@@ -28,6 +28,8 @@ if(BUILD_DOCUMENTATION)
         add_custom_target(doc_doxygen ALL COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile)
 endif(BUILD_DOCUMENTATION)
 
+add_compile_options(-Wall -Wextra)
+
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 add_subdirectory(source)
