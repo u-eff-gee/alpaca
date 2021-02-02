@@ -35,7 +35,7 @@ void test_numerical_equality(const T a, const T b, const T epsilon) {
         error_message << "Test of numerical equality failed. | " << a << " - " << b << " | = " << std::scientific << fabs(a-b) << " > " << epsilon;
         throw runtime_error(error_message.str());
     };
-};
+}
 
 template<typename T>
 void test_numerical_equality(const size_t n, T* a, T* b, const T epsilon){

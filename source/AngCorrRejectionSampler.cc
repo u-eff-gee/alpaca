@@ -22,7 +22,7 @@
 AngCorrRejectionSampler::AngCorrRejectionSampler(W_gamma_gamma* w, const int seed, const unsigned int max_tri): 
     SphereRejectionSampler(nullptr, w->get_upper_limit(), seed, max_tri),
     w_gamma_gamma(w)
-{};
+{}
 
 tuple<unsigned int, double, double> AngCorrRejectionSampler::sample(){
 
@@ -41,4 +41,4 @@ tuple<unsigned int, double, double> AngCorrRejectionSampler::sample(){
     }
 
     return {max_tries, 0., 0.};
-};
+}

@@ -35,7 +35,7 @@ SphereRejectionSampler::SphereRejectionSampler(function<double(const double, con
     max_tries(max_tri)
 {
     random_engine = mt19937(seed);
-};
+}
 
 tuple<unsigned int, double, double> SphereRejectionSampler::sample(){
     
