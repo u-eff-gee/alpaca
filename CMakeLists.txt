@@ -28,9 +28,10 @@ if(BUILD_DOCUMENTATION)
         add_custom_target(doc_doxygen ALL COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile)
 endif(BUILD_DOCUMENTATION)
 
-add_compile_options(-Wall -Wextra -Wpedantic)
+add_compile_options(-fPIC -Wall -Wextra -Wpedantic)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
+add_subdirectory(python)
 add_subdirectory(source)
 add_subdirectory(test)

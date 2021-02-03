@@ -44,7 +44,7 @@ target_link_libraries(uvCoefficient ${GSL_LIBRARIES})
 add_library(w_pol_dir W_pol_dir.cc)
 target_link_libraries(w_pol_dir alphavCoefficient avCoefficient w_dir_dir)
 
-add_library(angular_correlation AngularCorrelation.cc)
+add_library(angular_correlation SHARED AngularCorrelation.cc)
 target_link_libraries(angular_correlation euler_angle_rotation w_dir_dir w_pol_dir)
 
 add_library(euler_angle_rotation EulerAngleRotation.cc)
