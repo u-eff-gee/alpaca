@@ -194,7 +194,7 @@ string
         show_polarization=True,
         dollar=True,
     ):
-        """TeX representation of an EM transition between nuclear states.
+        r"""TeX representation of an EM transition between nuclear states.
 
 Parameters
 ----------

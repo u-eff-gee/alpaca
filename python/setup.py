@@ -15,23 +15,19 @@
 #
 #    Copyright (C) 2021 Udo Friman-Gayer
 
-cmake_minimum_required(VERSION 3.16)
-project(alpaca VERSION 0.2.0)
+from setuptools import setup, find_packages
 
-find_package(GSL REQUIRED)
-include_directories(${GSL_INCLUDE_DIRS})
-
-option(BUILD_DOCUMENTATION "Build doxygen documentation for some classes of alpaca" OFF)
-if(BUILD_DOCUMENTATION)
-        find_package(Doxygen)
-        configure_file(${PROJECT_SOURCE_DIR}/Doxyfile.in Doxyfile)
-        add_custom_target(doc_doxygen ALL COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile)
-endif(BUILD_DOCUMENTATION)
-
-add_compile_options(-fPIC -Wall -Wextra -Wpedantic)
-
-include_directories(${PROJECT_SOURCE_DIR}/include)
-
-add_subdirectory(python)
-add_subdirectory(source)
-add_subdirectory(test)
+setup(
+        name='alpaca',
+        version='@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@',
+        description='alpaca: a linearly-polarized angular-correlation application',
+        url='http://github.com/uga-uga/alpaca',
+        author='Udo Friman-Gayer',
+        author_email='ufg@email.unc.edu',
+        license='GPLv3',
+        python_requires='>=3',
+        packages=find_packages(),
+        install_requires=['numpy'],
+        setup_requires=['pytest-runner'],
+        tests_require=['pytest']
+)

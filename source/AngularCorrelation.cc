@@ -189,7 +189,16 @@ extern "C" {
         return new AngularCorrelation(initial_state, cascade_steps);
     }
 
-    double evaluate_angular_correlation(AngularCorrelation *angular_correlation, const double theta, const double phi){
-        return angular_correlation->operator()(theta, phi);
+    void evaluate_angular_correlation(AngularCorrelation *angular_correlation, const size_t n_angles, double* theta, double* phi, double* result){
+
+        for(size_t i = 0; i < n_angles; ++i){
+            result[i] = angular_correlation->operator()(theta[i], phi[i]);
+        }
+
+    }
+
+    double evaluate_angular_correlation_rotated(AngularCorrelation *angular_correlation, const double theta, const double phi, double* PhiThetaPsi){
+        return angular_correlation->operator()(theta, phi, 
+        {PhiThetaPsi[0], PhiThetaPsi[1], PhiThetaPsi[2]});
     }
 }

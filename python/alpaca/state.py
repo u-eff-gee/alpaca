@@ -134,7 +134,7 @@ class State:
         return spin_str_rep(self.two_J)
 
     def tex(self, parity_variable_symbol=r"\pm", dollar=True):
-        """TeX representation of a nuclear state.
+        r"""TeX representation of a nuclear state.
 
         Parameters
         ----------

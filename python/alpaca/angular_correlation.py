@@ -15,10 +15,12 @@
 
 # Copyright (C) 2021 Udo Friman-Gayer
 
-from ctypes import cdll, c_double, c_int, c_short, c_size_t, c_void_p, POINTER
+from ctypes import byref, cdll, c_double, c_int, c_short, c_size_t, c_void_p, POINTER
 
-from state import State
-from transition import Transition
+import numpy as np
+
+from .state import State
+from .transition import Transition
 
 libangular_correlation = cdll.LoadLibrary(
     "@PROJECT_BINARY_DIR@/source/libangular_correlation.so"
@@ -36,15 +38,26 @@ libangular_correlation.create_angular_correlation.argtypes = [
     POINTER(c_double),  # Multipole mixing ratios
 ]
 
-libangular_correlation.evaluate_angular_correlation.restype = c_double
+# libangular_correlation.evaluate_angular_correlation.restype = POINTER(c_double)
 libangular_correlation.evaluate_angular_correlation.argtypes = [
+    c_void_p,  # Pointer to AngularCorrelation object
+    c_size_t,  # Number of angles
+    POINTER(c_double),  # Polar angle theta
+    POINTER(c_double),  # Azimuthal angle phi
+    POINTER(c_double),  # Array that contains the results
+]
+
+libangular_correlation.evaluate_angular_correlation_rotated.restype = c_double
+libangular_correlation.evaluate_angular_correlation_rotated.argtypes = [
     c_void_p,  # Pointer to AngularCorrelation object
     c_double,  # Polar angle theta
     c_double,  # Azimuthal angle phi
+    POINTER(c_double),  # Euler angles Phi, Theta, and Psi
 ]
 
+
 class AngularCorrelation:
-    """Class for a gamma-gamma correlation.
+    r"""Class for a gamma-gamma correlation.
 
     Calculates the angular correlation \f$W_{\gamma \gamma} \left( \theta, \varphi \right)\f$
     between the first and the last photon in a sequence of \f$n-1\f$ (\f$n > 2\f$)
@@ -174,7 +187,7 @@ class AngularCorrelation:
 
     def __init__(self, initial_state, cascade_steps):
         """Constructor
-        
+
         Parameters
         ----------
         initial_state: State
@@ -206,8 +219,8 @@ class AngularCorrelation:
             n_cas_ste, two_J, par, em_char, two_L, em_charp, two_Lp, delta
         )
 
-    def __call__(self, theta, phi):
-        """Evaluate the angular correlation
+    def __call__(self, theta, phi, PhiThetaPsi=None):
+        r"""Evaluate the angular correlation
 
         This function can take three Euler angles as additional parameters to
         rotate the direction of propagation and the polarization axis (if defined) of the first photon.
@@ -218,16 +231,12 @@ class AngularCorrelation:
 
         Parameters
         ----------
-        theta: float
-            Polar angle in spherical coordinates in radians (\f$\theta \in \left[ 0, \pi \right]\f$).
-        phi: float
-            Azimuthal angle in spherical coordinates in radians (\f$\varphi \in \left[ 0, 2 \pi \right]\f$).
-        Phi: float
-            Euler angle \f$\Phi\f$ in radians (default: 0.).
-        Theta: float
-            Euler angle \f$\Theta\f$ in radians (default: 0.).
-        Psi: float
-            Euler angle \f$\Psi\f$ in radians (default: 0.).
+        theta: float or ndarray
+            Polar angle in spherical coordinates in radians (\f$\theta \in \left[ 0, \pi \right]\f$). If ndarray, must have the same shape as phi.
+        phi: float or ndarray
+            Azimuthal angle in spherical coordinates in radians (\f$\varphi \in \left[ 0, 2 \pi \right]\f$). If ndarray, must have the same shape as theta.
+        PhiThetaPsi: (float, float, float)
+            Euler angles \f$\Phi\f$, \f$\Theta\f$, and \f$\Psi\f$ in radians (default: None, i.e. no rotation).
 
         Returns
         -------
@@ -235,6 +244,42 @@ class AngularCorrelation:
             \f$W_{\gamma \gamma} \left( \theta, \varphi \right)\f$
         """
 
-        return libangular_correlation.evaluate_angular_correlation(
-            self.angular_correlation, theta, phi
+        theta_reshape = None
+        phi_reshape = None
+        original_shape = None
+        scalar_output = False
+
+        if isinstance(theta, (int, float)):
+            if isinstance(phi, (int, float)):
+                theta_reshape = np.array([theta])
+                phi_reshape = np.array([phi])
+                scalar_output = True
+            elif isinstance(phi, np.ndarray):
+                theta_reshape = theta*np.ones(np.size(phi))
+        else:
+            if isinstance(phi, np.ndarray):
+                theta_shape = np.shape(theta)
+                phi_shape = np.shape(phi)
+                if len(theta_shape) != len(phi_shape):
+                    raise ValueError('theta and phi must have the same shape if both are ndarray objects.')
+                for i in range(len(theta_shape)):
+                    if theta_shape[i] != phi_shape[i]:
+                        raise ValueError('theta and phi must have the same shape if both are ndarray objects.')
+
+            theta_reshape = np.reshape(theta, (1, np.size(theta)))[0]
+            original_shape = np.shape(theta)
+
+        if isinstance(phi, (int, float)) and isinstance(theta, np.ndarray):
+            phi_reshape = phi*np.ones(np.size(theta))
+        else:
+            phi_reshape = np.reshape(phi, (1, np.size(phi)))[0]
+            original_shape = np.shape(phi)
+
+        size = len(theta_reshape)
+        result = (c_double*size)()
+        libangular_correlation.evaluate_angular_correlation(
+        self.angular_correlation, size, (c_double*size)(*theta_reshape), (c_double*size)(*phi_reshape), result
         )
+        if scalar_output:
+            return result[0]
+        return np.reshape(np.array(result), original_shape)
