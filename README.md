@@ -47,11 +47,12 @@ First, go to the build directory and configure the code:
 
 ```
 $ cd ALPACA_BUILD_DIR
-$ cmake -DBUILD_DOCUMENTATION=ON ALPACA_SOURCE_DIR
+$ cmake -DBUILD_DOCUMENTATION=ON -DBUILD_TESTS=ON ALPACA_SOURCE_DIR
 ```
 
-The code above contains the optional `-DBUILD_DOCUMENTATION=ON` argument, which is the only custom build option of `alpaca` at the moment.
-When activated, it will build the `doxygen` documentation of the C++ code.
+The code above contains the optional `-DBUILD_DOCUMENTATION=ON` and `-DBUILD_TESTS=ON` arguments, which are the custom build options of `alpaca` at the moment.
+When activated, the former will build the `doxygen` documentation, and the latter will build the self tests of the C++ code.
+Both default to `OFF`.
 
 After configuring, compile the code by typing:
 
