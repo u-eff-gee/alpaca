@@ -89,15 +89,6 @@
  */
 class KappaCoefficient{
 public:
-	/**
-	 * \brief Constructor
-	 */
-	KappaCoefficient() = default;
-	/**
-	 * \brief Destructor
-	 */
-	~KappaCoefficient() = default;
-
     /**
      * \brief Return value of a specific polarization coefficent
      * 

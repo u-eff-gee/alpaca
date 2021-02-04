@@ -72,10 +72,6 @@ public:
 	 * Each step is a pair of a transition and the state which is populated by that transition.
 	 */
 	W_dir_dir(const State &ini_sta, const vector<pair<Transition, State>> cas_ste);
-	/**
-	 * \brief Destructor
-	 */
-	~W_dir_dir() = default;
 
 	/**
 	 * \brief Return value of the dir-dir correlation at an angle \f$\theta\f$

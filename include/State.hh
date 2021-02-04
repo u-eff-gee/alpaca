@@ -61,7 +61,6 @@ struct State{
 	State(const int t_J, const Parity p):
 		two_J(t_J),
 		parity(p){};
-	~State() = default;
 
 	int two_J; /**< Two times the angular momentum quantum number in units of the reduced Planck constant. */
 	Parity parity; /**< Parity quantum number. */

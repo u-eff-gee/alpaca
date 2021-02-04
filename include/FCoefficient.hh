@@ -115,8 +115,6 @@
 
 class FCoefficient{
 public:
-	FCoefficient() = default; /**< \brief Constructor */
-	~FCoefficient() = default; /**< \brief Destructor */
 
 	/**
 	 * \brief Return value of a specific F coefficient.

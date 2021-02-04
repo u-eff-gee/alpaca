@@ -51,10 +51,6 @@ public:
     W_gamma_gamma(const State &ini_sta, const vector<pair<Transition, State>> cas_ste):
         initial_state(ini_sta), cascade_steps(cas_ste), n_cascade_steps(cas_ste.size())
     {}
-	/**
-	 * \brief Destructor
-	 */
-	~W_gamma_gamma() = default;
 
 	/**
 	 * \brief Call operator of the gamma-gamma angular correlation

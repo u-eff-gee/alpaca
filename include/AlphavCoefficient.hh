@@ -50,7 +50,6 @@
 class AlphavCoefficient{
 public:
 	AlphavCoefficient();	
-	~AlphavCoefficient() = default;
 
 	/**
 	 * \brief Return value of a specific \f$\alpha_\nu\f$ coefficient.

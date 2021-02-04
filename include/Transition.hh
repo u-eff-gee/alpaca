@@ -86,7 +86,6 @@ struct Transition{
 				throw invalid_argument("The two multipolarities for a transition may not be equal. This holds even if the coupling allows only a single multipolarity.");
 			}
 		};
-	~Transition() = default;
 
 	/**
 	 * \brief String representation of EM characters.

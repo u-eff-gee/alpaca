@@ -35,7 +35,6 @@ struct KappaCoefficientLiteratureValue{
 		two_Lp(t_Lp),
 		value(val)
 	{};
-	~KappaCoefficientLiteratureValue() = default;
 
 	int two_nu, two_L, two_Lp;
 	double value;

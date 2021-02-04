@@ -176,7 +176,6 @@ public:
      * multipolarity is allowed.
      */
     AngularCorrelation(const State ini_sta, const vector<pair<Transition, State>> cas_ste);
-    ~AngularCorrelation() = default; /**< Destructor */
 
     /**
      * \brief Return the angular correlation for given spherical coordinates.

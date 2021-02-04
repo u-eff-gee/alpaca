@@ -263,7 +263,6 @@
 class AvCoefficient{
 public:
 	AvCoefficient();	
-	~AvCoefficient() = default;
 
 	/**
 	 * \brief Return value of a specific \f$A_\nu\f$ coefficient.

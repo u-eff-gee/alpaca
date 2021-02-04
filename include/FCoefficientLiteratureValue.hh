@@ -39,7 +39,6 @@ struct FCoefficientLiteratureValue{
 		two_nu(t_nu),
 		value(val)
 	{};
-	~FCoefficientLiteratureValue() = default;
 
 	int two_j, two_jp, two_L, two_Lp, two_nu;
 	double value;

@@ -191,8 +191,6 @@
  */
 class UvCoefficient{
 public:
-    UvCoefficient() = default;
-    ~UvCoefficient() = default;
 
     /**
      * \brief Return \f$U_\nu\f$ coefficient for a pure transition.

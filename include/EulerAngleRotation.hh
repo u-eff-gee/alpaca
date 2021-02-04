@@ -58,8 +58,6 @@ using std::array;
 class EulerAngleRotation{
 
 public:
-    EulerAngleRotation() = default; /**< \brief Constructor */
-    ~EulerAngleRotation() = default; /**< \brief Destructor */
 
     /**
      * \brief Rotate a 3D vector.

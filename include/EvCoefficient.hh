@@ -57,7 +57,6 @@
 class EvCoefficient{
 public:
 	EvCoefficient();	
-	~EvCoefficient() = default;
 
 	/**
 	 * \brief Return value of a specific \f$E_\nu\f$ coefficient.
