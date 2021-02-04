@@ -165,6 +165,8 @@ You should have received a copy of the GNU General Public License along with thi
 
 Copyright (C) 2021 Udo Friman-Gayer (ufg@email.unc.edu)
 
+This program was originally developed as part of the [Geant4](https://geant4.web.cern.ch/) application [nutr](https://github.com/uga-uga/nutr), published under the GNU General Public License.
+
 ## Acknowledgements
 
 The author would like to thank C. Iliadis for enlightening discussions about the angular correlation formalism and for help with debugging the associated modules. The author would also like to thank O. Papst for helpful discussions about the angular correlation formalism and advertise OP's angular correlation code [angcorrwat](https://github.com/op3/angcorrwat). angcorrwat is complementary to the present code in the sense that it uses the python package [sympy](https://www.sympy.org/) to obtain symbolic expressions for the angular correlations.
