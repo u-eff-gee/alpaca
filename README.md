@@ -109,13 +109,11 @@ The `AngularCorrelation` object can be called `(theta, phi)` with a polar angle 
 ### Example (C++)
 
 ```
-#include <gsl/gsl_math.h>
+#include <gsl/gsl_math.h> // To be able to use pi
 
 #include <iostream>
 
 #include "AngularCorrelation.hh"
-#include "State.hh"
-#include "Transition.hh"
 
 int main(){
     AngularCorrelation ang_cor{
@@ -136,24 +134,39 @@ int main(){
 }
 ```
 
+In order to run this code, which is assumed to be in a file called `test.cpp`, it has to be compiled against the `alpaca` libraries.
+For example, when using the GNU Compiler Collection ([GCC](https://gcc.gnu.org/)), type:
+
+```
+$ g++ test.cpp -I ALPACA_SOURCE_DIR/include -L ALPACA_BUILD_DIR/source -langular_correlation -Wl,-rpath,ALPACA_BUILD_DIR/source
+```
+
+This will create an executable binary for the test.
+
 ### Example (python)
 
 ```
-import numpy as np
+import numpy as np # To be able to use pi
 
 from alpaca.angular_correlation import AngularCorrelation
 from alpaca.state import NEGATIVE, POSITIVE, State
 from alpaca.transition import ELECTRIC, MAGNETIC, Transition
 
 ang_cor = AngularCorrelation(
-    State(0, POSITIVE),
+    State(0, POSITIVE), # Initial state
     [
-        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.), State(2, NEGATIVE)],
-        [Transition(ELECTRIC, 2, MAGNETIC, 4, 1.), State(4, POSITIVE)],
+        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.), State(2, NEGATIVE)], # Excitation
+        [Transition(ELECTRIC, 2, MAGNETIC, 4, 1.), State(4, POSITIVE)], # Decay
     ],
 )
 
 print(ang_cor(0.5*np.pi, 0.))
+```
+
+In order to run this code, which is assumed to be in a file called `test.py`, type:
+
+```
+$ python3 test.py
 ```
 
 ## License
