@@ -25,7 +25,8 @@ class LevelSchemePlotter:
     This class is intended to visualize the transition cascades whose angular correlations are
     given by the AngularCorrelation class.
     The first transition, which defines the 'orientation' of the system, is assumed to be an
-    excitation from the ground state.
+    excitation from the ground state, or, more generally, an initial state.
+    The excitation populates the first state of the decay cascade.
     All other transitions belong to a cascade whose last transition is assumed to be observed.
 
     The visualization is realized using the matplotlib package.
@@ -33,21 +34,28 @@ class LevelSchemePlotter:
 
     A plotted level scheme contains the following elements:
 
-    - Horizontal lines that represent states.
-    - State labels that indicate the spin- and parity quantum numbers.
+    - Horizontal lines that represent states. The initial state and the state that is reached by the exciting transition are represented by longer lines.
+    - State labels that indicate the spin- and parity quantum numbers. For the initial state and the first state of the cascade, the labels are printed on the left side of the state line. For all other states, they are on the right side.
     - One upward arrow that represents the excitation.
     - Downward arrows that represent the decays.
-    - Transition labels that indicate the EM character and the multipolarity.
-    - Transition labels that indicate the Multipole-mixing ratio of that transition.
+    - Transition labels that indicate the EM character and the multipolarity. Whether they are placed left or right of the transition arrows is determined by the same rule as for the state labels.
+    - Transition labels that indicate the Multipole-mixing ratio of that transition. Whether they are placed left or right of the transition arrows is determined by the same rule as for the state labels.
+
+    All labels are in a LaTeX environment, i.e. mathematical expressions are valid.
+
+    During the implementation of this class, it was found that the customization of matplotlib's 
+    arrows is a bit awkward.
+    To avoid things like arrow heads piercing through state lines and to be able to customize the width 
+    of the arrow heads and the lines independently, the present implementation combines a line ('pyplot.plot') with an arrow head ('Axes.arrow').
 
     Attributes
     ----------
 
     ax: matplotlib.axes.Axes object
         Axes on which the level scheme should be drawn
-    ini_sta: State
+    initial_state: State
         Initial state of the cascade. Same format as the corresponding input for the AngularCorrelation class.
-    cas_ste: array of [Transition, State] pairs
+    cascade_steps: array of [Transition, State] pairs
         Cascade steps, given as a list of arbitrary length which contains Transition-State pairs.
         The first and the last transition of this list are assumed to be observed.
         Same format as the corresponding input for the AngularCorrelation class.
@@ -55,7 +63,7 @@ class LevelSchemePlotter:
         Limits of the x - and y axis as given by ax.
     range_x, range_y:
         Range of the x - and y axis.
-    del_lab: list of str
+    delta_labels: list of str
         Labels for the multipole mixing ratios. The length of the list should equal the number of cascade steps.
     returns_to_initial_state: bool
         Determines whether the last step of the cascade should go back to the ground state.
@@ -65,11 +73,49 @@ class LevelSchemePlotter:
         Determines which transition labels should indicate a polarization.
         This allows to indicate for which transition polarization information is available.
     fontsize: int or float
-        Font size of the figure. Several other font sizes are scaled to this value.
+        Font size of the figure (matplotlib's 'fontsize' option). Several other font sizes are scaled to this value.
     fontsize_single_multipole: float
-        Font size for transition labels with a single multipole (default: 0.9*fontsize).
+        Font size for transition labels (matplotlib's 'fontsize 'option) with a single multipole (default: 0.9*fontsize).
     fontsize_single_multipole: float
-        Font size for transition labels with two possible multipoles. (default: 1.2*fontsize)
+        Font size for transition labels (matplotlib's 'fontsize' option) with two possible multipoles. (default: 1.2*fontsize)
+    state_line_width: float
+        Line width for a state (matplotlib's 'lw' option)
+    state_x: float
+        Position on the x axis where the line of the state starts.
+    state_width: float
+        Length of a state line in x direction.
+    intermediate_state_x: float
+        Position on the x axis where the line of an intermediate state starts.
+    intermediate_state_width: float
+        Length of an intermediate-state line in x direction.
+    initial_state_y: float
+        Position of the initial state on the y axis.
+    initial_state_y: float
+        Position of the first excited state on the y axis.
+    state_label_left_x, state_label_right_x:
+        Position of the state labels on the x axis.
+    parity_variable_symbol: str
+        Symbol to be displayed in the state label if the parity of a state is unknown (default: '\pm').
+    arrow_width: float
+        With of the transition arrows (matplotlib's 'linewidth' option). (default: 2)
+    excitation_arrow_x, decay_arrow_x: float
+        Position of the excitation/decay arrow on the x axis.
+    arrow_head_length: float
+        Length of the arrow heads, scaled to the plot range (Axes.arrow's 'head_length' option). (default: 0.04*range_y)
+    arrow_head_width: float
+        Width of the arrow heads, scaled to arrow_width. (default: 0.03*arrow_width)
+    excitation_arrow_color, decay_arrow_color: matplotlib color specification
+        Colors of the excitation- and decay arrows. Must be a color specification that can be understood by matplotlib.
+    em_variable_symbol: str
+        Symbol to be displayed in the transition label if the EM character of a transition is unknown (default: '\sigma').
+    decay_label_right_x, excitation_label_left_x: float
+        Position of the decay labels on the x axis.
+    delta_label_rotation: float
+        Rotation of the multipole-mixing ratio labels in degrees (Axes.text's 'rotation' option). The default is 90 degrees, which means that the labels are oriented as if the corresponding arrow were the base line of the text.
+    delta_label_left_x, delta_label_right_x: float
+        Position of the multipole-mixing labels on the x axis.
+    zorder_states, zorder_arrows: int
+        Sets the order in which the state lines and arrows are drawn (matplotlib's 'zorder' option). (default: zorder_states < zorder_arrows, i.e. arrows are on top of state lines)
     """
 
     def __init__(
@@ -84,18 +130,52 @@ class LevelSchemePlotter:
         state_line_width=2,
         arrow_width=2,
         offset=(0, 0),
-        transition_label_rotation=90,
+        delta_label_rotation=90,
         em_variable_symbol="\sigma",
         parity_variable_symbol="\pm",
     ):
+    """Initialization
+    
+    ax: matplotlib.axes.Axes object
+        Axes on which the level scheme should be drawn
+    initial_state: State
+        Initial state of the cascade. Same format as the corresponding input for the AngularCorrelation class.
+    cascade_steps: array of [Transition, State] pairs
+        Cascade steps, given as a list of arbitrary length which contains Transition-State pairs.
+        The first and the last transition of this list are assumed to be observed.
+        Same format as the corresponding input for the AngularCorrelation class.
+    delta_labels: list of str
+        Labels for the multipole mixing ratios. The length of the list should equal the number of cascade steps.
+    returns_to_initial_state: bool
+        Determines whether the last step of the cascade should go back to the ground state.
+        This option allows to make the distinction between a ground-state decay and a cascade that
+        ends up in a state with the same quantum numbers as the ground state. (default: False)
+    show_polarization: list of bool
+        Determines which transition labels should indicate a polarization.
+        This allows to indicate for which transition polarization information is available.
+    fontsize: int or float
+        Font size of the figure (matplotlib's 'fontsize' option). Several other font sizes are scaled to this value.
+    state_line_width: float
+        Line width for a state (matplotlib's 'lw' option)
+    arrow_width: float
+        With of the transition arrows (matplotlib's 'linewidth' option). (default: 2)
+    offset: (float, float)
+        Offset of the level scheme from the lower-left corner of the panel in x- and y direction. Even if the parameters of the LevelSchemePlotter have already been chosen to yield a nice-looking figure, an offset may sometimes be necessary. (default: (0, 0), i.e. no offset).
+    delta_label_rotation: float
+        Rotation of the multipole-mixing ratio labels in degrees (Axes.text's 'rotation' option). The default is 90 degrees, which means that the labels are oriented as if the corresponding arrow were the base line of the text.
+    em_variable_symbol: str
+        Symbol to be displayed in the transition label if the EM character of a transition is unknown (default: '\sigma').
+    parity_variable_symbol: str
+        Symbol to be displayed in the state label if the parity of a state is unknown (default: '\pm'). 
+    """
         self.ax = axis
         self.min_x, self.max_x = axis.get_xlim()
         self.range_x = self.max_x - self.min_x
         self.min_y, self.max_y = axis.get_ylim()
         self.range_y = self.max_y - self.min_y
-        self.ini_sta = initial_state
-        self.cas_ste = cascade_steps
-        self.del_lab = delta_labels
+        self.initial_state = initial_state
+        self.cascade_steps = cascade_steps
+        self.delta_labels = delta_labels
         self.returns_to_initial_state = returns_to_initial_state
         self.show_polarization = [False] * len(cascade_steps)
         if show_polarization is not None:
@@ -151,7 +231,7 @@ class LevelSchemePlotter:
         self.excitation_label_left_x = (
             0.18 * self.range_x + self.min_x + offset[0] * self.range_x
         )
-        self.transition_label_rotation = transition_label_rotation
+        self.delta_label_rotation = delta_label_rotation
 
         # Multipole mixing ratio (delta) labels
         self.delta_label_left_x = (
@@ -177,7 +257,7 @@ class LevelSchemePlotter:
         self.ax.text(
             self.state_label_left_x,
             self.initial_state_y,
-            self.ini_sta.tex(parity_variable_symbol=self.parity_variable_symbol),
+            self.initial_state.tex(parity_variable_symbol=self.parity_variable_symbol),
             verticalalignment="center",
             fontsize=self.fontsize,
         )
@@ -191,7 +271,7 @@ class LevelSchemePlotter:
         self.ax.text(
             self.state_label_left_x,
             self.excited_state_y,
-            self.cas_ste[0][1].tex(parity_variable_symbol=self.parity_variable_symbol),
+            self.cascade_steps[0][1].tex(parity_variable_symbol=self.parity_variable_symbol),
             verticalalignment="center",
             fontsize=self.fontsize,
         )
@@ -219,27 +299,27 @@ class LevelSchemePlotter:
         self.ax.text(
             self.excitation_label_left_x,
             0.5 * (self.excited_state_y - self.initial_state_y) + self.initial_state_y,
-            self.cas_ste[0][0].tex(
+            self.cascade_steps[0][0].tex(
                 em_variable_symbol=self.em_variable_symbol,
                 always_show_secondary=False,
                 show_polarization=self.show_polarization[0],
             ),
             verticalalignment="center",
             fontsize=self.fontsize_single_multipole
-            if self.cas_ste[0][0].delta == 0.0
+            if self.cascade_steps[0][0].delta == 0.0
             else self.fontsize_two_multipoles,
         )
         self.ax.text(
             self.delta_label_left_x,
             0.5 * (self.excited_state_y - self.initial_state_y) + self.initial_state_y,
-            self.del_lab[0],
+            self.delta_labels[0],
             verticalalignment="center",
             fontsize=self.fontsize,
-            rotation=self.transition_label_rotation,
+            rotation=self.delta_label_rotation,
         )
 
         # Calculate position of states in decay cascade
-        n_decay_steps = len(self.cas_ste) - 1
+        n_decay_steps = len(self.cascade_steps) - 1
         excitation_delta_y = self.excited_state_y - self.initial_state_y
         cascade_states_y = np.arange(1, n_decay_steps + 1)
 
@@ -271,7 +351,7 @@ class LevelSchemePlotter:
             self.ax.text(
                 self.state_label_right_x,
                 cascade_states_y[i],
-                self.cas_ste[i + 1][1].tex(
+                self.cascade_steps[i + 1][1].tex(
                     parity_variable_symbol=self.parity_variable_symbol
                 ),
                 verticalalignment="center",
@@ -300,23 +380,23 @@ class LevelSchemePlotter:
         self.ax.text(
             self.decay_label_right_x,
             0.5 * (self.excited_state_y - cascade_states_y[0]) + cascade_states_y[0],
-            self.cas_ste[1][0].tex(
+            self.cascade_steps[1][0].tex(
                 em_variable_symbol=self.em_variable_symbol,
                 always_show_secondary=False,
                 show_polarization=self.show_polarization[1],
             ),
             verticalalignment="center",
             fontsize=self.fontsize_single_multipole
-            if self.cas_ste[1][0].delta == 0.0
+            if self.cascade_steps[1][0].delta == 0.0
             else self.fontsize_two_multipoles,
         )
         self.ax.text(
             self.delta_label_right_x,
             0.5 * (self.excited_state_y - cascade_states_y[0]) + cascade_states_y[0],
-            self.del_lab[1],
+            self.delta_labels[1],
             verticalalignment="center",
             fontsize=self.fontsize,
-            rotation=self.transition_label_rotation,
+            rotation=self.delta_label_rotation,
         )
 
         # Transitions in cascade
@@ -343,22 +423,22 @@ class LevelSchemePlotter:
                 self.decay_label_right_x,
                 0.5 * (cascade_states_y[i - 1] - cascade_states_y[i])
                 + cascade_states_y[i],
-                self.cas_ste[i + 1][0].tex(
+                self.cascade_steps[i + 1][0].tex(
                     em_variable_symbol=self.em_variable_symbol,
                     always_show_secondary=False,
                     show_polarization=self.show_polarization[i + 1],
                 ),
                 verticalalignment="center",
                 fontsize=self.fontsize_single_multipole
-                if self.cas_ste[i + 1][0].delta == 0.0
+                if self.cascade_steps[i + 1][0].delta == 0.0
                 else self.fontsize_two_multipoles,
             )
             self.ax.text(
                 self.delta_label_right_x,
                 0.5 * (self.excited_state_y - cascade_states_y[i - 1])
                 + cascade_states_y[i],
-                self.del_lab[i + 1],
+                self.delta_labels[i + 1],
                 verticalalignment="center",
                 fontsize=self.fontsize,
-                rotation=self.transition_label_rotation,
+                rotation=self.delta_label_rotation,
             )
