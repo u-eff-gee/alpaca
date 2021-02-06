@@ -35,6 +35,7 @@ In addition, the following libraries/tools are required:
 
 * [python3](https://www.python.org/) (it is assumed that the command-line executable is called 'python3')
 * [numpy](https://numpy.org/)
+* [matplotlib](https://matplotlib.org/) (testing, optional)
 * [pytest](https://docs.pytest.org/) (testing, optional)
 * [pytest-cov](https://pypi.org/project/pytest-cov/) (testing, optional)
 
@@ -179,7 +180,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 Copyright (C) 2021 Udo Friman-Gayer (ufg@email.unc.edu)
 
-This program was originally developed as part of the [Geant4](https://geant4.web.cern.ch/) application [nutr](https://github.com/uga-uga/nutr), published under the GNU General Public License.
+This program was originally developed as part of the [Geant4](https://geant4.web.cern.ch/) application [alpaca](https://github.com/uga-uga/alpaca), published under the GNU General Public License.
 
 ## Acknowledgements
 

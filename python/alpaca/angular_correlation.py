@@ -181,6 +181,11 @@ class AngularCorrelation:
 
     Attributes
     ----------
+    initial_state: State
+        Initial state of the cascade.
+    cascade_steps: array of [Transition, State] pairs
+        Cascade steps, given as a list of arbitrary length which contains Transition-State pairs.
+        The first and the last transition of this list are assumed to be observed.
     angular_correlation: c_void_p
         Pointer to internal AngularCorrelation C++ object.
     """
@@ -192,7 +197,7 @@ class AngularCorrelation:
         ----------
         initial_state: State
             Initial state of the cascade.
-        cas_ste: array of [Transition, State] pairs
+        cascade_steps: array of [Transition, State] pairs
             Cascade steps, given as a list of arbitrary length which contains Transition-State pairs.
             The first and the last transition of this list are assumed to be observed.
         """
@@ -215,6 +220,8 @@ class AngularCorrelation:
         delta = [cas_ste[0].delta for cas_ste in cascade_steps]
         delta = (c_double * len(delta))(*delta)
 
+        self.initial_state = initial_state
+        self.cascade_steps = cascade_steps
         self.angular_correlation = libangular_correlation.create_angular_correlation(
             n_cas_ste, two_J, par, em_char, two_L, em_charp, two_Lp, delta
         )
@@ -255,30 +262,38 @@ class AngularCorrelation:
                 phi_reshape = np.array([phi])
                 scalar_output = True
             elif isinstance(phi, np.ndarray):
-                theta_reshape = theta*np.ones(np.size(phi))
+                theta_reshape = theta * np.ones(np.size(phi))
         else:
             if isinstance(phi, np.ndarray):
                 theta_shape = np.shape(theta)
                 phi_shape = np.shape(phi)
                 if len(theta_shape) != len(phi_shape):
-                    raise ValueError('theta and phi must have the same shape if both are ndarray objects.')
+                    raise ValueError(
+                        "theta and phi must have the same shape if both are ndarray objects."
+                    )
                 for i in range(len(theta_shape)):
                     if theta_shape[i] != phi_shape[i]:
-                        raise ValueError('theta and phi must have the same shape if both are ndarray objects.')
+                        raise ValueError(
+                            "theta and phi must have the same shape if both are ndarray objects."
+                        )
 
             theta_reshape = np.reshape(theta, (1, np.size(theta)))[0]
             original_shape = np.shape(theta)
 
         if isinstance(phi, (int, float)) and isinstance(theta, np.ndarray):
-            phi_reshape = phi*np.ones(np.size(theta))
+            phi_reshape = phi * np.ones(np.size(theta))
         else:
             phi_reshape = np.reshape(phi, (1, np.size(phi)))[0]
             original_shape = np.shape(phi)
 
         size = len(theta_reshape)
-        result = (c_double*size)()
+        result = (c_double * size)()
         libangular_correlation.evaluate_angular_correlation(
-        self.angular_correlation, size, (c_double*size)(*theta_reshape), (c_double*size)(*phi_reshape), result
+            self.angular_correlation,
+            size,
+            (c_double * size)(*theta_reshape),
+            (c_double * size)(*phi_reshape),
+            result,
         )
         if scalar_output:
             return result[0]
