@@ -27,7 +27,7 @@ setup(
         license='GPLv3',
         python_requires='>=3',
         packages=find_packages(),
-        install_requires=['numpy'],
+        install_requires=['matplotlib', 'numpy'],
         setup_requires=['pytest-runner'],
-        tests_require=['pytest', 'pytest-cov']
+        tests_require=['pytest', 'pytest-cov', 'tox']
 )
