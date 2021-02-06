@@ -1,6 +1,7 @@
 configure_file(setup.py setup.py)
 configure_file(setup.cfg setup.cfg)
 
+configure_file(alpaca/analyzing_power.py alpaca/analyzing_power.py)
 configure_file(alpaca/angular_correlation.py alpaca/angular_correlation.py @ONLY)
 configure_file(alpaca/__init__.py alpaca/__init__.py)
 configure_file(alpaca/state.py alpaca/state.py)
