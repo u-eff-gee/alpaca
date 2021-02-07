@@ -23,35 +23,37 @@ from alpaca.level_scheme_plotter import LevelSchemePlotter
 from alpaca.state import NEGATIVE, PARITY_UNKNOWN, POSITIVE, State
 from alpaca.transition import ELECTRIC, EM_UNKNOWN, MAGNETIC, Transition
 
-lvl_scheme_excited = LevelSchemePlotter(
-    initial_state=State(0, POSITIVE),
-    cascade_steps=[
-        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
-        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.5), State(4, POSITIVE)],
-        [Transition(EM_UNKNOWN, 4, EM_UNKNOWN, 6, 0.0), State(8, PARITY_UNKNOWN)],
-    ],
-    delta_labels=[r"", r"$\delta_2$", r"$\delta_3$"],
-    fontsize=10,
-    show_polarization=[True, False, False],
-)
 
-lvl_scheme_ground = LevelSchemePlotter(
-    initial_state=State(0, POSITIVE),
-    cascade_steps=[
-        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
-        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.5), State(4, POSITIVE)],
-        [Transition(EM_UNKNOWN, 4, EM_UNKNOWN, 6, 0.0), State(8, PARITY_UNKNOWN)],
-        [Transition(EM_UNKNOWN, 8, EM_UNKNOWN, 10, 0.0), State(0, POSITIVE)],
-    ],
-    delta_labels=["", r"$\delta_2$", r"$\delta_3$", ""],
-    fontsize=10,
-    show_polarization=[True, False, False, False],
-    returns_to_initial_state=True,
-)
+def test_level_scheme_plotter():
+    lvl_scheme_excited = LevelSchemePlotter(
+        initial_state=State(0, POSITIVE),
+        cascade_steps=[
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.5), State(4, POSITIVE)],
+            [Transition(EM_UNKNOWN, 4, EM_UNKNOWN, 6, 0.0), State(8, PARITY_UNKNOWN)],
+        ],
+        delta_labels=[r"", r"$\delta_2$", r"$\delta_3$"],
+        fontsize=10,
+        show_polarization=[True, False, False],
+    )
 
-fig, ax = plt.subplots(2, 1, figsize=(3, 6))
-ax[0].axis("off")
-lvl_scheme_excited.plot(ax[0])
-ax[1].axis("off")
-lvl_scheme_ground.plot(ax[1])
-plt.savefig("test_level_scheme_plotter.pdf")
+    lvl_scheme_ground = LevelSchemePlotter(
+        initial_state=State(0, POSITIVE),
+        cascade_steps=[
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.5), State(4, POSITIVE)],
+            [Transition(EM_UNKNOWN, 4, EM_UNKNOWN, 6, 0.0), State(8, PARITY_UNKNOWN)],
+            [Transition(EM_UNKNOWN, 8, EM_UNKNOWN, 10, 0.0), State(0, POSITIVE)],
+        ],
+        delta_labels=["", r"$\delta_2$", r"$\delta_3$", ""],
+        fontsize=10,
+        show_polarization=[True, False, False, False],
+        returns_to_initial_state=True,
+    )
+
+    fig, ax = plt.subplots(2, 1, figsize=(3, 6))
+    ax[0].axis("off")
+    lvl_scheme_excited.plot(ax[0])
+    ax[1].axis("off")
+    lvl_scheme_ground.plot(ax[1])
+    plt.savefig("test_level_scheme_plotter.pdf")
