@@ -13,7 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with alpaca.  If not, see <https://www.gnu.org/licenses/>.
 
-[testenv]
+[tox]
+envlist = pytest, black
+
+[testenv:pytest]
 deps = 
     matplotlib
     numpy
@@ -22,3 +25,9 @@ deps =
 commands =
     pytest --cov=alpaca
     coverage html
+
+[testenv:black]
+deps =
+    black
+commands =
+    black --verbose --check --diff @PROJECT_SOURCE_DIR@/python/alpaca/ @PROJECT_SOURCE_DIR@/python/test/

@@ -29,5 +29,5 @@ setup(
         packages=find_packages(),
         install_requires=['matplotlib', 'numpy'],
         setup_requires=['pytest-runner'],
-        tests_require=['pytest', 'pytest-cov', 'tox']
+        tests_require=['black', 'pytest', 'pytest-cov', 'tox']
 )

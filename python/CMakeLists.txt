@@ -1,6 +1,6 @@
 configure_file(setup.py setup.py)
 configure_file(setup.cfg setup.cfg)
-configure_file(tox.ini tox.ini)
+configure_file(tox.ini.in tox.ini)
 
 configure_file(alpaca/analyzing_power.py alpaca/analyzing_power.py)
 configure_file(alpaca/angular_correlation.py alpaca/angular_correlation.py @ONLY)

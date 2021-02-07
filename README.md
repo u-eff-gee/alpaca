@@ -35,7 +35,8 @@ In addition, the following libraries/tools are required:
 
 * [python3](https://www.python.org/) (it is assumed that the command-line executable is called 'python3')
 * [numpy](https://numpy.org/)
-* [matplotlib](https://matplotlib.org/) (testing, optional)
+* [matplotlib](https://matplotlib.org/)
+* [black](https://black.readthedocs.io/) (testing, optional)
 * [pytest](https://docs.pytest.org/) (testing, optional)
 * [pytest-cov](https://pypi.org/project/pytest-cov/) (testing, optional)
 
