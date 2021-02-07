@@ -254,6 +254,22 @@ extern "C" {
         return new AngularCorrelation(initial_state, cascade_steps);
     }
 
+    void* create_angular_correlation_with_transition_inference(const size_t n_cas_ste, int* two_J, short* par){
+
+        State initial_state{two_J[0], (Parity) par[0]};
+        vector<State> cascade_states;
+
+        for(size_t i = 0; i < n_cas_ste; ++i){
+            cascade_states.push_back(
+                {
+                    State{two_J[i+1], (Parity) par[i+1]}
+                }
+            );
+        }
+
+        return new AngularCorrelation(initial_state, cascade_states);
+    }
+
     void evaluate_angular_correlation(AngularCorrelation *angular_correlation, const size_t n_angles, double* theta, double* phi, double* result){
 
         for(size_t i = 0; i < n_angles; ++i){
@@ -265,5 +281,23 @@ extern "C" {
     double evaluate_angular_correlation_rotated(AngularCorrelation *angular_correlation, const double theta, const double phi, double* PhiThetaPsi){
         return angular_correlation->operator()(theta, phi, 
         {PhiThetaPsi[0], PhiThetaPsi[1], PhiThetaPsi[2]});
+    }
+
+    void get_em_char(AngularCorrelation *angular_correlation, short* em_char){
+        
+        vector<pair<Transition, State>> cascade_steps = angular_correlation->get_cascade_steps();
+        for(size_t i = 0; i < cascade_steps.size(); ++i){
+            em_char[i] = cascade_steps[i].first.em_char;
+        }
+
+    }
+
+    void get_two_L(AngularCorrelation *angular_correlation, int* two_L){
+        
+        vector<pair<Transition, State>> cascade_steps = angular_correlation->get_cascade_steps();
+        for(size_t i = 0; i < cascade_steps.size(); ++i){
+            two_L[i] = cascade_steps[i].first.two_L;
+        }
+
     }
 }

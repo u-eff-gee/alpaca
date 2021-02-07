@@ -43,9 +43,9 @@ class LevelSchemePlotter:
 
     All labels are in a LaTeX environment, i.e. mathematical expressions are valid.
 
-    During the implementation of this class, it was found that the customization of matplotlib's 
+    During the implementation of this class, it was found that the customization of matplotlib's
     arrows is a bit awkward.
-    To avoid things like arrow heads piercing through state lines and to be able to customize the width 
+    To avoid things like arrow heads piercing through state lines and to be able to customize the width
     of the arrow heads and the lines independently, the present implementation combines a line ('pyplot.plot') with an arrow head ('Axes.arrow').
 
     Attributes
@@ -124,7 +124,7 @@ class LevelSchemePlotter:
         em_variable_symbol: str
             Symbol to be displayed in the transition label if the EM character of a transition is unknown (default: '\sigma').
         parity_variable_symbol: str
-            Symbol to be displayed in the state label if the parity of a state is unknown (default: '\pm'). 
+            Symbol to be displayed in the state label if the parity of a state is unknown (default: '\pm').
         """
 
         # General options
@@ -154,9 +154,9 @@ class LevelSchemePlotter:
         self.zorder_states = 0
         self.zorder_arrows = 1
 
-    def plot(self, axis, offset=(0,0)):
+    def plot(self, axis, offset=(0, 0)):
         r"""Plot level scheme in the given axes
-        
+
         Parameters
         ----------
         axes: pyplot.axes.Axes object
@@ -205,10 +205,10 @@ class LevelSchemePlotter:
         """
 
         # Dimensions
-        min_x, max_x = (0., 1.)
+        min_x, max_x = (0.0, 1.0)
         range_x = max_x - min_x
         axis.set_xlim(min_x, max_x)
-        min_y, max_y = (0., 1.)
+        min_y, max_y = (0.0, 1.0)
         range_y = max_y - min_y
         axis.set_ylim(min_y, max_y)
 
@@ -219,30 +219,18 @@ class LevelSchemePlotter:
         # State lines
         state_x = 0.4 * range_x + min_x + offset[0] * range_x
         state_width = 0.4 * range_x
-        intermediate_state_x = (
-            0.55 * range_x + min_x + offset[0] * range_x
-        )
+        intermediate_state_x = 0.55 * range_x + min_x + offset[0] * range_x
         intermediate_state_width = 0.25 * range_x
 
-        initial_state_y = (
-            0.2 * range_y + min_y + offset[1] * range_y
-        )
-        excited_state_y = (
-            0.8 * range_y + min_y + offset[1] * range_y
-        )
+        initial_state_y = 0.2 * range_y + min_y + offset[1] * range_y
+        excited_state_y = 0.8 * range_y + min_y + offset[1] * range_y
 
         # State labels
-        state_label_left_x = (
-            0.25 * range_x + min_x + offset[0] * range_x
-        )
-        state_label_right_x = (
-            0.9 * range_x + min_x + offset[0] * range_x
-        )
+        state_label_left_x = 0.25 * range_x + min_x + offset[0] * range_x
+        state_label_right_x = 0.9 * range_x + min_x + offset[0] * range_x
 
         # Transition arrows
-        excitation_arrow_x = (
-            0.5 * range_x + min_x + offset[0] * range_x
-        )
+        excitation_arrow_x = 0.5 * range_x + min_x + offset[0] * range_x
         decay_arrow_x = 0.7 * range_x + min_x + offset[0] * range_x
         arrow_head_length = 0.04 * range_y
         arrow_head_width = 0.03 * self.arrow_width
@@ -250,19 +238,11 @@ class LevelSchemePlotter:
         decay_arrow_color = "red"
 
         # Transition labels
-        decay_label_right_x = (
-            0.85 * range_x + min_x + offset[0] * range_x
-        )
-        excitation_label_left_x = (
-            0.18 * range_x + min_x + offset[0] * range_x
-        )
+        decay_label_right_x = 0.85 * range_x + min_x + offset[0] * range_x
+        excitation_label_left_x = 0.18 * range_x + min_x + offset[0] * range_x
 
-        delta_label_left_x = (
-            0.4 * range_x + min_x + offset[0] * range_x
-        )
-        delta_label_right_x = (
-            0.74 * range_x + min_x + offset[0] * range_x
-        )
+        delta_label_left_x = 0.4 * range_x + min_x + offset[0] * range_x
+        delta_label_right_x = 0.74 * range_x + min_x + offset[0] * range_x
 
         # Initial and excited state
         axis.plot(
@@ -289,7 +269,9 @@ class LevelSchemePlotter:
         axis.text(
             state_label_left_x,
             excited_state_y,
-            self.cascade_steps[0][1].tex(parity_variable_symbol=self.parity_variable_symbol),
+            self.cascade_steps[0][1].tex(
+                parity_variable_symbol=self.parity_variable_symbol
+            ),
             verticalalignment="center",
             fontsize=self.fontsize,
         )
@@ -453,8 +435,7 @@ class LevelSchemePlotter:
             )
             axis.text(
                 delta_label_right_x,
-                0.5 * (excited_state_y - cascade_states_y[i - 1])
-                + cascade_states_y[i],
+                0.5 * (excited_state_y - cascade_states_y[i - 1]) + cascade_states_y[i],
                 self.delta_labels[i + 1],
                 verticalalignment="center",
                 fontsize=self.fontsize,

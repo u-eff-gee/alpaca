@@ -20,7 +20,7 @@ from ctypes import byref, cdll, c_double, c_int, c_short, c_size_t, c_void_p, PO
 import numpy as np
 
 from .state import State
-from .transition import Transition
+from .transition import ELECTRIC, EM_UNKNOWN, MAGNETIC, Transition
 
 libangular_correlation = cdll.LoadLibrary(
     "@PROJECT_BINARY_DIR@/source/libangular_correlation.so"
@@ -38,21 +38,31 @@ libangular_correlation.create_angular_correlation.argtypes = [
     POINTER(c_double),  # Multipole mixing ratios
 ]
 
-# libangular_correlation.evaluate_angular_correlation.restype = POINTER(c_double)
+libangular_correlation.create_angular_correlation_with_transition_inference.restype = (
+    c_void_p
+)
+libangular_correlation.create_angular_correlation_with_transition_inference.argtypes = [
+    c_size_t,  # Number of cascade steps
+    POINTER(c_int),  # Angular momenta
+    POINTER(c_short),  # Parities
+]
+
+libangular_correlation.get_em_char.argtypes = [
+    c_void_p,  # Pointer to AngularCorrelation object
+    POINTER(c_short),  # Array that contains the results
+]
+
+libangular_correlation.get_two_L.argtypes = [
+    c_void_p,  # Pointer to AngularCorrelation object
+    POINTER(c_int),  # Array that contains the results
+]
+
 libangular_correlation.evaluate_angular_correlation.argtypes = [
     c_void_p,  # Pointer to AngularCorrelation object
     c_size_t,  # Number of angles
     POINTER(c_double),  # Polar angle theta
     POINTER(c_double),  # Azimuthal angle phi
     POINTER(c_double),  # Array that contains the results
-]
-
-libangular_correlation.evaluate_angular_correlation_rotated.restype = c_double
-libangular_correlation.evaluate_angular_correlation_rotated.argtypes = [
-    c_void_p,  # Pointer to AngularCorrelation object
-    c_double,  # Polar angle theta
-    c_double,  # Azimuthal angle phi
-    POINTER(c_double),  # Euler angles Phi, Theta, and Psi
 ]
 
 
@@ -197,34 +207,71 @@ class AngularCorrelation:
         ----------
         initial_state: State
             Initial state of the cascade.
-        cascade_steps: array of [Transition, State] pairs
-            Cascade steps, given as a list of arbitrary length which contains Transition-State pairs.
+        cascade_steps: array of [Transition, State] pairs or array of State objects
+            Cascade steps, given as a list of arbitrary length which contains Transition-State pairs or State objects.
             The first and the last transition of this list are assumed to be observed.
+            If no transition information is given, the most likely transitions (lowest multipole order, no mixing) are assumed to connect the given states.
         """
-        n_cas_ste = len(cascade_steps)
-        two_J = [cas_ste[1].two_J for cas_ste in cascade_steps]
-        two_J.insert(0, initial_state.two_J)
-        two_J = (c_int * len(two_J))(*two_J)
-        par = [cas_ste[1].parity for cas_ste in cascade_steps]
-        par.insert(0, initial_state.parity)
-        par = (c_short * len(par))(*par)
-
-        em_char = [cas_ste[0].em_char for cas_ste in cascade_steps]
-        em_char = (c_short * len(em_char))(*em_char)
-        two_L = [cas_ste[0].two_L for cas_ste in cascade_steps]
-        two_L = (c_int * len(two_L))(*two_L)
-        em_charp = [cas_ste[0].em_charp for cas_ste in cascade_steps]
-        em_charp = (c_short * len(em_charp))(*em_charp)
-        two_Lp = [cas_ste[0].two_Lp for cas_ste in cascade_steps]
-        two_Lp = (c_int * len(two_Lp))(*two_Lp)
-        delta = [cas_ste[0].delta for cas_ste in cascade_steps]
-        delta = (c_double * len(delta))(*delta)
 
         self.initial_state = initial_state
-        self.cascade_steps = cascade_steps
-        self.angular_correlation = libangular_correlation.create_angular_correlation(
-            n_cas_ste, two_J, par, em_char, two_L, em_charp, two_Lp, delta
-        )
+        self.angular_correlation = None
+        n_cas_ste = len(cascade_steps)
+
+        if isinstance(cascade_steps[0], State):
+            two_J = [cas_ste.two_J for cas_ste in cascade_steps]
+            two_J.insert(0, initial_state.two_J)
+            two_J = (c_int * len(two_J))(*two_J)
+            par = [cas_ste.parity for cas_ste in cascade_steps]
+            par.insert(0, initial_state.parity)
+            par = (c_short * len(par))(*par)
+            self.angular_correlation = libangular_correlation.create_angular_correlation_with_transition_inference(
+                n_cas_ste, two_J, par
+            )
+
+            em_char = (c_short * n_cas_ste)()
+            libangular_correlation.get_em_char(self.angular_correlation, em_char)
+            two_L = (c_int * n_cas_ste)()
+            libangular_correlation.get_two_L(self.angular_correlation, two_L)
+            self.cascade_steps = []
+            for i in range(n_cas_ste):
+                em_charp = EM_UNKNOWN
+                if em_char[i] == MAGNETIC:
+                    em_charp = ELECTRIC
+                elif em_char[i] == ELECTRIC:
+                    em_charp = MAGNETIC
+
+                self.cascade_steps.append(
+                    [
+                        Transition(em_char[i], two_L[i], em_charp, two_L[i] + 2, 0.0),
+                        cascade_steps[i],
+                    ]
+                )
+
+        else:
+            two_J = [cas_ste[1].two_J for cas_ste in cascade_steps]
+            two_J.insert(0, initial_state.two_J)
+            two_J = (c_int * len(two_J))(*two_J)
+            par = [cas_ste[1].parity for cas_ste in cascade_steps]
+            par.insert(0, initial_state.parity)
+            par = (c_short * len(par))(*par)
+
+            em_char = [cas_ste[0].em_char for cas_ste in cascade_steps]
+            em_char = (c_short * len(em_char))(*em_char)
+            two_L = [cas_ste[0].two_L for cas_ste in cascade_steps]
+            two_L = (c_int * len(two_L))(*two_L)
+            em_charp = [cas_ste[0].em_charp for cas_ste in cascade_steps]
+            em_charp = (c_short * len(em_charp))(*em_charp)
+            two_Lp = [cas_ste[0].two_Lp for cas_ste in cascade_steps]
+            two_Lp = (c_int * len(two_Lp))(*two_Lp)
+            delta = [cas_ste[0].delta for cas_ste in cascade_steps]
+            delta = (c_double * len(delta))(*delta)
+
+            self.angular_correlation = (
+                libangular_correlation.create_angular_correlation(
+                    n_cas_ste, two_J, par, em_char, two_L, em_charp, two_Lp, delta
+                )
+            )
+            self.cascade_steps = cascade_steps
 
     def __call__(self, theta, phi, PhiThetaPsi=None):
         r"""Evaluate the angular correlation
