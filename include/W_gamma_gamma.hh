@@ -91,6 +91,24 @@ public:
 	 */
 	virtual double get_upper_limit() const = 0;
 
+	/**
+	 * \brief Return the initial state of the angular correlation.
+	 * 
+	 * \return Initial state.
+	 */
+	State get_initial_state() const {
+		return initial_state;
+	}
+
+	/**
+	 * \brief Return the cascade steps.
+	 * 
+	 * \return vector of Transition-State pairs.
+	 */
+	vector<pair<Transition, State>> get_cascade_steps() const {
+		return cascade_steps;
+	}
+
 protected:
     State initial_state; /**< Initial state */
 	/** 

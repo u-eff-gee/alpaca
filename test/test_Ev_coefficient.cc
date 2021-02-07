@@ -20,7 +20,6 @@
 #include "AlphavCoefficient.hh"
 #include "EvCoefficient.hh"
 #include "TestUtilities.hh"
-#include "Transition.hh"
 
 int main(){
 

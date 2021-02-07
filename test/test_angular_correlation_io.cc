@@ -237,4 +237,75 @@ int main(){
 
     assert(error_thrown);
     error_thrown = false;
+
+    // Simplified constructor
+    // Error: Transition between spin-0 states
+    try{
+        AngularCorrelation ang_corr_0_1_0{
+            State(0, parity_unknown), 
+            {
+                State(0, negative),
+                State(0, parity_unknown)
+            }
+        }; 
+    } catch(const std::invalid_argument &e) {
+        error_thrown = true;
+    }
+
+    assert(error_thrown);
+    error_thrown = false;
+
+    // Error: Too few steps in cascade
+    try{
+        AngularCorrelation ang_corr_0_1{
+		State(0, parity_unknown), 
+            {
+                State(2, negative),
+            }
+        }; 
+    } catch(const std::invalid_argument &e) {
+        error_thrown = true;
+    }
+
+    assert(error_thrown);
+    error_thrown = false;
+
+    AngularCorrelation ang_corr_0_1_0{
+        State(0, positive), 
+        {
+            State(2, negative),
+            State(6, negative)
+        }
+    };
+
+    vector<pair<Transition, State>> cas_ste = ang_corr_0_1_0.get_cascade_steps();
+
+    assert(cas_ste[0].first.two_L == 2);
+    assert(cas_ste[0].first.em_char == electric);
+    assert(cas_ste[0].first.two_Lp == 4);
+    assert(cas_ste[0].first.em_charp == magnetic);
+    assert(cas_ste[0].first.delta == 0.);
+    assert(cas_ste[1].first.two_L == 4);
+    assert(cas_ste[1].first.em_char == electric);
+    assert(cas_ste[1].first.two_Lp == 6);
+    assert(cas_ste[1].first.em_charp == magnetic);
+    assert(cas_ste[1].first.delta == 0.);
+
+    AngularCorrelation ang_corr_3_5_3_9 = AngularCorrelation{
+        State(3, positive), 
+        {
+            State(5, parity_unknown),
+            State(3, negative),
+            State(9, negative)
+        }
+    };
+
+    cas_ste = ang_corr_3_5_3_9.get_cascade_steps();
+
+    assert(cas_ste[0].first.em_char == em_unknown);
+    assert(cas_ste[0].first.em_charp == em_unknown);
+    assert(cas_ste[1].first.em_char == em_unknown);
+    assert(cas_ste[1].first.em_charp == em_unknown);
+    assert(cas_ste[2].first.em_char == magnetic);
+    assert(cas_ste[2].first.em_charp == electric);
 }

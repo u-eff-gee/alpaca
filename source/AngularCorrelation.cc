@@ -40,6 +40,71 @@ AngularCorrelation::AngularCorrelation(const State ini_sta, const vector<pair<Tr
     }
 }
 
+AngularCorrelation::AngularCorrelation(const State ini_sta, const vector<State> cas_sta):
+    euler_angle_rotation(EulerAngleRotation()), w_gamma_gamma(nullptr){
+
+    if(cas_sta.size() < 2){
+        throw invalid_argument("Cascade must have at least two transition - state pairs.");
+    }
+
+    vector<pair<Transition, State>> cascade_steps;
+
+    cascade_steps.push_back(
+        {
+            infer_transition({ini_sta, cas_sta[0]}),
+            cas_sta[0]
+        }
+    );
+
+    for(size_t i = 0; i < cas_sta.size()-1; ++i){
+        cascade_steps.push_back(
+            {
+                infer_transition({cas_sta[i], cas_sta[i+1]}),
+                cas_sta[i+1]
+            }
+        );
+    }
+
+    if(cascade_steps[0].first.em_char == em_unknown){
+        w_gamma_gamma = std::make_unique<W_dir_dir>(ini_sta, cascade_steps);
+    } else{
+        w_gamma_gamma = std::make_unique<W_pol_dir>(ini_sta, cascade_steps);
+    }
+
+}
+
+Transition AngularCorrelation::infer_transition(const pair<State, State> states) const {
+    
+    if(states.first.two_J == 0 and states.second.two_J == 0){
+        throw invalid_argument("An electromagnetic transition between two spin-0 states with the absorption/emission of a single photon is not possible.");
+    }
+
+    const int two_L = abs(states.first.two_J - states.second.two_J);
+    EMCharacter em = em_unknown;
+    EMCharacter emp = em_unknown;
+    if(states.first.parity != parity_unknown && states.second.parity != parity_unknown){
+        if(two_L % 4 == 0){
+            if(states.first.parity == states.second.parity){
+                em = electric;
+                emp = magnetic;
+            } else{
+                em = magnetic;
+                emp = electric;
+            }
+        } else{
+            if(states.first.parity == states.second.parity){
+                em = magnetic;
+                emp = electric;
+            } else{
+                em = electric;
+                emp = magnetic;
+            }
+        }
+    }
+
+    return Transition(em, two_L, emp, two_L + 2, 0.);
+}
+
 double AngularCorrelation::operator()(const double theta, const double phi) const {
     return w_gamma_gamma->operator()(theta, phi);
 }

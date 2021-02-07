@@ -178,6 +178,35 @@ public:
     AngularCorrelation(const State ini_sta, const vector<pair<Transition, State>> cas_ste);
 
     /**
+     * \brief Constructor with transition inference
+     * 
+     * Simplified version of the general constructor which takes a vector of State objects
+     * as cascade steps.
+     * See the general constructor for more information.
+     * 
+     * For the multipolarities, electromagnetic characters, and mixing ratios of the transitions,
+     * the most likely values will be inferred according to the following rules: 
+     * 
+     * \enum The multipolarities are assumed to be the lowest possible ones permitted by the triangle inequality for each transitions.
+     * \enum The EM character for the transition between the initial state and the second state is set to 'unknown' if any of the parities of the two states is unknown. In this case, a dir-dir correlation will be calculated. If both parities are known, the EM characters corresponding to the lowest possible multipole orders will be chosen. The EM characters for all other transitions are assumed in the same way(Note that the pol-dir correlation only depends on the EM character of the transition for which the polarization information is available.).
+     * \enum All multipole-mixing ratios are assumed to be zero.
+     * 
+     * All the aforementioned rules are based on the single-particle 'Weisskopf' estimates 
+     * (see, e.g., Sec. 6.A in Ref. \cite BlattWeisskopf1979), which favor the lowest multipole
+     * order.
+     * 
+     * \param ini_sta Initial state of the cascade.
+     * \param cas_sta Cascade states, given as a list of arbitrary length which contains 
+     * State objects. 
+     * The transitions between the first and the seconds, and between the next-to last and the 
+     * last state of this list are assumed to be observed.
+     * 
+     * \throw invalid_argument if the number of cascade steps is smaller or equal to one, because 
+     * two transitions are needed for a gamma-gamma correlation.
+     */
+    AngularCorrelation(const State ini_sta, const vector<State> cas_sta);
+
+    /**
      * \brief Return the angular correlation for given spherical coordinates.
      * 
      * This function assumes that the direction of propagation of the first photon is in the
@@ -215,6 +244,24 @@ public:
      * \return \f$W_{\gamma \gamma} \left( \theta, \varphi \right)\f$
      */
     double operator()(const double theta, const double phi, const array<double, 3> euler_angles) const;
+
+	/**
+	 * \brief Return the initial state of the angular correlation.
+	 * 
+	 * \return Initial state.
+	 */
+    State get_initial_state() const {
+        return w_gamma_gamma->get_initial_state();
+    }
+
+	/**
+	 * \brief Return the cascade steps.
+	 * 
+	 * \return vector of Transition-State pairs.
+	 */
+    vector<pair<Transition, State>> get_cascade_steps() const {
+        return w_gamma_gamma->get_cascade_steps();
+    }
 
 protected:
 /**
@@ -321,12 +368,29 @@ protected:
  */
     bool valid_em_character(const Parity p0, const Parity p1, const int two_L, const EMCharacter em) const;
 
+/**
+ * \brief Infer the most likely transition that connects two given states.
+ * 
+ * This method is used in connection with the simplified constructor of the AngularCorrelation 
+ * class.
+ * Given two states of a cascade, it infers the most likely transition that connects them.
+ * See the corresponding constructor for more information.
+ * 
+ * \param states Two states for which the most likely transition should be inferred.
+ * 
+ * \return Transition object.
+ * 
+ * \throw invalid_argument, if both states have spin 0. In this case, no EM transition is possible.
+ */
+    Transition infer_transition(const pair<State, State> states) const;
+
     const EulerAngleRotation euler_angle_rotation; /**< Instance of the EulerAngleRotation class */
-    /**
-     * \brief Pointer to an object of the W_gamma_gamma class.
-     * 
-     * W_gamma_gamma is the base class of the W_dir_dir and W_pol_dir classes.
-     * The user input decides which one is stored by this pointer.
-     */
+
+/**
+ * \brief Pointer to an object of the W_gamma_gamma class.
+ * 
+ * W_gamma_gamma is the base class of the W_dir_dir and W_pol_dir classes.
+ * The user input decides which one is stored by this pointer.
+ */
     unique_ptr<W_gamma_gamma> w_gamma_gamma;
 };
