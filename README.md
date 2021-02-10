@@ -39,6 +39,7 @@ In addition, the following libraries/tools are required:
 * [black](https://black.readthedocs.io/) (testing, optional)
 * [pytest](https://docs.pytest.org/) (testing, optional)
 * [pytest-cov](https://pypi.org/project/pytest-cov/) (testing, optional)
+* [tox](https://tox.readthedocs.io) (testing, optional)
 
 ### Build (C++)
 
@@ -89,12 +90,14 @@ To run a self test of the python code, type:
 
 ```
 $ cd ALPACA_BUILD_DIR/python
-$ pytest
+$ tox
 ```
 
-Note that the python tests only test the python API.
+The `tox` tool will run `pytest` to perform self tests and `black` to check whether the formatting of the code corresponds to `black`'s requirements.
+Using `pytest-cov`, a coverage report for the self tests will be created.
+
+Note that the python tests only ensure that the python API works.
 A detailed test of the angular correlation formalism is performed for the C++ code only.
-Using `pytest-cov`, the tests create a coverage report.
 
 ## Usage
 
