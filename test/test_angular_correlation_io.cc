@@ -308,4 +308,26 @@ int main(){
     assert(cas_ste[1].first.em_charp == em_unknown);
     assert(cas_ste[2].first.em_char == magnetic);
     assert(cas_ste[2].first.em_charp == electric);
+
+    // Check that the correct transition is inferred between states of equal spin.
+    // The triangle inequality gives a monopole transition as the lowest possible multipolarity
+    // in that case, but this is not possible for a single photon.
+    AngularCorrelation ang_corr_0_4_4 = AngularCorrelation{
+        State(0, positive), 
+        {
+            State(4, positive),
+            State(4, positive),
+        }
+    };
+
+    cas_ste = ang_corr_0_4_4.get_cascade_steps();
+
+    assert(cas_ste[0].first.em_char == electric);
+    assert(cas_ste[0].first.two_L == 4);
+    assert(cas_ste[0].first.em_charp == magnetic);
+    assert(cas_ste[0].first.two_Lp == 6);
+    assert(cas_ste[1].first.em_char == magnetic);
+    assert(cas_ste[1].first.two_L == 2);
+    assert(cas_ste[1].first.em_charp == electric);
+    assert(cas_ste[1].first.two_Lp == 4);
 }

@@ -79,7 +79,10 @@ Transition AngularCorrelation::infer_transition(const pair<State, State> states)
         throw invalid_argument("An electromagnetic transition between two spin-0 states with the absorption/emission of a single photon is not possible.");
     }
 
-    const int two_L = abs(states.first.two_J - states.second.two_J);
+    int two_L = abs(states.first.two_J - states.second.two_J);
+    if(two_L == 0){
+        two_L += 2;
+    }
     EMCharacter em = em_unknown;
     EMCharacter emp = em_unknown;
     if(states.first.parity != parity_unknown && states.second.parity != parity_unknown){

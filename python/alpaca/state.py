@@ -103,7 +103,7 @@ class State:
         Parity quantum number, which may be 1 (positive parity), -1 (negative), or 0 (parity unknown).
     """
 
-    def __init__(self, t_J, par):
+    def __init__(self, t_J, par=PARITY_UNKNOWN):
         """Constructor
 
         Parameters
@@ -111,7 +111,7 @@ class State:
         t_J: int
             Two times the angular momentum quantum number in units of the reduced Planck constant.
         par: int
-            Parity quantum number, which may be 1 (positive parity), -1 (negative), or 0 (parity unknown).
+            Parity quantum number, which may be 1 (positive parity), -1 (negative), or 0 (parity unknown, default).
         """
 
         ## Two times the angular momentum quantum number
