@@ -133,3 +133,14 @@ def test_io():
     assert ang_cor.cascade_steps[1][0].two_Lp == 4
     assert ang_cor.cascade_steps[1][0].em_charp == ELECTRIC
     assert ang_cor.cascade_steps[0][0].delta == 0.0
+
+    ang_cor = AngularCorrelation(
+        State(0, POSITIVE),
+        [State(2, POSITIVE), State(0, POSITIVE)]
+    )
+
+    assert np.isclose(ang_cor(0.5*np.pi, 0.       ), 1.5)
+    assert np.isclose(ang_cor(0.5*np.pi, 0.5*np.pi), 0.)
+
+    assert np.isclose(ang_cor(0.5*np.pi, 0.       , [0.5*np.pi, 0., 0.]), 0.)
+    assert np.isclose(ang_cor(0.5*np.pi, 0.5*np.pi, [0.5*np.pi, 0., 0.]), 1.5)

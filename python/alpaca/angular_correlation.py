@@ -65,6 +65,15 @@ libangular_correlation.evaluate_angular_correlation.argtypes = [
     POINTER(c_double),  # Array that contains the results
 ]
 
+libangular_correlation.evaluate_angular_correlation_rotated.argtypes = [
+    c_void_p,  # Pointer to AngularCorrelation object
+    c_size_t,  # Number of angles
+    POINTER(c_double),  # Polar angle theta
+    POINTER(c_double),  # Azimuthal angle phi
+    POINTER(c_double),  # Euler angles Phi, Theta, and Psi
+    POINTER(c_double),  # Array that contains the results
+]
+
 
 class AngularCorrelation:
     r"""Class for a gamma-gamma correlation.
@@ -335,13 +344,23 @@ class AngularCorrelation:
 
         size = len(theta_reshape)
         result = (c_double * size)()
-        libangular_correlation.evaluate_angular_correlation(
-            self.angular_correlation,
-            size,
-            (c_double * size)(*theta_reshape),
-            (c_double * size)(*phi_reshape),
-            result,
-        )
+        if PhiThetaPsi is None:
+            libangular_correlation.evaluate_angular_correlation(
+                self.angular_correlation,
+                size,
+                (c_double * size)(*theta_reshape),
+                (c_double * size)(*phi_reshape),
+                result,
+            )
+        else:
+            libangular_correlation.evaluate_angular_correlation_rotated(
+                self.angular_correlation,
+                size,
+                (c_double * size)(*theta_reshape),
+                (c_double * size)(*phi_reshape),
+                (c_double * 3)(*PhiThetaPsi),
+                result,
+            )
         if scalar_output:
             return result[0]
         return np.reshape(np.array(result), original_shape)
