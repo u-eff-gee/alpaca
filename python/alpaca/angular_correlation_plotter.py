@@ -24,7 +24,7 @@ class AngularCorrelationPlotter:
     def __init__(self, angular_correlation):
         self.angular_correlation = angular_correlation
 
-    def plot(self, axis):
+    def plot(self, axis, PhiThetaPsi=None):
 
         N_THETA = 100
         N_PHI = 100
@@ -37,7 +37,7 @@ class AngularCorrelationPlotter:
             np.linspace(0.0, np.pi, N_THETA), np.linspace(0.0, 2.0 * np.pi, N_PHI)
         )
 
-        ang_cor = self.angular_correlation(theta, phi)
+        ang_cor = self.angular_correlation(theta, phi, PhiThetaPsi=PhiThetaPsi)
 
         sine_theta = np.sin(theta)
         x = ang_cor * sine_theta * np.cos(phi)
@@ -47,9 +47,9 @@ class AngularCorrelationPlotter:
         color_map_max = np.max(ang_cor)
         color_map_min = np.min(ang_cor)
         color_map_norm = (ang_cor - color_map_min) / (color_map_max - color_map_min)
-        color_map = mpl.cm.inferno(color_map_norm)
+        color_map = mpl.cm.rainbow(color_map_norm)
 
         axis.set_xlim(-2.0, 2.0)
         axis.set_ylim(-2.0, 2.0)
         axis.set_zlim(-2.0, 2.0)
-        axis.plot_surface(x, y, z, facecolors=color_map)
+        axis.plot_surface(x, y, z, facecolors=color_map, rcount=100, ccount=100)
