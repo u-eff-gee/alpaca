@@ -24,17 +24,10 @@ class AngularCorrelationPlotter:
     def __init__(self, angular_correlation):
         self.angular_correlation = angular_correlation
 
-    def plot(self, axis, PhiThetaPsi=None):
-
-        N_THETA = 100
-        N_PHI = 100
-
-        XLIM = (-2.0, 2.0)
-        YLIM = (-2.0, 2.0)
-        ZLIM = (-2.0, 2.0)
+    def plot(self, axis, PhiThetaPsi=None, n_points_per_dimension=100, max_abs_value=2.):
 
         theta, phi = np.meshgrid(
-            np.linspace(0.0, np.pi, N_THETA), np.linspace(0.0, 2.0 * np.pi, N_PHI)
+            np.linspace(0.0, np.pi, n_points_per_dimension), np.linspace(0.0, 2.0 * np.pi, n_points_per_dimension)
         )
 
         ang_cor = self.angular_correlation(theta, phi, PhiThetaPsi=PhiThetaPsi)
@@ -49,7 +42,7 @@ class AngularCorrelationPlotter:
         color_map_norm = (ang_cor - color_map_min) / (color_map_max - color_map_min)
         color_map = mpl.cm.rainbow(color_map_norm)
 
-        axis.set_xlim(-2.0, 2.0)
-        axis.set_ylim(-2.0, 2.0)
-        axis.set_zlim(-2.0, 2.0)
-        axis.plot_surface(x, y, z, facecolors=color_map, rcount=100, ccount=100)
+        axis.set_xlim(-max_abs_value, max_abs_value)
+        axis.set_ylim(-max_abs_value, max_abs_value)
+        axis.set_zlim(-max_abs_value, max_abs_value)
+        axis.plot_surface(x, y, z, facecolors=color_map, rcount=n_points_per_dimension, ccount=n_points_per_dimension)
