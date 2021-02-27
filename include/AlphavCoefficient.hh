@@ -21,6 +21,7 @@
 
 #include "FCoefficient.hh"
 #include "KappaCoefficient.hh"
+#include "StringRepresentable.hh"
 
 /**
  * \brief Class for an \f$\alpha_\nu\f$ coefficient.
@@ -47,13 +48,12 @@
  * See also the definition of the AvCoefficient class for more information.
  */
 
-class AlphavCoefficient{
+class AlphavCoefficient : public StringRepresentable{
 public:
-	AlphavCoefficient();	
 
 	/**
-	 * \brief Return value of a specific \f$\alpha_\nu\f$ coefficient.
-	 *
+	 * \brief Constructor
+	 * 
 	 * \param two_nu \f$2 \nu\f$
 	 * \param two_L Primary multipolarity \f$2 L\f$
 	 * \param two_Lp Secondary multipolarity \f$2 L^\prime\f$
@@ -61,14 +61,32 @@ public:
 	 * 	of a transition 
 	 * \param two_j Angular momentum quantum number \f$2 j\f$ of the intermediate state
 	 * 	of a transition 
+	 */
+	AlphavCoefficient(const int two_nu, const int two_L, const int two_Lp, const int two_jn, const int two_j);	
+
+	/**
+	 * \brief Return value of a specific \f$\alpha_\nu\f$ coefficient.
+	 *
 	 * \param delta Multipole mixing ratio \f$\delta\f$
 	 *
 	 * \return \f$\alpha_\nu \left( L, L^\prime, j_n, j, \delta_n \right)\f$
 	 */
-	double operator()(const int two_nu, const int two_L, const int two_Lp, const int two_jn, const int two_j, const double delta) const;
+	double operator()(const double delta) const;
+
+	string string_representation() const;
 
 protected:
+	const int two_nu;
+	const int two_L;
+	const int two_Lp;
+	const int two_jn;
+	const int two_j;
+
 	const FCoefficient f_coef; /**< Instance of the F coefficient class */
 	const KappaCoefficient kappa_coef; /**< Instance of the \f$\kappa_\nu\f$ coefficient class */
+
+	double constant_coefficient;
+	double linear_coefficient;
+	double quadratic_coefficient;
 
 };

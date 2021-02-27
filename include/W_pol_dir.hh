@@ -19,6 +19,10 @@
 
 #pragma once
 
+#include <vector>
+
+using std::vector;
+
 #include "AlphavCoefficient.hh"
 #include "AvCoefficient.hh"
 #include "W_dir_dir.hh"
@@ -159,7 +163,7 @@ protected:
 	 * \return \f$\alpha_\nu (1) A_\nu (2)\f$ (\f$n=3\f$) or \f$\alpha_\nu (1) U_\nu (2) ... A_\nu (n)\f$ (\f$n>3\f$) for \f$ \nu \in \lbrace 0, ..., \nu_\mathrm{max} \rbrace,~ \nu~\mathrm{even} \f$ sorted by increasing values
 	 *  of \f$\nu\f$ in a std::vector.
 	 */	
-	vector<double> calculate_expansion_coefficients() const;
+	vector<double> calculate_expansion_coefficients();
 
 	/**
 	 * \brief Calculate set of products of \f$\alpha_\nu A_\nu \f$ coefficients
@@ -180,10 +184,10 @@ protected:
 	 * \return \f$\alpha_\nu (1) A_\nu (n)\f$ for \f$ \nu \in \lbrace 0, ..., \nu_\mathrm{max} \rbrace,~ \nu~\mathrm{even} \f$ sorted by increasing values
 	 *  of \f$\nu\f$ in a std::vector.
  	 */
-	vector<double> calculate_expansion_coefficients_alphav_Av() const;
+	vector<double> calculate_expansion_coefficients_alphav_Av();
 
 	const AvCoefficient av_coef; /**< Instance of the AvCoefficient class */
-	const AlphavCoefficient alphav_coef; /**< Instance of the AlphavCoefficient class */
+	vector<AlphavCoefficient> alphav_coefficients; /**< Instance of the AlphavCoefficient class */
 	vector<double> expansion_coefficients; /**< Vector to store expansion coefficients */
 	const W_dir_dir w_dir_dir; /**< Instance of the W_dir_dir class */
 

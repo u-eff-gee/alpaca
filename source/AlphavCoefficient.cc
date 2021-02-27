@@ -17,15 +17,36 @@
     Copyright (C) 2021 Udo Friman-Gayer
 */
 
+#include <sstream>
+
+using std::stringstream;
+
 #include "AlphavCoefficient.hh"
 
-AlphavCoefficient::AlphavCoefficient():
-f_coef(FCoefficient()), kappa_coef(KappaCoefficient())
-{}
+AlphavCoefficient::AlphavCoefficient(const int two_nu, const int two_L, const int two_Lp, const int two_jn, const int two_j):
+    two_nu(two_nu), two_L(two_L), two_Lp(two_Lp), two_jn(two_jn), two_j(two_j), f_coef(FCoefficient()), kappa_coef(KappaCoefficient())
+{
+    constant_coefficient = -kappa_coef(two_nu, two_L, two_L)*f_coef(two_nu, two_L, two_L, two_jn, two_j);
+    linear_coefficient = 2.*kappa_coef(two_nu, two_L, two_Lp)*f_coef(two_nu, two_L, two_Lp, two_jn, two_j);
+    quadratic_coefficient = kappa_coef(two_nu, two_Lp, two_Lp)*f_coef(two_nu, two_Lp, two_Lp, two_jn, two_j);
 
-double AlphavCoefficient::operator()(const int two_nu, const int two_L, const int two_Lp, const int two_jn, const int two_j, const double delta) const {
+}
+
+double AlphavCoefficient::operator()(const double delta) const {
 	
-	return -kappa_coef(two_nu, two_L, two_L)*f_coef(two_nu, two_L, two_L, two_jn, two_j)
-		+ 2.*delta*kappa_coef(two_nu, two_L, two_Lp)*f_coef(two_nu, two_L, two_Lp, two_jn, two_j)
-		+ delta*delta*kappa_coef(two_nu, two_Lp, two_Lp)*f_coef(two_nu, two_Lp, two_Lp, two_jn, two_j);
+	return 
+        constant_coefficient + delta*linear_coefficient 
+        + delta*delta*quadratic_coefficient;
+}
+
+string AlphavCoefficient::string_representation() const {
+
+    stringstream str_rep;
+
+    str_rep << constant_coefficient 
+        << linear_coefficient << " \\times \\delta"
+        << quadratic_coefficient << " \\times \\delta^2";
+
+    return str_rep.str();
+
 }

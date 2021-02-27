@@ -27,7 +27,7 @@
 using std::min;
 
 W_pol_dir::W_pol_dir(const State &ini_sta, const vector<pair<Transition, State>> cas_ste):
-W_gamma_gamma(ini_sta, cas_ste), av_coef(AvCoefficient()), alphav_coef(AlphavCoefficient()), w_dir_dir(W_dir_dir(ini_sta, cas_ste))
+W_gamma_gamma(ini_sta, cas_ste), av_coef(AvCoefficient()), w_dir_dir(W_dir_dir(ini_sta, cas_ste))
 {
 	
 	two_nu_max = w_dir_dir.get_two_nu_max();
@@ -66,7 +66,7 @@ double W_pol_dir::get_upper_limit() const {
 	return w_dir_dir.get_upper_limit() + upper_limit*w_dir_dir.get_normalization_factor();
 }
 
-vector<double> W_pol_dir::calculate_expansion_coefficients() const {
+vector<double> W_pol_dir::calculate_expansion_coefficients() {
 
 	vector<double> exp_coef_alphav_Av = calculate_expansion_coefficients_alphav_Av();
 
@@ -84,16 +84,18 @@ vector<double> W_pol_dir::calculate_expansion_coefficients() const {
 	return exp_coef_alphav_Av;
 }
 
-vector<double> W_pol_dir::calculate_expansion_coefficients_alphav_Av() const {
+vector<double> W_pol_dir::calculate_expansion_coefficients_alphav_Av() {
 
 	vector<double> exp_coef;
-	
+
 	for(int two_nu = 4; two_nu <= two_nu_max; two_nu += 4){
+		alphav_coefficients.push_back(
+			AlphavCoefficient(two_nu,
+				cascade_steps[0].first.two_L, cascade_steps[0].first.two_Lp, initial_state.two_J, cascade_steps[0].second.two_J
+			)
+		);
 		exp_coef.push_back(
-			alphav_coef(two_nu, 
-				cascade_steps[0].first.two_L, cascade_steps[0].first.two_Lp,
-				initial_state.two_J, cascade_steps[0].second.two_J, 
-				cascade_steps[0].first.delta)
+			alphav_coefficients[two_nu/4 - 1](cascade_steps[0].first.delta)
 			*av_coef(two_nu,
 				cascade_steps[n_cascade_steps-1].first.two_L, cascade_steps[n_cascade_steps-1].first.two_Lp,
 				cascade_steps[n_cascade_steps-1].second.two_J, cascade_steps[n_cascade_steps-2].second.two_J, 

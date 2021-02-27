@@ -20,13 +20,15 @@
 #pragma once
 
 #include <vector>
+
+using std::vector;
+
 #include <utility>
+
+using std::pair;
 
 #include "State.hh"
 #include "Transition.hh"
-
-using std::pair;
-using std::vector;
 
 /**
  * \brief Abstract class for angular correlations of two photons.

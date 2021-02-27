@@ -30,7 +30,7 @@ int main(){
 	// radiation.
 	// Note that in Ref. \cite AjzenbergSelove1960 [Eq. (85a)], this sign is part of the E_v 
 	// coefficients, while it is factored out in Ref. \cite FaggHanna1959 [Eq. (I-8)].
-	AlphavCoefficient alphav_coef;
+	AlphavCoefficient alphav_coef(4, 4, 6, 7, 3);
 	EvCoefficient ev_coef;
 	const double epsilon = 1e-4;
 
@@ -51,13 +51,14 @@ int main(){
 	// However, a cross check with other literature, for example Ref. \cite Kneissl1996, shows
 	// that indeed, 'the + or - sign is to be employed according as the ... is electric or 
 	// magnetic in character' \cite FaggHanna1959 means that 'electric' and + belong together.
-	test_numerical_equality<double>(ev_coef_num, alphav_coef(4, 4, 6, 7, 3, 0.), epsilon);
+	test_numerical_equality<double>(ev_coef_num, alphav_coef(0.), epsilon);
 
 	// Eq. (89b) in \cite AjzenbergSelove1960
 	ev_coef_num = ev_coef(4, magnetic, 2, electric, 4, 3, 3, 1.);
 	test_numerical_equality<double>(ev_coef_num, 0.20000 - 0.25820, epsilon);
 
+	AlphavCoefficient alphav_coef_2(4, 2, 4, 3, 3);
 	// Here, the additional sign is needed.
-	test_numerical_equality<double>(ev_coef_num, -alphav_coef(4, 2, 4, 3, 3, 1.), epsilon);
+	test_numerical_equality<double>(ev_coef_num, -alphav_coef_2(1.), epsilon);
 
 }
