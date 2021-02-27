@@ -24,10 +24,13 @@ class AngularCorrelationPlotter:
     def __init__(self, angular_correlation):
         self.angular_correlation = angular_correlation
 
-    def plot(self, axis, PhiThetaPsi=None, n_points_per_dimension=100, max_abs_value=2.):
+    def plot(
+        self, axis, PhiThetaPsi=None, n_points_per_dimension=100, max_abs_value=2.0
+    ):
 
         theta, phi = np.meshgrid(
-            np.linspace(0.0, np.pi, n_points_per_dimension), np.linspace(0.0, 2.0 * np.pi, n_points_per_dimension)
+            np.linspace(0.0, np.pi, n_points_per_dimension),
+            np.linspace(0.0, 2.0 * np.pi, n_points_per_dimension),
         )
 
         ang_cor = self.angular_correlation(theta, phi, PhiThetaPsi=PhiThetaPsi)
@@ -45,4 +48,11 @@ class AngularCorrelationPlotter:
         axis.set_xlim(-max_abs_value, max_abs_value)
         axis.set_ylim(-max_abs_value, max_abs_value)
         axis.set_zlim(-max_abs_value, max_abs_value)
-        axis.plot_surface(x, y, z, facecolors=color_map, rcount=n_points_per_dimension, ccount=n_points_per_dimension)
+        axis.plot_surface(
+            x,
+            y,
+            z,
+            facecolors=color_map,
+            rcount=n_points_per_dimension,
+            ccount=n_points_per_dimension,
+        )

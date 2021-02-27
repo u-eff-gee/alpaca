@@ -32,6 +32,7 @@ angular_correlations = [
     ["0_2_2.pdf", State(0), [State(4), State(4)]],
 ]
 
+
 def test_angular_correlation_plotter():
     for ang_cor in angular_correlations:
         ang_cor_plot = AngularCorrelationPlotter(
@@ -40,14 +41,22 @@ def test_angular_correlation_plotter():
 
         fig = plt.figure()
         ax = fig.add_subplot(projection="3d")
-        ang_cor_plot.plot(ax, [0., 0.5*np.pi, 0.5*np.pi], max_abs_value=2.3)
-        ax.set_title(r'{} $\rightarrow$ {} $\rightarrow$ {}'.format(ang_cor[1].tex(parity_variable_symbol=''), ang_cor[2][0].tex(parity_variable_symbol=''), ang_cor[2][1].tex(parity_variable_symbol='')))
+        ang_cor_plot.plot(ax, [0.0, 0.5 * np.pi, 0.5 * np.pi], max_abs_value=2.3)
+        ax.set_title(
+            r"{} $\rightarrow$ {} $\rightarrow$ {}".format(
+                ang_cor[1].tex(parity_variable_symbol=""),
+                ang_cor[2][0].tex(parity_variable_symbol=""),
+                ang_cor[2][1].tex(parity_variable_symbol=""),
+            )
+        )
         ax.tick_params(pad=-3)
         ticks = [-2, -1, 0, 1, 2]
         ax.set_xticks(ticks)
         ax.set_yticks(ticks)
         ax.set_zticks(ticks)
-        ax.set_xlabel(r'Beam Direction $\rightarrow$', labelpad=-2)
+        ax.set_xlabel(r"Beam Direction $\rightarrow$", labelpad=-2)
         if ang_cor[1].parity in (POSITIVE, NEGATIVE):
-            ax.set_ylabel(r' $\leftarrow$ Polarization Plane $\rightarrow$', labelpad=-8)
+            ax.set_ylabel(
+                r" $\leftarrow$ Polarization Plane $\rightarrow$", labelpad=-2
+            )
         plt.savefig(ang_cor[0])
