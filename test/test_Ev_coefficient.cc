@@ -31,13 +31,13 @@ int main(){
 	// Note that in Ref. \cite AjzenbergSelove1960 [Eq. (85a)], this sign is part of the E_v 
 	// coefficients, while it is factored out in Ref. \cite FaggHanna1959 [Eq. (I-8)].
 	AlphavCoefficient alphav_coef(4, 4, 6, 7, 3);
-	EvCoefficient ev_coef;
+	EvCoefficient ev_coef(4, electric, 4, magnetic, 6, 7, 3);
 	const double epsilon = 1e-4;
 
 	double ev_coef_num{0.};
 
 	// Eq. (88b) in \cite AjzenbergSelove1960
-	ev_coef_num = ev_coef(4, electric, 4, magnetic, 6, 7, 3, 0.);
+	ev_coef_num = ev_coef(0.);
 	test_numerical_equality<double>(ev_coef_num, 0.07143, epsilon);
 	
 	// The primary transition is an electric transition.
@@ -54,7 +54,8 @@ int main(){
 	test_numerical_equality<double>(ev_coef_num, alphav_coef(0.), epsilon);
 
 	// Eq. (89b) in \cite AjzenbergSelove1960
-	ev_coef_num = ev_coef(4, magnetic, 2, electric, 4, 3, 3, 1.);
+	EvCoefficient ev_coef_2(4, magnetic, 2, electric, 4, 3, 3);
+	ev_coef_num = ev_coef_2(1.);
 	test_numerical_equality<double>(ev_coef_num, 0.20000 - 0.25820, epsilon);
 
 	AlphavCoefficient alphav_coef_2(4, 2, 4, 3, 3);

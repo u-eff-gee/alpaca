@@ -267,7 +267,7 @@ protected:
 	 * \return \f$A_\nu (1) A_\nu (2)\f$ (\f$n=3\f$) or \f$A_\nu (1) U_\nu (2) ... A_\nu (n)\f$ (\f$n>3\f$) for \f$ \nu \in \lbrace 0, ..., \nu_\mathrm{max} \rbrace,~ \nu~\mathrm{even} \f$ sorted by increasing values
 	 *  of \f$\nu\f$ in a std::vector.
 	 */
-	vector<double> calculate_expansion_coefficients() const;
+	vector<double> calculate_expansion_coefficients();
 	
 	/**
 	 * \brief Calculate products of \f$A_\nu\f$ coefficients for the dir-dir correlation.
@@ -277,7 +277,7 @@ protected:
 	 * \return \f$A_\nu (1) A_\nu (n)\f$ for \f$ \nu \in \lbrace 0, ..., \nu_\mathrm{max} \rbrace,~ \nu~\mathrm{even} \f$ sorted by increasing values
 	 *  of \f$\nu\f$ in a std::vector.
 	 */
-	vector<double> calculate_expansion_coefficients_Av() const;
+	vector<double> calculate_expansion_coefficients_Av();
 
 	/**
 	 * \brief Calculate the normalization factor for the angular correlation.
@@ -299,7 +299,8 @@ protected:
 	 */
 	double calculate_normalization_factor() const;
 
-	const AvCoefficient av_coef; /**< Instance of the AvCoefficient class */
+	vector<AvCoefficient> av_coefficients_excitation; /**< Vector of AvCoefficient objects for the excitation */
+	vector<AvCoefficient> av_coefficients_decay; /**< Vector of AvCoefficient objects for the decays */
 	const UvCoefficient uv_coef; /**< Instance of the UvCoefficient class */
 	vector<double> expansion_coefficients; /**< Vector to store expansion coefficients */
 

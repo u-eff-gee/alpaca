@@ -17,15 +17,33 @@
     Copyright (C) 2021 Udo Friman-Gayer
 */
 
+#include <sstream>
+
+using std::stringstream;
+
 #include "AvCoefficient.hh"
 
-AvCoefficient::AvCoefficient():
-f_coef(FCoefficient())
-{}
+AvCoefficient::AvCoefficient(const int two_nu, const int two_L, const int two_Lp, const int two_jn, const int two_j):
+two_nu(two_nu), two_L(two_L), two_Lp(two_Lp), two_jn(two_jn), two_j(two_j), f_coef(FCoefficient())
+{
+    constant_coefficient = f_coef(two_nu, two_L, two_L, two_jn, two_j);
+    linear_coefficient = 2.*f_coef(two_nu, two_L, two_Lp, two_jn, two_j);
+    quadratic_coefficient = f_coef(two_nu, two_Lp, two_Lp, two_jn, two_j);
+}
 
-double AvCoefficient::operator()(const int two_nu, const int two_L, const int two_Lp, const int two_jn, const int two_j, const double delta) const {
+double AvCoefficient::operator()(const double delta) const {
 	
-	return f_coef(two_nu, two_L, two_L, two_jn, two_j)
-		+ 2.*delta*f_coef(two_nu, two_L, two_Lp, two_jn, two_j)
-		+ delta*delta*f_coef(two_nu, two_Lp, two_Lp, two_jn, two_j);
+	return constant_coefficient + delta*linear_coefficient + delta*delta*quadratic_coefficient;
+}
+
+string AvCoefficient::string_representation() const {
+
+    stringstream str_rep;
+
+    str_rep << constant_coefficient 
+        << linear_coefficient << " \\times \\delta"
+        << quadratic_coefficient << " \\times \\delta^2";
+
+    return str_rep.str();
+
 }

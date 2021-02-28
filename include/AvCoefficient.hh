@@ -20,6 +20,7 @@
 #pragma once
 
 #include "FCoefficient.hh"
+#include "StringRepresentable.hh"
 
 /**
  * \brief Class for an \f$A_\nu\f$ coefficient.
@@ -260,16 +261,13 @@
  * in \cite Kneissl1996}.
  */
 
-class AvCoefficient{
+class AvCoefficient : public StringRepresentable{
 public:
-	AvCoefficient();	
-
 	/**
-	 * \brief Return value of a specific \f$A_\nu\f$ coefficient.
+	 * \brief Constructor
 	 * 
 	 * The order of arguments is the same as for the F coefficients for all that \f$A_\nu\f$
 	 * and F have in common.
-	 * The multipole mixing ratio was added as the last parameter.
 	 *
 	 * \param two_nu \f$2 \nu\f$
 	 * \param two_L Primary multipolarity \f$2 L\f$
@@ -278,12 +276,30 @@ public:
 	 * 	of a transition 
 	 * \param two_j Angular momentum quantum number \f$2 j\f$ of the intermediate state
 	 * 	of a transition 
+	 */
+	AvCoefficient(const int two_nu, const int two_L, const int two_Lp, const int two_jn, const int two_j);	
+
+	/**
+	 * \brief Return value of a specific \f$A_\nu\f$ coefficient.
+	 * 
 	 * \param delta Multipole mixing ratio \f$\delta\f$
 	 *
 	 * \return \f$A_\nu \left( L, L^\prime, j_n, j, \delta_n \right)\f$
 	 */
-	double operator()(const int two_nu, const int two_L, const int two_Lp, const int two_jn, const int two_j, const double delta) const;
+	double operator()(const double delta) const;
+
+	string string_representation() const;
 
 protected:
+	const int two_nu;
+	const int two_L;
+	const int two_Lp;
+	const int two_jn;
+	const int two_j;
+
 	const FCoefficient f_coef; /**< Instance of the F coefficient class */
+
+	double constant_coefficient;
+	double linear_coefficient;
+	double quadratic_coefficient;
 };

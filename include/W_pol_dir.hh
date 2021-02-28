@@ -186,8 +186,8 @@ protected:
  	 */
 	vector<double> calculate_expansion_coefficients_alphav_Av();
 
-	const AvCoefficient av_coef; /**< Instance of the AvCoefficient class */
-	vector<AlphavCoefficient> alphav_coefficients; /**< Instance of the AlphavCoefficient class */
+	vector<AvCoefficient> av_coefficients; /**< Vector of AvCoefficient objects */
+	vector<AlphavCoefficient> alphav_coefficients; /**< Vector of AlphavCoefficient objects */
 	vector<double> expansion_coefficients; /**< Vector to store expansion coefficients */
 	const W_dir_dir w_dir_dir; /**< Instance of the W_dir_dir class */
 

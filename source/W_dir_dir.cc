@@ -28,7 +28,7 @@ using std::min;
 using std::max;
 
 W_dir_dir::W_dir_dir(const State &ini_sta, const vector<pair<Transition, State>> cas_ste):
-W_gamma_gamma(ini_sta, cas_ste), av_coef(AvCoefficient()), uv_coef(UvCoefficient())
+W_gamma_gamma(ini_sta, cas_ste), uv_coef(UvCoefficient())
 {
 	two_nu_max = calculate_two_nu_max();
 	nu_max = two_nu_max/2;
@@ -97,7 +97,7 @@ int W_dir_dir::calculate_two_nu_max_Uv() const {
 
 }
 
-vector<double> W_dir_dir::calculate_expansion_coefficients() const {
+vector<double> W_dir_dir::calculate_expansion_coefficients(){
 
 	vector<double> exp_coef_Av = calculate_expansion_coefficients_Av();
 
@@ -115,21 +115,26 @@ vector<double> W_dir_dir::calculate_expansion_coefficients() const {
 	return exp_coef_Av;
 }
 
-vector<double> W_dir_dir::calculate_expansion_coefficients_Av() const {
+vector<double> W_dir_dir::calculate_expansion_coefficients_Av(){
 
 	vector<double> exp_coef;
 	
 	for(int two_nu = 0; two_nu <= two_nu_max; two_nu += 4){
-		exp_coef.push_back(
-			av_coef(two_nu, 
+		av_coefficients_excitation.push_back(
+			AvCoefficient(two_nu, 
 				cascade_steps[0].first.two_L, cascade_steps[0].first.two_Lp,
-				initial_state.two_J, cascade_steps[0].second.two_J, 
-				cascade_steps[0].first.delta
+				initial_state.two_J, cascade_steps[0].second.two_J
 			)
-			*av_coef(two_nu,
+		);
+		av_coefficients_decay.push_back(
+			AvCoefficient(two_nu,
 				cascade_steps[n_cascade_steps-1].first.two_L, cascade_steps[n_cascade_steps-1].first.two_Lp,
-				cascade_steps[n_cascade_steps-1].second.two_J, cascade_steps[n_cascade_steps-2].second.two_J, 
-				cascade_steps[n_cascade_steps-1].first.delta)
+				cascade_steps[n_cascade_steps-1].second.two_J, cascade_steps[n_cascade_steps-2].second.two_J
+			)
+		);
+		exp_coef.push_back(
+			av_coefficients_excitation[two_nu/4](cascade_steps[0].first.delta)
+			*av_coefficients_decay[two_nu/4](cascade_steps[n_cascade_steps-1].first.delta)
 		);
 	}
 

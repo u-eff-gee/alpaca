@@ -20,6 +20,7 @@
 #pragma once
 
 #include "FCoefficient.hh"
+#include "StringRepresentable.hh"
 #include "Transition.hh"
 
 /**
@@ -56,11 +57,9 @@
 
 class EvCoefficient{
 public:
-	EvCoefficient();	
-
 	/**
-	 * \brief Return value of a specific \f$E_\nu\f$ coefficient.
-	 *
+	 * \brief Constructor
+	 * 
 	 * \param two_nu \f$2 \nu\f$
 	 * \param em Primary electromagnetic character \f$\sigma_{L_n}\f$
 	 * \param two_L Primary multipolarity \f$2 L\f$
@@ -70,13 +69,31 @@ public:
 	 * 	of a transition 
 	 * \param two_j Angular momentum quantum number \f$2 j\f$ of the intermediate state
 	 * 	of a transition 
+	 */
+	EvCoefficient(const int two_nu, const EMCharacter em, const int two_L, const EMCharacter emp, const int two_Lp, const int two_jn, const int two_j);	
+
+	/**
+	 * \brief Return value of a specific \f$E_\nu\f$ coefficient.
+	 *
 	 * \param delta Multipole mixing ratio \f$\delta\f$
 	 *
 	 * \return \f$E_\nu \left( L, L^\prime, j_n, j, \delta_n \right)\f$
 	 */
-	double operator()(const int two_nu, const EMCharacter em, const int two_L, const EMCharacter emp, const int two_Lp, const int two_jn, const int two_j, const double delta) const;
+	double operator()(const double delta) const;
+
+	string string_representation() const;
 
 protected:
+	const int two_nu;
+	const EMCharacter em;
+	const int two_L;
+	const EMCharacter emp;
+	const int two_Lp;
+	const int two_jn;
+	const int two_j;
+	const int sign_sigma_L_n;
+	const int sign_sigma_Lp_n;
+
 	const FCoefficient f_coef; /**< Instance of the F coefficient class */
 
 };

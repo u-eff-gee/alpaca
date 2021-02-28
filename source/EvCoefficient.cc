@@ -21,14 +21,11 @@
 
 #include "EvCoefficient.hh"
 
-EvCoefficient::EvCoefficient():
-f_coef(FCoefficient())
+EvCoefficient::EvCoefficient(const int two_nu, const EMCharacter em, const int two_L, const EMCharacter emp, const int two_Lp, const int two_jn, const int two_j):
+two_nu(two_nu), em(em), two_L(two_L), emp(emp), two_Lp(two_Lp), two_jn(two_jn), two_j(two_j), sign_sigma_L_n((em == magnetic) ? -1 : 1), sign_sigma_Lp_n((emp == magnetic) ? -1 : 1), f_coef(FCoefficient())
 {}
 
-double EvCoefficient::operator()(const int two_nu, const EMCharacter em, const int two_L, const EMCharacter emp, const int two_Lp, const int two_jn, const int two_j, const double delta) const {
-	
-    const int sign_sigma_L_n = (em == magnetic) ? -1 : 1;
-	const int sign_sigma_Lp_n = (emp == magnetic) ? -1 : 1;
+double EvCoefficient::operator()(const double delta) const {
 
     const int nu = two_nu/2;
     const double nu_times_nu_plus_one = nu*(nu+1);
