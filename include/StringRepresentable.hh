@@ -17,6 +17,8 @@
     Copyright (C) 2021 Udo Friman-Gayer
 */
 
+#pragma once
+
 #include <string>
 
 using std::string;
