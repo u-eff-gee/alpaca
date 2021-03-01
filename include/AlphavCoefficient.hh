@@ -73,7 +73,7 @@ public:
 	 */
 	double operator()(const double delta) const;
 
-	string string_representation() const;
+	string string_representation(vector<string> variable_names = {}) const;
 
 protected:
 	const int two_nu;
@@ -83,7 +83,7 @@ protected:
 	const int two_j;
 
 	const FCoefficient constant_f_coefficient, linear_f_coefficient, quadratic_f_coefficient;
-	const KappaCoefficient kappa_coef; /**< Instance of the \f$\kappa_\nu\f$ coefficient class */
+	const KappaCoefficient constant_kappa_coefficient, linear_kappa_coefficient, quadratic_kappa_coefficient;
 
 	double constant_coefficient;
 	double linear_coefficient;

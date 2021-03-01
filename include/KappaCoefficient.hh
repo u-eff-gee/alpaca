@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "StringRepresentable.hh"
+
 /**
  * \brief Class for a polarization coefficient
  * 
@@ -87,21 +89,31 @@
  * In the present implementation, it was decided to throw an exception when \f$\kappa_{\nu < 2}\f$
  * is requested.
  */
-class KappaCoefficient{
+class KappaCoefficient : public StringRepresentable{
 public:
     /**
-     * \brief Return value of a specific polarization coefficent
+     * \brief Constructor, value of a specific polarization coefficent
+     * 
+     * \f$\kappa_\nu \left( L, L^\prime \right) \f$, in particular 
+     * \f$\kappa_\nu = 0\f$ if the triangle inequality between \f$L\f$, \f$L^\prime\f$, and
+     * \f$\nu\f$ is not fulfilled.
      * 
      * \param two_nu \f$2 \nu\f$
      * \param two_L \f$2 L\f$
      * \param two_Lp \f$2 L^\prime \f$
      * 
-     * \return \f$\kappa_\nu \left( L, L^\prime \right) \f$, in particular 
-     * \f$\kappa_\nu = 0\f$ if the triangle inequality between \f$L\f$, \f$L^\prime\f$, and
-     * \f$\nu\f$ is not fulfilled.
-     * 
      * \exception std::invalid_argument If \f$\nu < 2\f$, i.e. \f$2\nu < 4\f$
      */
-	double operator()(const int two_nu, const int two_L, const double two_Lp) const;
+	KappaCoefficient(const int two_nu, const int two_L, const int two_Lp);
 
+    double get_value() const { return value; };
+
+    string string_representation([[maybe_unused]] const vector<string> variable_names) const;
+
+protected:
+    const int two_nu;
+    const int two_L;
+    const int two_Lp;
+
+    double value;
 };

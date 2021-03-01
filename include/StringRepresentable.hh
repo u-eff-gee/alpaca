@@ -23,6 +23,10 @@
 
 using std::string;
 
+#include <vector>
+
+using std::vector;
+
 /**'
  * \brief Abstract class for string-representable expressions
  */
@@ -32,7 +36,9 @@ public:
     /**
      * \brief Return string representation of expression.
      * 
+     * \param variable_names Names for the variables of a function (default: {} i.e. use default names).
+     * 
      * \return String representation.
      */
-    virtual string string_representation() const = 0;
+    virtual string string_representation(vector<string> variable_names = {}) const = 0;
 };

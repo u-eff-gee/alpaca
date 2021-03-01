@@ -17,6 +17,11 @@
     Copyright (C) 2021 Udo Friman-Gayer
 */
 
+#include <memory>
+
+using std::make_unique;
+using std::unique_ptr;
+
 #include <stdexcept>
 
 #include "KappaCoefficient.hh"
@@ -53,21 +58,19 @@ vector<KappaCoefficientLiteratureValue> kappa_coefficient_values {
 
 int main(){
 
-	KappaCoefficient kappa_coef;
+	unique_ptr<KappaCoefficient> kappa_coef;
 	const double epsilon = 1e-7;
 
-	double kappa_coef_num{0.};
-
 	for(auto k : kappa_coefficient_values){
-		kappa_coef_num = kappa_coef(k.two_nu, k.two_L, k.two_Lp);
+		kappa_coef = make_unique<KappaCoefficient>(k.two_nu, k.two_L, k.two_Lp);
 		// Test whether the numerical value is correct within the given digits of the 
 		// literature data.
-		test_numerical_equality<double>(kappa_coef_num, k.value, epsilon);
+		test_numerical_equality<double>(kappa_coef->get_value(), k.value, epsilon);
 	}
 
 	[[maybe_unused]] bool error_thrown{false};
 	try{
-		kappa_coef(0, 2, 2);
+		kappa_coef = make_unique<KappaCoefficient>(0, 2, 2);
 	} catch(const std::invalid_argument &e){
 		error_thrown = true;
 	}
