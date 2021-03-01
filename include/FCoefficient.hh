@@ -113,15 +113,17 @@
  * Ref. \cite FerentzRosenzweig1955 is replaced by \f$\nu\f$.
  */
 
-class FCoefficient{
+#include "StringRepresentable.hh"
+
+class FCoefficient : public StringRepresentable{
 public:
 
 	/**
-	 * \brief Return value of a specific F coefficient.
+	 * \brief Constructor, value of a specific F coefficient.
 	 *
 	 * The order of arguments is the same as in Eq. (1) in Ref. \cite FerentzRosenzweig1955.
 	 * The parameter \f$\nu\f$ was assumed to be the first one.
-	 * All parameters of this function correspond to their actual values multiplied by two, 
+	 * All parameters of this constructor correspond to their actual values multiplied by two, 
 	 * to be able to work with integer numbers.
 	 * This is in accordance with the definition of the Wigner symbols in GSL \cite Galassi2009.
 	 *
@@ -136,7 +138,7 @@ public:
 	 *
 	 * \return \f$F_\nu(L, L^\prime, j_1, j)\f$
 	 */
-	double operator()(const int two_nu, const int two_L, const int two_Lp, const int two_j1, const int two_j) const;
+	FCoefficient(const int two_nu, const int two_L, const int two_Lp, const int two_j1, const int two_j);
 	
 	/**
 	 * \brief Check whether given F coefficient is nonzero.
@@ -154,7 +156,11 @@ public:
 	 *
 	 * \return \f$F_\nu(L, L^\prime, j_1, j) != 0\f$
 	 */
-	bool is_nonzero(const int two_nu, const int two_L, const int two_Lp, const int two_j1, const int two_j);
+	static bool is_nonzero(const int two_nu, const int two_L, const int two_Lp, const int two_j1, const int two_j);
+
+	double get_value() const { return value; }
+
+	string string_representation() const;
 
 protected:
 	/**
@@ -176,7 +182,7 @@ protected:
 	 * 		\end{array}
 	 *	\right) != 0\f]
 	 */
-	bool cg_is_nonzero(const int two_j1, const int two_j2, const int two_J, const int two_m1, const int two_m2, const int two_M) const;
+	static bool cg_is_nonzero(const int two_j1, const int two_j2, const int two_J, const int two_m1, const int two_m2, const int two_M);
 
 	/**
 	 * \brief Check whether given Racah coefficient is nonzero.
@@ -197,7 +203,7 @@ protected:
 	 * 		\end{array}
 	 *	\right\rbrace != 0\f]
 	 */
-	bool racah_is_nonzero(const int two_j1, const int two_j2, const int two_j3, const int two_J1, const int two_J2, const int two_J3) const;
+	static bool racah_is_nonzero(const int two_j1, const int two_j2, const int two_j3, const int two_J1, const int two_J2, const int two_J3);
 
 	/**
 	 * \brief Check whether the sum of three integers is an even number
@@ -209,5 +215,12 @@ protected:
 	 * \return \f$\left( 2 j_1 + 2 j_2 + 2 j_3 \right) \% 2 == 0\f$, 
 	 * which is equivalent to '\f$\left( j_1 + j_2 + j_3 \right) \in \mathcal{Z} \f$' (where \f$\mathcal{Z}\f$ is the set of integer numbers)
 	 */
-	bool sum_is_even(const int two_j1, const int two_j2, const int two_j3) const { return ((two_j1 + two_j2 + two_j3) % 2 == 0); };
+	static bool sum_is_even(const int two_j1, const int two_j2, const int two_j3){ return ((two_j1 + two_j2 + two_j3) % 2 == 0); };
+
+	const int two_nu;
+	const int two_L;
+	const int two_Lp;
+	const int two_j1;
+	const int two_j;
+	double value;
 };

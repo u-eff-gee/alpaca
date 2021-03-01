@@ -82,7 +82,7 @@ protected:
 	const int two_jn;
 	const int two_j;
 
-	const FCoefficient f_coef; /**< Instance of the F coefficient class */
+	const FCoefficient constant_f_coefficient, linear_f_coefficient, quadratic_f_coefficient;
 	const KappaCoefficient kappa_coef; /**< Instance of the \f$\kappa_\nu\f$ coefficient class */
 
 	double constant_coefficient;

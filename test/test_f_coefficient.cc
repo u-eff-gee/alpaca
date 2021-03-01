@@ -17,6 +17,11 @@
     Copyright (C) 2021 Udo Friman-Gayer
 */
 
+#include <memory>
+
+using std::make_unique;
+using std::unique_ptr;
+
 #include "FCoefficient.hh"
 #include "FCoefficientLiteratureValue.hh"
 #include "TestUtilities.hh"
@@ -60,18 +65,16 @@ vector<FCoefficientLiteratureValue> f_coefficient_values {
 
 int main(){
 
-	FCoefficient f_coef;
+	unique_ptr<FCoefficient> f_coef;
 	const double epsilon = 1e-7;
 
-	double f_coef_num{0.};
-
 	for(auto f : f_coefficient_values){
-		f_coef_num = f_coef(f.two_nu, f.two_L, f.two_Lp, f.two_jp, f.two_j);
+		f_coef = make_unique<FCoefficient>(f.two_nu, f.two_L, f.two_Lp, f.two_jp, f.two_j);
 		// Test whether the numerical value is correct within the given digits of the 
 		// literature data.
-		test_numerical_equality<double>(f_coef_num, f.value, epsilon);
+		test_numerical_equality<double>(f_coef->get_value(), f.value, epsilon);
 		// Check whether the prediction that a given F coefficient vanishes is correct.
-		assert(f_coef.is_nonzero(f.two_nu, f.two_L, f.two_Lp, f.two_jp, f.two_j) == (f_coef_num != 0.));
+		assert(FCoefficient::is_nonzero(f.two_nu, f.two_L, f.two_Lp, f.two_jp, f.two_j) == (f_coef->get_value() != 0.));
 	}
 
 }

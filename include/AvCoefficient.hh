@@ -297,9 +297,7 @@ protected:
 	const int two_jn;
 	const int two_j;
 
-	const FCoefficient f_coef; /**< Instance of the F coefficient class */
+	const FCoefficient constant_f_coefficient, linear_f_coefficient, quadratic_f_coefficient;
 
-	double constant_coefficient;
-	double linear_coefficient;
-	double quadratic_coefficient;
+	double constant_coefficient, linear_coefficient, quadratic_coefficient;
 };

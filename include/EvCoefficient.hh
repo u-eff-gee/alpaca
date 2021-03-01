@@ -94,6 +94,6 @@ protected:
 	const int sign_sigma_L_n;
 	const int sign_sigma_Lp_n;
 
-	const FCoefficient f_coef; /**< Instance of the F coefficient class */
+	const FCoefficient constant_f_coefficient, linear_f_coefficient, quadratic_f_coefficient;
 
 };

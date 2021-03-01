@@ -22,7 +22,8 @@
 #include "EvCoefficient.hh"
 
 EvCoefficient::EvCoefficient(const int two_nu, const EMCharacter em, const int two_L, const EMCharacter emp, const int two_Lp, const int two_jn, const int two_j):
-two_nu(two_nu), em(em), two_L(two_L), emp(emp), two_Lp(two_Lp), two_jn(two_jn), two_j(two_j), sign_sigma_L_n((em == magnetic) ? -1 : 1), sign_sigma_Lp_n((emp == magnetic) ? -1 : 1), f_coef(FCoefficient())
+two_nu(two_nu), em(em), two_L(two_L), emp(emp), two_Lp(two_Lp), two_jn(two_jn), two_j(two_j), sign_sigma_L_n((em == magnetic) ? -1 : 1), sign_sigma_Lp_n((emp == magnetic) ? -1 : 1), constant_f_coefficient(two_nu, two_L, two_L, two_jn, two_j), linear_f_coefficient(two_nu, two_L, two_Lp, two_jn, two_j),
+quadratic_f_coefficient(two_nu, two_Lp, two_Lp, two_jn, two_j)
 {}
 
 double EvCoefficient::operator()(const double delta) const {
@@ -35,8 +36,8 @@ double EvCoefficient::operator()(const double delta) const {
     const double two_Lp_times_Lp_plus_one = 2*Lp*(Lp+1);
 
     return (
-        sign_sigma_L_n*f_coef(two_nu, two_L, two_L, two_jn, two_j)*(nu_times_nu_plus_one*two_L_times_L_plus_one)/(nu_times_nu_plus_one - two_L_times_L_plus_one)
-        + 2.*delta*sign_sigma_Lp_n*f_coef(two_nu, two_L, two_Lp, two_jn, two_j)*(Lp - L)*(Lp + L + 1)
-        + delta*delta*sign_sigma_Lp_n*f_coef(two_nu, two_Lp, two_Lp, two_jn, two_j)*(nu_times_nu_plus_one*two_Lp_times_Lp_plus_one)/(nu_times_nu_plus_one - two_Lp_times_Lp_plus_one)
+        sign_sigma_L_n*constant_f_coefficient.get_value()*(nu_times_nu_plus_one*two_L_times_L_plus_one)/(nu_times_nu_plus_one - two_L_times_L_plus_one)
+        + 2.*delta*sign_sigma_Lp_n*linear_f_coefficient.get_value()*(Lp - L)*(Lp + L + 1)
+        + delta*delta*sign_sigma_Lp_n*quadratic_f_coefficient.get_value()*(nu_times_nu_plus_one*two_Lp_times_Lp_plus_one)/(nu_times_nu_plus_one - two_Lp_times_Lp_plus_one)
     )*gsl_sf_fact(nu-2)/gsl_sf_fact(nu+2);
 }

@@ -24,11 +24,11 @@ using std::stringstream;
 #include "AvCoefficient.hh"
 
 AvCoefficient::AvCoefficient(const int two_nu, const int two_L, const int two_Lp, const int two_jn, const int two_j):
-two_nu(two_nu), two_L(two_L), two_Lp(two_Lp), two_jn(two_jn), two_j(two_j), f_coef(FCoefficient())
+two_nu(two_nu), two_L(two_L), two_Lp(two_Lp), two_jn(two_jn), two_j(two_j), constant_f_coefficient(two_nu, two_L, two_L, two_jn, two_j), linear_f_coefficient(two_nu, two_L, two_Lp, two_jn, two_j), quadratic_f_coefficient(two_nu, two_Lp, two_Lp, two_jn, two_j)
 {
-    constant_coefficient = f_coef(two_nu, two_L, two_L, two_jn, two_j);
-    linear_coefficient = 2.*f_coef(two_nu, two_L, two_Lp, two_jn, two_j);
-    quadratic_coefficient = f_coef(two_nu, two_Lp, two_Lp, two_jn, two_j);
+    constant_coefficient = constant_f_coefficient.get_value();
+    linear_coefficient = 2.*linear_f_coefficient.get_value();
+    quadratic_coefficient = quadratic_f_coefficient.get_value();
 }
 
 double AvCoefficient::operator()(const double delta) const {

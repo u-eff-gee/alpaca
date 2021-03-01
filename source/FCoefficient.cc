@@ -18,33 +18,47 @@
 */
 
 #include <cmath>
+
+#include <string>
+
+using std::to_string;
+
 #include <gsl/gsl_sf.h>
 
 #include "FCoefficient.hh"
 #include "TestUtilities.hh"
 
-double FCoefficient::operator()(const int two_nu, const int two_L, const int two_Lp, const int two_j1, const int two_j) const {
+FCoefficient::FCoefficient(const int two_nu, const int two_L, const int two_Lp, const int two_j1, const int two_j):
+	two_nu(two_nu), two_L(two_L), two_Lp(two_Lp), two_j1(two_j1), two_j(two_j), value(0.){
+
 	double wigner3j{
 		gsl_sf_coupling_3j(
 			two_L, two_Lp, two_nu,
 			2, -2, 0)
 	};
 
+	double wigner6j;
+
 	// Shortcut to avoid further calculations.
-	if(wigner3j == 0.) return 0.;
+	if(wigner3j == 0.)
+	{
+		value = 0.;
+	} else {
 
-	double wigner6j{
-		gsl_sf_coupling_6j(
-			two_j, two_j, two_nu,
-			two_Lp, two_L, two_j1)
-	};
+		wigner6j = gsl_sf_coupling_6j(
+				two_j, two_j, two_nu,
+				two_Lp, two_L, two_j1);
 
-	// Another shortcut
-	if(wigner6j == 0.) return 0.;
+		// Another shortcut
+		if(wigner6j == 0.){
+			value =  0.;
+		} else {
 
-	return 
-		pow(-1, (two_j1 + two_j)/2 - 1)
-		*sqrt((two_L + 1)*(two_Lp + 1)*(two_j + 1)*(two_nu + 1))*wigner3j*wigner6j;
+			value = pow(-1, (two_j1 + two_j)/2 - 1)
+			*sqrt((two_L + 1)*(two_Lp + 1)*(two_j + 1)*(two_nu + 1))*wigner3j*wigner6j;
+
+		}
+	}
 }
 
 bool FCoefficient::is_nonzero(const int two_nu, const int two_L, const int two_Lp, const int two_j1, const int two_j){
@@ -62,7 +76,7 @@ bool FCoefficient::is_nonzero(const int two_nu, const int two_L, const int two_L
 	return false;
 }
 
-bool FCoefficient::cg_is_nonzero(const int two_j1, const int two_j2, const int two_J, const int two_m1, const int two_m2, const int two_M) const {
+bool FCoefficient::cg_is_nonzero(const int two_j1, const int two_j2, const int two_J, const int two_m1, const int two_m2, const int two_M){
 
 	// Maximum projection of angular momentum.
 	if(
@@ -83,7 +97,7 @@ bool FCoefficient::cg_is_nonzero(const int two_j1, const int two_j2, const int t
 	return true;
 }
 
-bool FCoefficient::racah_is_nonzero(const int two_j1, const int two_j2, const int two_j3, const int two_J1, const int two_J2, const int two_J3) const {
+bool FCoefficient::racah_is_nonzero(const int two_j1, const int two_j2, const int two_j3, const int two_J1, const int two_J2, const int two_J3){
 
 	if(
 		   !sum_is_even(two_j1, two_j2, two_j3)
@@ -98,4 +112,8 @@ bool FCoefficient::racah_is_nonzero(const int two_j1, const int two_j2, const in
 		return false;
 
 	return true;
+}
+
+string FCoefficient::string_representation() const {
+	return "F_";
 }
