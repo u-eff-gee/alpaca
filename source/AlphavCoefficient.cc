@@ -41,12 +41,24 @@ double AlphavCoefficient::operator()(const double delta) const {
 
 string AlphavCoefficient::string_representation(vector<string> variable_names) const {
 
-    stringstream str_rep;
+    string multipole_mixing_ratio_variable = variable_names.size() ? variable_names[0] : "\\delta";
 
-    str_rep << constant_coefficient 
-        << linear_coefficient << " \\times \\delta"
-        << quadratic_coefficient << " \\times \\delta^2";
-
-    return str_rep.str();
+    return "- "
+        + constant_kappa_coefficient.string_representation()
+        + " \\times "
+        + constant_f_coefficient.string_representation() 
+        + " + 2 \\times " 
+        + linear_kappa_coefficient.string_representation() 
+        + " \\times "
+        + linear_f_coefficient.string_representation() 
+        + " \\times "
+        + multipole_mixing_ratio_variable
+        + " + "
+        + quadratic_kappa_coefficient.string_representation() 
+        + " \\time "
+        + quadratic_f_coefficient.string_representation() 
+        + " \\times "
+        + multipole_mixing_ratio_variable
+        + "^2";
 
 }

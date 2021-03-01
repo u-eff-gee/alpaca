@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "StringRepresentable.hh"
+
 /**
  * \brief Class for a \f$U_\nu\f$ coefficient
  * 
@@ -189,7 +191,7 @@
  *          + \delta_{n-1}^2 F_\nu \left( L_{n-1}^\prime, L_{n-1}^\prime, j_n, j_{n-1} \right).
  * \f]
  */
-class UvCoefficient{
+class UvCoefficient : public StringRepresentable {
 public:
 
     /**
@@ -229,6 +231,8 @@ public:
     UvCoefficient(const unsigned int two_nu, const int two_j, const int two_L, const int two_Lp, const double delta, const int two_jp);
 
     double get_value() const { return value; };
+
+    string string_representation(const vector<string> variable_names = {}) const;
 
 protected:
 

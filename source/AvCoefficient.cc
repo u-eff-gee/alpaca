@@ -17,10 +17,6 @@
     Copyright (C) 2021 Udo Friman-Gayer
 */
 
-#include <sstream>
-
-using std::stringstream;
-
 #include "AvCoefficient.hh"
 
 AvCoefficient::AvCoefficient(const int two_nu, const int two_L, const int two_Lp, const int two_jn, const int two_j):
@@ -36,14 +32,20 @@ double AvCoefficient::operator()(const double delta) const {
 	return constant_coefficient + delta*linear_coefficient + delta*delta*quadratic_coefficient;
 }
 
-string AvCoefficient::string_representation() const {
+string AvCoefficient::string_representation(vector<string> variable_names) const {
 
-    stringstream str_rep;
+    string multipole_mixing_ratio_variable = variable_names.size() ? variable_names[0] : "\\delta";
 
-    str_rep << constant_coefficient 
-        << linear_coefficient << " \\times \\delta"
-        << quadratic_coefficient << " \\times \\delta^2";
-
-    return str_rep.str();
+    return constant_f_coefficient.string_representation() 
+        + " + "
+        + "2 \\times " 
+        + linear_f_coefficient.string_representation() 
+        + " \\times "
+        + multipole_mixing_ratio_variable
+        + " + "
+        + quadratic_f_coefficient.string_representation() 
+        + " \\times "
+        + multipole_mixing_ratio_variable
+        + "^2";
 
 }

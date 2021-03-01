@@ -107,3 +107,7 @@ vector<double> W_pol_dir::calculate_expansion_coefficients_alphav_Av() {
 
 	return exp_coef;
 }
+
+string W_pol_dir::string_representation(const vector<string> variable_names) const {
+	return "";
+}

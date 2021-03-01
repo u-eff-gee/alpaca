@@ -181,5 +181,32 @@ double W_dir_dir::calculate_normalization_factor() const {
 }
 
 string W_dir_dir::string_representation(const vector<string> variable_names) const {
-	return "";
+
+	string str_rep;
+	string polar_angle_variable = variable_names.size() ? variable_names[0] : "\\theta";
+	string azimuthal_angle_variable = variable_names.size() ? variable_names[1] : "\\varphi";
+	vector<string> delta_variables;
+	for(size_t i = 0; i < n_cascade_steps; ++i){
+		if(variable_names.size()){
+			delta_variables.push_back(variable_names[2+i]);
+		} else {
+			delta_variables.push_back("\\delta" + to_string(i+1));
+		}
+	}
+
+	for(int i = 0; i <= nu_max/2; ++i){
+		str_rep += av_coefficients_excitation[i].string_representation({delta_variables[0]})
+			+ " \\times ";
+		for(int j = 0; j < uv_coefficients[i].size(); ++j){
+			str_rep += uv_coefficients[i][j].string_representation({delta_variables[1+j]});
+		}
+		str_rep += av_coefficients_decay[i].string_representation({delta_variables[delta_variables.size()-1]})
+		+ "P_{"
+		+ to_string(2*i)
+		+ "} \\left\\[ \\cos \\left("
+		+ polar_angle_variable
+		+ "\\right) \\right\\]";
+	}
+
+	return str_rep;
 }

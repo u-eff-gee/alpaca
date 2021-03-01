@@ -40,5 +40,5 @@ public:
      * 
      * \return String representation.
      */
-    virtual string string_representation(vector<string> variable_names = {}) const = 0;
+    virtual string string_representation(const vector<string> variable_names = {}) const = 0;
 };

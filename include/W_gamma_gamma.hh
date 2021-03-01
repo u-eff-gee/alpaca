@@ -28,6 +28,7 @@ using std::vector;
 using std::pair;
 
 #include "State.hh"
+#include "StringRepresentable.hh"
 #include "Transition.hh"
 
 /**
@@ -40,7 +41,7 @@ using std::pair;
  * The angular correlation is a function of two variables, the polar angle \f$\theta\f$ and
  * the azimuthal angle \f$\varphi\f$ in spherical coordinates.
  */
-class W_gamma_gamma{
+class W_gamma_gamma : public StringRepresentable{
 
 public:
 	/**
@@ -110,6 +111,8 @@ public:
 	vector<pair<Transition, State>> get_cascade_steps() const {
 		return cascade_steps;
 	}
+
+	virtual string string_representation(const vector<string> variable_names = {}) const override = 0;
 
 protected:
     State initial_state; /**< Initial state */

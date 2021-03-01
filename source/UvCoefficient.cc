@@ -18,6 +18,11 @@
 */
 
 #include <cmath>
+
+#include <string>
+
+using std::to_string;
+
 #include <gsl/gsl_sf.h>
 
 #include "UvCoefficient.hh"
@@ -64,4 +69,24 @@ double UvCoefficient::phase_norm_6j_symbol(const int two_nu, const int two_j, co
     *gsl_sf_coupling_6j(
         two_j, two_nu, two_j,
         two_jp, two_L, two_jp);
+}
+
+string UvCoefficient::string_representation(const vector<string> variable_names) const {
+
+    string delta_variable = variable_names.size() ? variable_names[0] : "\\delta";
+
+    return "U_" 
+        + to_string(two_nu/2)
+        + "\\left("
+        + to_string(two_j/2)
+        + ","
+        + to_string(two_L/2)
+        + ","
+        + to_string(two_Lp/2)
+        + ","
+        + delta_variable
+        + ","
+        + to_string(two_jp/2)
+        + ","
+        + "\\right)";
 }

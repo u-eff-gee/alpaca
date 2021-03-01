@@ -160,7 +160,7 @@ public:
 
 	double get_value() const { return value; }
 
-	string string_representation() const;
+	string string_representation([[maybe_unused]] vector<string> variable_names = {}) const;
 
 protected:
 	/**
