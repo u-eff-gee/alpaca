@@ -89,4 +89,7 @@ if(BUILD_TESTS)
 
     add_executable(test_sphere_rejection_sampler test_sphere_rejection_sampler.cc)
     target_link_libraries(test_sphere_rejection_sampler sphereRejectionSampler w_dir_dir)
+
+    add_executable(test_string_representation test_string_representation.cc)
+    target_link_libraries(test_string_representation w_dir_dir)
 endif(BUILD_TESTS)
