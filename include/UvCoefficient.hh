@@ -193,7 +193,7 @@ class UvCoefficient{
 public:
 
     /**
-     * \brief Return \f$U_\nu\f$ coefficient for a pure transition.
+     * \brief Constructor, \f$U_\nu\f$ coefficient for a pure transition.
      * 
      * The order of arguments is meant to resemble the notation
      * 
@@ -201,17 +201,17 @@ public:
      *      j_m \left( L_{m+1} \right) j_{m+1}.
      * \f]
      * 
+     * The multipole mixing ratio is set to zero when this constructor is used.
+     * 
      * \param two_nu \f$2 \nu\f$
      * \param two_j \f$2 j_m\f$
      * \param two_L \f$2 L_{m+1}\f$
      * \param two_jp \f$2 j_{m+1}\f$
-     * 
-     * \return \f$U_\nu \left( m \right)\f$
      */
-    double operator()(const unsigned int two_nu, const int two_j, const int two_L, const int two_jp) const;
+    UvCoefficient(const unsigned int two_nu, const int two_j, const int two_L, const int two_jp);
 
     /**
-     * \brief Return \f$U_\nu\f$ coefficient for a mixed transition.
+     * \brief Constructor, \f$U_\nu\f$ coefficient for a mixed transition.
      * 
      * The order of arguments is meant to resemble the notation
      * 
@@ -225,8 +225,21 @@ public:
      * \param two_Lp \f$2 L_{m+1}^\prime\f$
      * \param delta \f$\delta_m\f$
      * \param two_jp \f$2 j_{m+1}\f$
-     * 
-     * \return \f$U_\nu \left( m \right)\f$
      */
-    double operator()(const unsigned int two_nu, const int two_j, const int two_L, const int two_Lp, const double delta, const int two_jp) const;
+    UvCoefficient(const unsigned int two_nu, const int two_j, const int two_L, const int two_Lp, const double delta, const int two_jp);
+
+    double get_value() const { return value; };
+
+protected:
+
+    double phase_norm_6j_symbol(const int two_nu, const int two_j, const int two_L, const int two_jp) const;
+
+    const int two_nu;
+    const int two_j;
+    const int two_L;
+    const int two_Lp;
+    const double delta;
+    const int two_jp;
+
+    double value;
 };

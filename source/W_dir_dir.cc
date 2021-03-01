@@ -28,7 +28,7 @@ using std::min;
 using std::max;
 
 W_dir_dir::W_dir_dir(const State &ini_sta, const vector<pair<Transition, State>> cas_ste):
-W_gamma_gamma(ini_sta, cas_ste), uv_coef(UvCoefficient())
+W_gamma_gamma(ini_sta, cas_ste)
 {
 	two_nu_max = calculate_two_nu_max();
 	nu_max = two_nu_max/2;
@@ -141,22 +141,24 @@ vector<double> W_dir_dir::calculate_expansion_coefficients_Av(){
 	return exp_coef;
 }
 
-vector<double> W_dir_dir::calculate_expansion_coefficients_Uv() const {
+vector<double> W_dir_dir::calculate_expansion_coefficients_Uv(){
 	
 	vector<double> exp_coef;
 	double uv_coef_product = 1.;
 
 	for(int two_nu = 0; two_nu <= two_nu_max; two_nu += 4){
-		
+		uv_coefficients.push_back(vector<UvCoefficient>());
 		for(size_t i = 1; i < n_cascade_steps - 1; ++i){
-			uv_coef_product = uv_coef_product
-				*uv_coef(two_nu,
+			uv_coefficients[two_nu/4].push_back(
+				UvCoefficient(two_nu,
 					cascade_steps[i-1].second.two_J,
 					cascade_steps[i].first.two_L,
 					cascade_steps[i].first.two_Lp,
 					cascade_steps[i].first.delta,
 					cascade_steps[i].second.two_J
-				);
+				)
+			);
+			uv_coef_product = uv_coef_product*uv_coefficients[two_nu/4][i-1].get_value();
 		}
 
 		exp_coef.push_back(uv_coef_product);
@@ -176,4 +178,8 @@ double W_dir_dir::calculate_normalization_factor() const {
 
 	return norm_fac;
 
+}
+
+string W_dir_dir::string_representation(const vector<string> variable_names) const {
+	return "";
 }

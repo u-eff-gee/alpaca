@@ -17,6 +17,11 @@
     Copyright (C) 2021 Udo Friman-Gayer
 */
 
+#include <memory>
+
+using std::make_unique;
+using std::unique_ptr;
+
 #include "UvCoefficient.hh"
 #include "TestUtilities.hh"
 
@@ -26,17 +31,19 @@ int main(){
     // [Eqs. (66) - (68)] of Ref. \cite AjzenbergSelove1960, which gives the values of two
     // coefficients explicitly.
 
-	UvCoefficient uv_coef;
+	unique_ptr<UvCoefficient> uv_coef;
 	const double epsilon = 1e-4;
 
     // Test the coefficient \f$U_2\f$
+    uv_coef = make_unique<UvCoefficient>(4, 8, 2, 6);
 	test_numerical_equality<double>(
-        uv_coef(4, 8, 2, 6), 
+        uv_coef->get_value(), 
         0.90469, epsilon);
 
     // Test the coefficient \f$U_4\f$
+    uv_coef = make_unique<UvCoefficient>(8, 8, 2, 6);
 	test_numerical_equality<double>(
-        uv_coef(8, 8, 2, 6), 
+        uv_coef->get_value(), 
         0.68138, epsilon);
 
 }

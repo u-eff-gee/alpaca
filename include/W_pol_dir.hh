@@ -144,6 +144,8 @@ public:
 	 */
 	double get_upper_limit() const override;
 
+	string string_representation(const vector<string> variable_names = {}) const override;
+
 protected:
 	/**
 	 * \brief Calculate the set of expansion coefficients for the pol-dir correlation.
@@ -189,6 +191,6 @@ protected:
 	vector<AvCoefficient> av_coefficients; /**< Vector of AvCoefficient objects */
 	vector<AlphavCoefficient> alphav_coefficients; /**< Vector of AlphavCoefficient objects */
 	vector<double> expansion_coefficients; /**< Vector to store expansion coefficients */
-	const W_dir_dir w_dir_dir; /**< Instance of the W_dir_dir class */
+	W_dir_dir w_dir_dir; /**< Instance of the W_dir_dir class */
 
 };

@@ -22,8 +22,25 @@
 
 #include "UvCoefficient.hh"
 
-double UvCoefficient::operator()(const unsigned int two_nu, const int two_j, const int two_L, const int two_jp) const {
+UvCoefficient::UvCoefficient(const unsigned int two_nu, const int two_j, const int two_L, const int two_jp):
+    two_nu(two_nu), two_j(two_j), two_L(two_L), two_Lp(two_L), delta(0.), two_jp(two_jp){
 
+    value = phase_norm_6j_symbol(two_nu, two_j, two_L, two_jp);
+}
+
+UvCoefficient::UvCoefficient(const unsigned int two_nu, const int two_j, const int two_L, const int two_Lp, const double delta, const int two_jp):
+    two_nu(two_nu), two_j(two_j), two_L(two_L), two_Lp(two_Lp), delta(delta), two_jp(two_jp){
+
+    value = phase_norm_6j_symbol(two_nu, two_j, two_L, two_jp);
+
+    if(delta != 0.){
+        value += delta*delta*phase_norm_6j_symbol(two_nu, two_j, two_Lp, two_jp);
+    }
+
+}
+
+double UvCoefficient::phase_norm_6j_symbol(const int two_nu, const int two_j, const int two_L, const int two_jp) const {
+    
     // Definition of Fagg and Hanna \cite FaggHanna1959 [Eq. (I-1') and the expression below that one].
     // Causes some tests to fail.
     //
@@ -47,15 +64,4 @@ double UvCoefficient::operator()(const unsigned int two_nu, const int two_j, con
     *gsl_sf_coupling_6j(
         two_j, two_nu, two_j,
         two_jp, two_L, two_jp);
-}
-
-double UvCoefficient::operator()(const unsigned int two_nu, const int two_j, const int two_L, const int two_Lp, const double delta, const int two_jp) const {
-
-    if(delta != 0.){
-        return (*this)(two_nu, two_j, two_L, two_jp) 
-            + delta*delta*(*this)(two_nu, two_j, two_Lp, two_jp);
-    }
-
-    return (*this)(two_nu, two_j, two_L, two_jp);
-
 }

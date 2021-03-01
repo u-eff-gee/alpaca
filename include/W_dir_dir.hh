@@ -201,7 +201,9 @@ public:
 	 * \return \f$U_\nu (2) ... U_\nu (n-1)\f$ for \f$ \nu \in \lbrace 0, ..., \nu_\mathrm{max} \rbrace,~ \nu~\mathrm{even} \f$ sorted by increasing values
 	 *  of \f$\nu\f$ in a std::vector.
 	 */
-	vector<double> calculate_expansion_coefficients_Uv() const;
+	vector<double> calculate_expansion_coefficients_Uv();
+
+	string string_representation(const vector<string> variable_names = {}) const override;
 
 protected:
 	/**
@@ -301,7 +303,7 @@ protected:
 
 	vector<AvCoefficient> av_coefficients_excitation; /**< Vector of AvCoefficient objects for the excitation */
 	vector<AvCoefficient> av_coefficients_decay; /**< Vector of AvCoefficient objects for the decays */
-	const UvCoefficient uv_coef; /**< Instance of the UvCoefficient class */
+	vector<vector<UvCoefficient>> uv_coefficients; /**< Vector of the UvCoefficient objects */
 	vector<double> expansion_coefficients; /**< Vector to store expansion coefficients */
 
 };
