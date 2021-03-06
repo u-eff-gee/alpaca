@@ -39,7 +39,7 @@ double AlphavCoefficient::operator()(const double delta) const {
         + delta*delta*quadratic_coefficient;
 }
 
-string AlphavCoefficient::string_representation(vector<string> variable_names) const {
+string AlphavCoefficient::string_representation(vector<string> variable_names, const unsigned int n_digits) const {
 
     string multipole_mixing_ratio_variable = variable_names.size() ? variable_names[0] : "\\delta";
 

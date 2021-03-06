@@ -114,7 +114,7 @@ bool FCoefficient::racah_is_nonzero(const int two_j1, const int two_j2, const in
 	return true;
 }
 
-string FCoefficient::string_representation([[maybe_unused]] vector<string> variable_names) const {
+string FCoefficient::string_representation([[maybe_unused]] vector<string> variable_names, const unsigned int n_digits) const {
 	return "F_" 
 		+ to_string(two_nu/2) 
 		+ "\\left(" 

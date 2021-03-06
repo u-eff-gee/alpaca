@@ -203,7 +203,20 @@ public:
 	 */
 	vector<double> calculate_expansion_coefficients_Uv();
 
-	string string_representation(const vector<string> variable_names = {}) const override;
+	/**
+	 * \brief Return \f$U_\nu\f$ coefficients for the dir-dir correlation.
+	 * 
+	 * This function returns an \f$\nu_\mathrm{max} / 2 \times \left(n-2\right) f$ array of 
+	 * \f$U_\nu\f$ coefficient (UvCoefficient) objects as opposed to 
+	 * W_dir_dir::calculate_expansion_coefficients_Uv(), which gives a list of the products of 
+	 * the columns as a \f$\nu_\mathrm{max} / 2 \times 1\f$ array.
+	 * 
+	 * \return \f$U_\nu\f$ coefficients, sorted by \f$\nu_\mathrm{max}\f$ (first index) and 
+	 * the cascade step number (second index, runs from \f$2\f$ to \f$n-1\f$).
+	 */
+	vector<vector<UvCoefficient>> get_Uv_coefficients() const { return uv_coefficients; };
+
+	string string_representation(const vector<string> variable_names = {}, const unsigned int n_digits = 0) const override;
 
 protected:
 	/**

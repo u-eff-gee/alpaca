@@ -108,6 +108,45 @@ vector<double> W_pol_dir::calculate_expansion_coefficients_alphav_Av() {
 	return exp_coef;
 }
 
-string W_pol_dir::string_representation(const vector<string> variable_names) const {
-	return "";
+string W_pol_dir::string_representation(const vector<string> variable_names, const unsigned int n_digits) const {
+	
+	const string polar_angle_variable = variable_names.size() ? variable_names[0] : "\\theta";
+	const string azimuthal_angle_variable = variable_names.size() ? variable_names[1] : "\\varphi";
+	vector<string> delta_variables;
+	for(size_t i = 0; i < n_cascade_steps; ++i){
+		if(variable_names.size()){
+			delta_variables.push_back(variable_names[2+i]);
+		} else {
+			delta_variables.push_back("\\delta_" + to_string(i+1));
+		}
+	}
+
+	const vector<vector<UvCoefficient>> uv_coefficients = w_dir_dir.get_Uv_coefficients();
+
+	string str_rep = w_dir_dir.string_representation(variable_names, n_digits);
+	str_rep += cascade_steps[0].first.em_charp == magnetic ? " + " : " - ";
+	str_rep += "\\cos \\left( 2 " + azimuthal_angle_variable +  " \\right) \\left\\{";
+
+	for(int i = 0; i <= nu_max/2; ++i){
+		if(i > 0){
+			str_rep += " + ";
+		}
+
+		str_rep += "\\left[ " + alphav_coefficients[i].string_representation({delta_variables[0]}, n_digits) + " \\right] \\times ";
+		if(n_cascade_steps > 2){
+			for(size_t j = 0; j < uv_coefficients[i].size(); ++j){
+				str_rep += uv_coefficients[i][j].string_representation({delta_variables[1+j]}, n_digits)
+					+ " \\times ";
+			}
+		}
+		str_rep += "\\left[" + alphav_coefficients[i].string_representation({delta_variables[delta_variables.size()-1]}, n_digits)
+		+ "\\right] \\times P_{"
+		+ to_string(2*i)
+		+ "}^{\\left( 2 \\right)} \\left[ \\cos \\left("
+		+ polar_angle_variable
+		+ "\\right) \\right]";
+	}
+	str_rep += " \\right \\}";
+
+	return str_rep;
 }

@@ -42,6 +42,6 @@ double EvCoefficient::operator()(const double delta) const {
     )*gsl_sf_fact(nu-2)/gsl_sf_fact(nu+2);
 }
 
-string EvCoefficient::string_representation(vector<string> variable_names) const {
+string EvCoefficient::string_representation(vector<string> variable_names, const unsigned int n_digits) const {
     return "E";
 }

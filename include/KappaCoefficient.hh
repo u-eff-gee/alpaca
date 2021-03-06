@@ -108,7 +108,7 @@ public:
 
     double get_value() const { return value; };
 
-    string string_representation([[maybe_unused]] const vector<string> variable_names = {}) const;
+    string string_representation([[maybe_unused]] const vector<string> variable_names = {}, const unsigned int n_digits = 0) const;
 
 protected:
     const int two_nu;

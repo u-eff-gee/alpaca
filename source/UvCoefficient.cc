@@ -71,7 +71,7 @@ double UvCoefficient::phase_norm_6j_symbol(const int two_nu, const int two_j, co
         two_jp, two_L, two_jp);
 }
 
-string UvCoefficient::string_representation(const vector<string> variable_names) const {
+string UvCoefficient::string_representation(const vector<string> variable_names, const unsigned int n_digits) const {
 
     string delta_variable = variable_names.size() ? variable_names[0] : "\\delta";
 

@@ -144,7 +144,7 @@ public:
 	 */
 	double get_upper_limit() const override;
 
-	string string_representation(const vector<string> variable_names = {}) const override;
+	string string_representation(const vector<string> variable_names = {}, const unsigned int n_digits = 0) const override;
 
 protected:
 	/**

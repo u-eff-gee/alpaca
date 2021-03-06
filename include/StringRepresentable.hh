@@ -36,9 +36,15 @@ public:
     /**
      * \brief Return string representation of expression.
      * 
+     * This function has an argument n_digits that indicates whether coefficients should be 
+     * displayed as variables or evaluated numerically.
+     * The numerical expressions will be formatted using std::scientific and std::setw(n_digits).
+     * 
      * \param variable_names Names for the variables of a function (default: {} i.e. use default names).
+     * \param n_digits Determines whether the expression should be evaluated numerically,
+     * (n_digits > 0). If yes, indicates how many digits should be displayed (default: 0).
      * 
      * \return String representation.
      */
-    virtual string string_representation(const vector<string> variable_names = {}) const = 0;
+    virtual string string_representation(const vector<string> variable_names = {}, const unsigned int n_digits = 0) const = 0;
 };
