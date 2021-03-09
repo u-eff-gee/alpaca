@@ -91,7 +91,7 @@ class Transition:
         Multipole mixing ratio
     """
 
-    def __init__(self, em, t_L, emp, t_Lp, de):
+    def __init__(self, em, t_L, emp, t_Lp, de=0.):
         """Constructor
 
         Parameters
@@ -105,7 +105,7 @@ class Transition:
         t_Lp: int
             Two times the secondary multipolarity.
         de: float
-            Multipole mixing ratio
+            Multipole mixing ratio (default: 0, i.e. primary EM character dominates)
         """
 
         ## Primary EM character.
