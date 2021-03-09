@@ -91,5 +91,6 @@ if(BUILD_TESTS)
     target_link_libraries(test_sphere_rejection_sampler sphereRejectionSampler w_dir_dir)
 
     add_executable(test_string_representation test_string_representation.cc)
-    target_link_libraries(test_string_representation w_dir_dir)
+    target_link_libraries(test_string_representation w_dir_dir w_pol_dir)
+    add_test(test_string_representation test_string_representation)
 endif(BUILD_TESTS)

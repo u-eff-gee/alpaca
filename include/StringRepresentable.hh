@@ -19,6 +19,14 @@
 
 #pragma once
 
+#include <iomanip>
+
+using std::setprecision;
+
+#include <sstream>
+
+using std::stringstream;
+
 #include <string>
 
 using std::string;
@@ -38,7 +46,7 @@ public:
      * 
      * This function has an argument n_digits that indicates whether coefficients should be 
      * displayed as variables or evaluated numerically.
-     * The numerical expressions will be formatted using std::scientific and std::setw(n_digits).
+     * The numerical expressions will be formatted using std::setprecision(n_digits).
      * 
      * \param variable_names Names for the variables of a function (default: {} i.e. use default names).
      * \param n_digits Determines whether the expression should be evaluated numerically,
@@ -46,5 +54,16 @@ public:
      * 
      * \return String representation.
      */
-    virtual string string_representation(const vector<string> variable_names = {}, const unsigned int n_digits = 0) const = 0;
+    virtual string string_representation(const unsigned int n_digits = 0, const vector<string> variable_names = {}) const = 0;
+
+protected:
+    string float_string_representation(const unsigned int n_digits, const double number) const {
+		stringstream str_rep;
+        if(number < 0.){
+		    str_rep << "\\left( " << std::setprecision(n_digits) << number << " \\right) ";
+        } else {
+            str_rep << std::setprecision(n_digits) << number;
+        }
+		return str_rep.str();
+    };
 };

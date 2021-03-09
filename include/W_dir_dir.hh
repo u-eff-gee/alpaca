@@ -216,7 +216,7 @@ public:
 	 */
 	vector<vector<UvCoefficient>> get_Uv_coefficients() const { return uv_coefficients; };
 
-	string string_representation(const vector<string> variable_names = {}, const unsigned int n_digits = 0) const override;
+	string string_representation(const unsigned int n_digits = 0, const vector<string> variable_names = {}) const override;
 
 protected:
 	/**

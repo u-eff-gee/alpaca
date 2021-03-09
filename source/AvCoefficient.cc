@@ -32,18 +32,18 @@ double AvCoefficient::operator()(const double delta) const {
 	return constant_coefficient + delta*linear_coefficient + delta*delta*quadratic_coefficient;
 }
 
-string AvCoefficient::string_representation(vector<string> variable_names, const unsigned int n_digits) const {
+string AvCoefficient::string_representation(const unsigned int n_digits, const vector<string> variable_names) const {
 
     string multipole_mixing_ratio_variable = variable_names.size() ? variable_names[0] : "\\delta";
 
-    return constant_f_coefficient.string_representation() 
+    return constant_f_coefficient.string_representation(n_digits, {}) 
         + " + "
         + "2 \\times " 
-        + linear_f_coefficient.string_representation() 
+        + linear_f_coefficient.string_representation(n_digits, {}) 
         + " \\times "
         + multipole_mixing_ratio_variable
         + " + "
-        + quadratic_f_coefficient.string_representation() 
+        + quadratic_f_coefficient.string_representation(n_digits, {}) 
         + " \\times "
         + multipole_mixing_ratio_variable
         + "^2";

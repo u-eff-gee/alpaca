@@ -18,6 +18,7 @@
 */
 
 #include <cmath>
+
 #include <stdexcept>
 
 using std::invalid_argument;
@@ -64,13 +65,15 @@ KappaCoefficient::KappaCoefficient(const int two_nu, const int two_L, const int 
     }
 }
 
-string KappaCoefficient::string_representation([[maybe_unused]] const vector<string> variable_names, const unsigned int n_digits) const {
+string KappaCoefficient::string_representation(const unsigned int n_digits, [[maybe_unused]] vector<string> variable_names) const {
+	if(n_digits){
+		return float_string_representation(n_digits, value);
+	}
     return "\\kappa_"
         + to_string(two_nu/2)
         + " \\left("
         + to_string(two_L/2)
         + ","
         + to_string(two_Lp/2)
-        + ","
         + "\\right)";
 }

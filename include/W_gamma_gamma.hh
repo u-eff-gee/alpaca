@@ -112,7 +112,7 @@ public:
 		return cascade_steps;
 	}
 
-	virtual string string_representation(const vector<string> variable_names = {}, const unsigned int n_digits = 0) const override = 0;
+	virtual string string_representation(const unsigned int n_digits = 0, const vector<string> variable_names = {}) const override = 0;
 
 protected:
     State initial_state; /**< Initial state */

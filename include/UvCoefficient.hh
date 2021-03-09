@@ -232,7 +232,7 @@ public:
 
     double get_value() const { return value; };
 
-    string string_representation(const vector<string> variable_names = {}, const unsigned int n_digits = 0) const;
+    string string_representation(const unsigned int n_digits = 0, vector<string> variable_names = {}) const;
 
 protected:
 

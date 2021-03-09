@@ -180,7 +180,7 @@ double W_dir_dir::calculate_normalization_factor() const {
 
 }
 
-string W_dir_dir::string_representation(const vector<string> variable_names, const unsigned int n_digits) const {
+string W_dir_dir::string_representation(const unsigned int n_digits, vector<string> variable_names) const {
 
 	const string polar_angle_variable = variable_names.size() ? variable_names[0] : "\\theta";
 	const string azimuthal_angle_variable = variable_names.size() ? variable_names[1] : "\\varphi";
@@ -199,16 +199,16 @@ string W_dir_dir::string_representation(const vector<string> variable_names, con
 		if(i > 0){
 			str_rep += " + ";
 		}
-		str_rep += "\\left[ " + av_coefficients_excitation[i].string_representation({delta_variables[0]}, n_digits)
-			+ " \\right] \\times ";
+		str_rep += "\\\\ \\left[ " + av_coefficients_excitation[i].string_representation(n_digits, {delta_variables[0]})
+			+ " \\right] \\\\ \\times ";
 		if(n_cascade_steps > 2){
 			for(size_t j = 0; j < uv_coefficients[i].size(); ++j){
-				str_rep += uv_coefficients[i][j].string_representation({delta_variables[1+j]}, n_digits)
-					+ " \\times ";
+				str_rep += uv_coefficients[i][j].string_representation(n_digits, {delta_variables[1+j]})
+					+ "\\times ";
 			}
 		}
-		str_rep += "\\left[" + av_coefficients_decay[i].string_representation({delta_variables[delta_variables.size()-1]}, n_digits)
-		+ "\\right] \\times P_{"
+		str_rep += "\\left[" + av_coefficients_decay[i].string_representation(n_digits, {delta_variables[delta_variables.size()-1]})
+		+ "\\right] \\\\ \\times P_{"
 		+ to_string(2*i)
 		+ "} \\left[ \\cos \\left("
 		+ polar_angle_variable

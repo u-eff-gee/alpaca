@@ -288,7 +288,7 @@ public:
 	 */
 	double operator()(const double delta) const;
 
-	string string_representation(vector<string> variable_names = {}, const unsigned int n_digits = 0) const;
+	string string_representation(const unsigned int n_digits = 0, const vector<string> variable_names = {}) const;
 
 protected:
 	const int two_nu;
