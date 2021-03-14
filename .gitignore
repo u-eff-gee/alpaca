@@ -1,2 +1,5 @@
 # build directory
 build
+
+# Output of code editor
+*.json
