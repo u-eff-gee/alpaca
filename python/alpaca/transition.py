@@ -91,7 +91,7 @@ class Transition:
         Multipole mixing ratio
     """
 
-    def __init__(self, em, t_L, emp, t_Lp, de=0.):
+    def __init__(self, em, t_L, emp, t_Lp, de=0.0):
         """Constructor
 
         Parameters

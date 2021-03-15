@@ -143,3 +143,54 @@ def test_io():
 
     assert np.isclose(ang_cor(0.5 * np.pi, 0.0, [0.5 * np.pi, 0.0, 0.0]), 0.0)
     assert np.isclose(ang_cor(0.5 * np.pi, 0.5 * np.pi, [0.5 * np.pi, 0.0, 0.0]), 1.5)
+
+    # Test delta as argument to __call__() method of angular_correlation
+    ang_cor = AngularCorrelation(
+        State(2, POSITIVE),
+        [
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, -0.3), State(2, NEGATIVE)],
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.3), State(2, POSITIVE)],
+        ],
+    )
+
+    assert np.isclose(ang_cor(0.3, 0.3), ang_cor(0.3, 0.3, None, -0.3, 0.3))
+
+    ang_cor_2 = AngularCorrelation(
+        State(2, POSITIVE),
+        [
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, -0.3), State(2, NEGATIVE)],
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, POSITIVE)],
+        ],
+    )
+
+    with pytest.warns(
+        UserWarning, match=r"\(1\) is smaller than the number of cascade steps \(2\)"
+    ):
+        assert np.isclose(ang_cor_2(0.3, 0.3), ang_cor(0.3, 0.3, None, -0.3))
+
+    assert ang_cor.delta[0] == -0.3
+    assert ang_cor.delta[1] == 0.0
+
+    ang_cor_2 = AngularCorrelation(
+        State(2, POSITIVE),
+        [
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.3), State(2, NEGATIVE)],
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, -0.4), State(2, POSITIVE)],
+        ],
+    )
+
+    with pytest.warns(
+        UserWarning, match=r"\(3\) is larger than the number of cascade steps \(2\)"
+    ):
+        np.isclose(ang_cor_2(0.3, 0.3), ang_cor(0.3, 0.3, None, 0.3, -0.4, 0.0))
+
+    assert ang_cor.delta[0] == 0.3
+    assert ang_cor.delta[1] == -0.4
+
+    # Calling angular_correlation with delta as an argument has the side effect that a new
+    # AngularCorrelation object is created in the C++ code which will have the new mixing ratios
+    # as members.
+    # This is demonstrated here:
+    # Above, ang_cor was created with multipole mixing ratios -0.3 and 0.3, but the last call
+    # was with mixing ratios 0.3 and -0.4, so it matches ang_cor_2 now.
+    np.isclose(ang_cor_2(0.3, 0.3), ang_cor(0.3, 0.3))

@@ -16,6 +16,7 @@
 # Copyright (C) 2021 Udo Friman-Gayer
 
 from ctypes import byref, cdll, c_double, c_int, c_short, c_size_t, c_void_p, POINTER
+import warnings
 
 import numpy as np
 
@@ -224,7 +225,7 @@ class AngularCorrelation:
 
         self.initial_state = initial_state
         self.angular_correlation = None
-        n_cas_ste = len(cascade_steps)
+        self.n_cas_ste = len(cascade_steps)
 
         if isinstance(cascade_steps[0], State):
             two_J = [cas_ste.two_J for cas_ste in cascade_steps]
@@ -234,15 +235,15 @@ class AngularCorrelation:
             par.insert(0, initial_state.parity)
             par = (c_short * len(par))(*par)
             self.angular_correlation = libangular_correlation.create_angular_correlation_with_transition_inference(
-                n_cas_ste, two_J, par
+                self.n_cas_ste, two_J, par
             )
 
-            em_char = (c_short * n_cas_ste)()
+            em_char = (c_short * self.n_cas_ste)()
             libangular_correlation.get_em_char(self.angular_correlation, em_char)
-            two_L = (c_int * n_cas_ste)()
+            two_L = (c_int * self.n_cas_ste)()
             libangular_correlation.get_two_L(self.angular_correlation, two_L)
             self.cascade_steps = []
-            for i in range(n_cas_ste):
+            for i in range(self.n_cas_ste):
                 em_charp = EM_UNKNOWN
                 if em_char[i] == MAGNETIC:
                     em_charp = ELECTRIC
@@ -255,6 +256,9 @@ class AngularCorrelation:
                         cascade_steps[i],
                     ]
                 )
+
+            two_Lp = [tL + 2 for tL in two_L]
+            delta = [0.0] * self.n_cas_ste
 
         else:
             two_J = [cas_ste[1].two_J for cas_ste in cascade_steps]
@@ -277,20 +281,49 @@ class AngularCorrelation:
 
             self.angular_correlation = (
                 libangular_correlation.create_angular_correlation(
-                    n_cas_ste, two_J, par, em_char, two_L, em_charp, two_Lp, delta
+                    self.n_cas_ste, two_J, par, em_char, two_L, em_charp, two_Lp, delta
                 )
             )
             self.cascade_steps = cascade_steps
 
-    def __call__(self, theta, phi, PhiThetaPsi=None):
+        self.two_J = two_J
+        self.par = par
+        self.em_char = em_char
+        self.two_L = two_L
+        self.em_charp = em_charp
+        self.two_Lp = two_Lp
+        self.delta = delta
+
+    def __call__(self, theta, phi, PhiThetaPsi=None, *delta):
         r"""Evaluate the angular correlation
 
-        This function can take three Euler angles as additional parameters to
+        This function accepts more parameters than the two angles in spherical coordinates:
+
+        Three Euler angles can be provided as additional parameters to
         rotate the direction of propagation and the polarization axis (if defined) of the first photon.
         The 'zxz' convention or 'x' convention is used for the order of the rotations
         \cite Weisstein2020.
-        As implied by the notation, the angles \f$\theta\f$ and \f$\varphi\f$ are still defined in
-        the original coordinate system, i.e. \f$\theta = 0\f$ is still the z axis.
+        As implied by the notation ('x' instead of 'x prime'), the angles \f$\theta\f$ and
+        \f$\varphi\f$ are still defined in the original coordinate system, i.e. \f$\theta = 0\f$
+        is still the z axis.
+
+        A list of multipole mixing ratios can be provided to call the angular correlation with
+        different values than the ones given in the constructor.
+        The function will display a warning if the number of mixing ratios does not match the
+        number of cascade steps.
+        If the list is shorter than the number of cascade steps, the missing deltas will be
+        assumed to be zero.
+        If the list is longer than the number of cascade steps, the unnecessary deltas at the
+        end of the list will be ignored.
+        Note that using the variable-length argument delta causes the creation of a new
+        AngularCorrelation object internally.
+        This means that the following code raises no error if delta_1 is not equal to delta_2:
+
+        ::
+            angular_correlation(theta, phi, None, delta_1)
+            assert angular_correlation(theta, phi) == angular_correlation(theta, phi, None, delta_1)
+            angular_correlation(theta, phi, None, delta_2)
+            assert angular_correlation(theta, phi) == angular_correlation(theta, phi, None, delta_2)
 
         Parameters
         ----------
@@ -300,12 +333,55 @@ class AngularCorrelation:
             Azimuthal angle in spherical coordinates in radians (\f$\varphi \in \left[ 0, 2 \pi \right]\f$). If ndarray, must have the same shape as theta.
         PhiThetaPsi: (float, float, float)
             Euler angles \f$\Phi\f$, \f$\Theta\f$, and \f$\Psi\f$ in radians (default: None, i.e. no rotation).
+        *delta: tuple of float
+            Multipole mixing ratios in the convention of Biedenharn [default: empty tuple (), i.e. use previously set mixing ratios].
 
         Returns
         -------
         float
             \f$W_{\gamma \gamma} \left( \theta, \varphi \right)\f$
         """
+
+        n_delta = len(delta)
+        if n_delta:
+            delta_values = [0.0] * self.n_cas_ste
+            if n_delta < self.n_cas_ste:
+                warnings.warn(
+                    "Number of multipole-mixing ratios ({:d}) is smaller than the number of cascade steps ({:d}). Assuming that the last {:d} transition(s) is/are pure.".format(
+                        n_delta, self.n_cas_ste, self.n_cas_ste - n_delta
+                    )
+                )
+                for i in range(n_delta):
+                    delta_values[i] = delta[i]
+
+            elif len(delta) > len(self.cascade_steps):
+                warnings.warn(
+                    "Number of multipole-mixing ratios ({:d}) is larger than the number of cascade steps ({:d}). Using only the first {:d} mixing ratios.".format(
+                        n_delta, self.n_cas_ste, n_delta
+                    )
+                )
+                delta_values = delta[: self.n_cas_ste]
+            else:
+                delta_values = [d for d in delta]
+
+            delta_values = (c_double * len(delta_values))(*delta_values)
+            self.angular_correlation = (
+                libangular_correlation.create_angular_correlation(
+                    self.n_cas_ste,
+                    self.two_J,
+                    self.par,
+                    self.em_char,
+                    self.two_L,
+                    self.em_charp,
+                    self.two_Lp,
+                    delta_values,
+                )
+            )
+            self.delta = delta_values
+
+        return self.evaluate(theta, phi, PhiThetaPsi)
+
+    def evaluate(self, theta, phi, PhiThetaPsi):
 
         theta_reshape = None
         phi_reshape = None
