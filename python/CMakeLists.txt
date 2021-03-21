@@ -20,6 +20,7 @@ configure_file(setup.cfg setup.cfg)
 configure_file(tox.ini.in tox.ini)
 
 configure_file(alpaca/analyzing_power.py alpaca/analyzing_power.py)
+configure_file(alpaca/analyzing_power_plotter.py alpaca/analyzing_power_plotter.py)
 configure_file(alpaca/angular_correlation.py alpaca/angular_correlation.py @ONLY)
 configure_file(alpaca/angular_correlation_plotter.py alpaca/angular_correlation_plotter.py)
 configure_file(alpaca/angular_correlation_table.py alpaca/angular_correlation_table.py)
@@ -34,3 +35,4 @@ configure_file(test/test_level_scheme_plotter.py test/test_level_scheme_plotter.
 configure_file(test/test_angular_correlation_plotter.py test/test_angular_correlation_plotter.py)
 configure_file(test/test_angular_correlation_table.py test/test_angular_correlation_table.py)
 configure_file(test/test_analyzing_power_pure_transitions.py test/test_analyzing_power_pure_transitions.py)
+configure_file(test/test_analyzing_power_single_mixing.py test/test_analyzing_power_single_mixing.py)
