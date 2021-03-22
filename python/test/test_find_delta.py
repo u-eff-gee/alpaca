@@ -46,3 +46,12 @@ def test_find_delta():
 
     assert len(delta_results) == 2
     assert np.isclose([delta], [delta_results[0]], atol=1e-2)
+
+    delta_results = find_delta_brute_force(ana_pow, (ana_pow_val-1e-4, ana_pow_val+1e-4), (0.0, "delta"), theta)
+
+    assert len(delta_results) == 2
+    assert np.isclose([delta], [delta_results[0]], atol=1e-2)
+
+    delta_results = find_delta_brute_force(ana_pow, (-100., 100.), (0.0, "delta"), theta)
+
+    assert len(delta_results) == 1000

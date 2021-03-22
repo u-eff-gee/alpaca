@@ -73,9 +73,13 @@ def find_delta_brute_force(
                 analyzing_power.angular_correlation.initial_state, cascade_steps
             ),
             convention=analyzing_power.convention,
-        )
+        )(theta)
 
-        if np.abs(ana_pow(theta) - analyzing_power_value) < atol:
-            delta_results.append(delta)
+        if isinstance(analyzing_power_value, (int, float)):
+            if np.abs(ana_pow - analyzing_power_value) < atol:
+                delta_results.append(delta)
+        else:
+            if analyzing_power_value[0] - atol <= ana_pow <= analyzing_power_value[1] + atol:
+                delta_results.append(delta)
 
     return delta_results
