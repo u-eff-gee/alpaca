@@ -40,6 +40,7 @@ class AnalyzingPowerPlotter:
         show_polarization=None,
         abcd=("a)", "b)", "c)", "d)"),
         analyzing_power_experimental=None,
+        markers=True,
         output_file_name=None,
     ):
         self.angular_correlation = angular_correlation
@@ -51,6 +52,7 @@ class AnalyzingPowerPlotter:
         self.show_polarization = show_polarization
         self.abcd = abcd
         self.analyzing_power_experimental = analyzing_power_experimental
+        self.markers = markers
         self.output_file_name = output_file_name
 
         self.abs_delta_max = 100.0
@@ -96,6 +98,12 @@ class AnalyzingPowerPlotter:
         self.exp_marker = "o"
         self.exp_marker_size = 6
         self.exp_result_fill_color = 'chocolate'
+
+        self.marker_color = 'crimson'
+        self.marker_size = 8
+        self.marker_negative_infinity = 'o'
+        self.marker_zero = 's'
+        self.marker_positive_infinity = '^'
 
     def evaluate(self, deltas):
         ana_pow_1 = np.zeros(len(deltas))
@@ -146,6 +154,8 @@ class AnalyzingPowerPlotter:
         arctan_delta = np.linspace(-arctan_delta_max, arctan_delta_max, n_delta)
         delta = np.tan(arctan_delta)
         ana_pow_1, ana_pow_2 = self.evaluate(delta)
+        if self.markers:
+            delta_zero_index = np.argmin(np.abs(delta))
 
         ana_pow_1_min = np.min(ana_pow_1)
         ana_pow_1_max = np.max(ana_pow_1)
@@ -245,6 +255,10 @@ class AnalyzingPowerPlotter:
                     [np.arctan(interval[1])] * 2,
                     color=self.exp_result_fill_color
                 )
+        if self.markers:
+            ax[0][0].plot(ana_pow_2[0], [-arctan_delta_max], self.marker_negative_infinity, color=self.marker_color, markersize=self.marker_size)
+            ax[0][0].plot(ana_pow_2[delta_zero_index], [0.], self.marker_zero, color=self.marker_color, markersize=self.marker_size)
+            ax[0][0].plot(ana_pow_2[-1], [arctan_delta_max], self.marker_positive_infinity, color=self.marker_color, markersize=self.marker_size)
         ax_00x = ax[0][0].twiny()
         ax_00x.set_xlabel(r"$" + self.ana_pow_2_label + r"$")
         ax_00x.set_xlim(ana_pow_2_lim)
@@ -292,6 +306,10 @@ class AnalyzingPowerPlotter:
             ax[1][0].errorbar([self.analyzing_power_experimental[1][0]], [self.analyzing_power_experimental[0][0]], xerr=[self.analyzing_power_experimental[1][1]], yerr=[self.analyzing_power_experimental[0][1]], marker=self.exp_marker, markersize=self.exp_marker_size, capsize=self.exp_cap_size, color=self.exp_color)
             ax[1][0].fill_between(ana_pow_2_lim, [self.analyzing_power_experimental[0][0] - self.analyzing_power_experimental[0][1]]*2, [self.analyzing_power_experimental[0][0] + self.analyzing_power_experimental[0][1]]*2, color=self.exp_fill_color, alpha=self.exp_alpha)
             ax[1][0].fill_betweenx(ana_pow_1_lim, [self.analyzing_power_experimental[1][0] - self.analyzing_power_experimental[1][1]]*2, [self.analyzing_power_experimental[1][0] + self.analyzing_power_experimental[1][1]]*2, color=self.exp_fill_color, alpha=self.exp_alpha)
+        if self.markers:
+            ax[1][0].plot(ana_pow_2[0], [ana_pow_1[0]], self.marker_negative_infinity, color=self.marker_color, markersize=self.marker_size)
+            ax[1][0].plot(ana_pow_2[delta_zero_index], [ana_pow_1[delta_zero_index]], self.marker_zero, color=self.marker_color, markersize=self.marker_size)
+            ax[1][0].plot(ana_pow_2[-1], [ana_pow_1[-1]], self.marker_positive_infinity, color=self.marker_color, markersize=self.marker_size)
         if self.abcd is not None:
             ax[1][0].text(
                 *self.abcd_position,
@@ -359,6 +377,10 @@ class AnalyzingPowerPlotter:
                     [np.arctan(interval[1])] * 2,
                     color=self.exp_result_fill_color,
                 )
+        if self.markers:
+            ax[1][1].plot([-arctan_delta_max], [ana_pow_1[0]], self.marker_negative_infinity, color=self.marker_color, markersize=self.marker_size)
+            ax[1][1].plot([0.], [ana_pow_1[delta_zero_index]], self.marker_zero, color=self.marker_color, markersize=self.marker_size)
+            ax[1][1].plot([arctan_delta_max], [ana_pow_1[-1]], self.marker_positive_infinity, color=self.marker_color, markersize=self.marker_size)
         if self.abcd is not None:
             ax[1][1].text(
                 *self.abcd_position,
