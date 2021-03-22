@@ -26,10 +26,6 @@ from alpaca.state import NEGATIVE, PARITY_UNKNOWN, POSITIVE, State
 
 angular_correlations = [
     ["0_1_0.pdf", State(0), [State(2), State(0)]],
-    ["0p_1p_0p.pdf", State(0, POSITIVE), [State(2, POSITIVE), State(0, POSITIVE)]],
-    ["0p_1m_0p.pdf", State(0, POSITIVE), [State(2, NEGATIVE), State(0, POSITIVE)]],
-    ["0_2_0.pdf", State(0), [State(4), State(0)]],
-    ["0_2_2.pdf", State(0), [State(4), State(4)]],
 ]
 
 

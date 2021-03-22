@@ -129,9 +129,8 @@ class AnalyzingPowerPlotter:
 
     def plot(self, n_delta=100):
         abs_delta_max = 100.0
-        arctan_delta = np.linspace(
-            np.arctan(-abs_delta_max), np.arctan(abs_delta_max), n_delta
-        )
+        arctan_delta_max = np.arctan(abs_delta_max)
+        arctan_delta = np.linspace(-arctan_delta_max, arctan_delta_max, n_delta)
         delta = np.tan(arctan_delta)
         ana_pow_1, ana_pow_2 = self.evaluate(delta)
 
