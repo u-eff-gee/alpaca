@@ -19,7 +19,12 @@ import numpy as np
 
 from alpaca.analyzing_power import AnalyzingPower
 from alpaca.angular_correlation import AngularCorrelation
-from alpaca.find_delta import find_delta_brute_force, interval_intersection
+from alpaca.find_delta import (
+    find_delta_brute_force,
+    intersection,
+    intersection_of_interval_with_list_of_intervals,
+    intersection_of_two_intervals,
+)
 from alpaca.state import POSITIVE, State
 from alpaca.transition import ELECTRIC, MAGNETIC, Transition
 
@@ -79,23 +84,56 @@ def test_find_delta():
     assert np.allclose(delta_intervals[0], [-100.0, 100.0])
 
 
-def test_interval_intersection():
+def test_intersection_of_two_intervals():
+    # Test intersection of two intervals.
     a = [0.0, 0.5]
     b = [0.6, 1.0]
-    assert len(interval_intersection(a, b)) == 0
+    assert len(intersection_of_two_intervals(a, b)) == 0
+
+    a = [0.6, 1.0]
+    b = [0.0, 0.5]
+    assert len(intersection_of_two_intervals(a, b)) == 0
 
     a = [0.0, 0.5]
     b = [0.4, 1.0]
-    assert np.allclose(interval_intersection(a, b), [0.4, 0.5])
+    assert np.allclose(intersection_of_two_intervals(a, b), [0.4, 0.5])
 
     a = [0.0, 0.5]
     b = [0.3, 0.4]
-    assert np.allclose(interval_intersection(a, b), [0.3, 0.4])
+    assert np.allclose(intersection_of_two_intervals(a, b), [0.3, 0.4])
 
     a = [0.3, 0.4]
     b = [0.2, 0.5]
-    assert np.allclose(interval_intersection(a, b), [0.3, 0.4])
+    assert np.allclose(intersection_of_two_intervals(a, b), [0.3, 0.4])
 
     a = [0.3, 0.6]
     b = [0.2, 0.5]
-    assert np.allclose(interval_intersection(a, b), [0.3, 0.5])
+    assert np.allclose(intersection_of_two_intervals(a, b), [0.3, 0.5])
+
+    assert np.allclose(intersection_of_two_intervals(a, a), a)
+
+    # Test intersection of an interval with a list of intervals.
+    b = [[0.2, 0.4], [0.5, 0.7]]
+    assert np.allclose(
+        intersection_of_interval_with_list_of_intervals(a, b), [[0.3, 0.4], [0.5, 0.6]]
+    )
+
+    b = [[0.4, 0.5], [0.7, 0.8]]
+    assert np.allclose(
+        intersection_of_interval_with_list_of_intervals(a, b), [[0.4, 0.5]]
+    )
+
+    # Test intersection of two lists of intervals.
+    a = [[0.0, 0.1], [0.3, 0.4], [0.6, 1.0]]
+    b = [[0.3, 0.5], [0.8, 0.9]]
+    assert np.allclose(intersection_of_interval_with_list_of_intervals(a[0], b), [])
+    assert np.allclose(
+        intersection_of_interval_with_list_of_intervals(a[1], b), [[0.3, 0.4]]
+    )
+    assert np.allclose(
+        intersection_of_interval_with_list_of_intervals(a[2], b), [[0.8, 0.9]]
+    )
+    assert np.allclose(intersection(a, b), [[0.3, 0.4], [0.8, 0.9]])
+    assert np.allclose(intersection(b, a), [[0.3, 0.4], [0.8, 0.9]])
+    assert np.allclose(intersection(a, a), a)
+    assert np.allclose(intersection(b, b), b)

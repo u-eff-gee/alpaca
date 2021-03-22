@@ -106,10 +106,12 @@ def find_delta_brute_force(
     return (delta_results, delta_matches)
 
 
-def interval_intersection(interval_1, interval_2):
+def intersection_of_two_intervals(interval_1, interval_2):
     intersection = []
 
-    if interval_1[0] >= interval_2[0] and interval_1[0] <= interval_2[1]:
+    if interval_1[0] > interval_2[1]:
+        return []
+    elif interval_1[0] >= interval_2[0] and interval_1[0] <= interval_2[1]:
         if interval_1[1] <= interval_2[1]:
             return [interval_1[0], interval_1[1]]
         else:
@@ -121,3 +123,28 @@ def interval_intersection(interval_1, interval_2):
             return [interval_2[0], interval_2[1]]
 
     return []
+
+
+def intersection_of_interval_with_list_of_intervals(interval_1, list_of_intervals):
+    intersections = []
+
+    for interval in list_of_intervals:
+        intersection = intersection_of_two_intervals(interval_1, interval)
+        if len(intersection) > 0:
+            intersections.append(intersection)
+
+    return intersections
+
+
+def intersection(list_of_intervals_1, list_of_intervals_2):
+    intersections = []
+
+    for interval_1 in list_of_intervals_1:
+        intersection = intersection_of_interval_with_list_of_intervals(
+            interval_1, list_of_intervals_2
+        )
+        if len(intersection) > 0:
+            for interval in intersection:
+                intersections.append(interval)
+
+    return intersections
