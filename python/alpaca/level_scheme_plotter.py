@@ -68,6 +68,7 @@ class LevelSchemePlotter:
     show_polarization: list of bool
         Determines which transition labels should indicate a polarization.
         This allows to indicate for which transition polarization information is available.
+        Default: None, i.e. for none of the transitions, polarization information is available.
     fontsize: int or float
         Font size of the figure (matplotlib's 'fontsize' option). Several other font sizes are scaled to this value.
     state_line_width: float

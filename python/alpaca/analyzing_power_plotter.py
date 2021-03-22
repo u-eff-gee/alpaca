@@ -20,6 +20,7 @@ import numpy as np
 
 from .analyzing_power import AnalyzingPower
 from .angular_correlation import AngularCorrelation
+from .find_delta import find_delta_brute_force, intersection
 from .level_scheme_plotter import LevelSchemePlotter
 from .state import State
 from .transition import Transition
@@ -36,7 +37,9 @@ class AnalyzingPowerPlotter:
         theta_2=0.25 * np.pi,
         theta_2_label=r"45^\circ",
         returns_to_initial_state=False,
+        show_polarization=None,
         abcd=("a)", "b)", "c)", "d)"),
+        analyzing_power_experimental=None,
         output_file_name=None,
     ):
         self.angular_correlation = angular_correlation
@@ -45,7 +48,9 @@ class AnalyzingPowerPlotter:
         self.theta_1 = theta_1
         self.theta_2 = theta_2
         self.returns_to_initial_state = returns_to_initial_state
+        self.show_polarization = show_polarization
         self.abcd = abcd
+        self.analyzing_power_experimental = analyzing_power_experimental
         self.output_file_name = output_file_name
 
         self.abs_delta_max = 100.0
@@ -63,8 +68,8 @@ class AnalyzingPowerPlotter:
             r"$-\pi/2$",
             r"$-\pi/4$",
             "0",
-            r"$-\pi/4$",
-            r"$-\pi/2$",
+            r"$\pi/4$",
+            r"$\pi/2$",
         )
         self.delta_label = r"\delta"
         self.level_scheme_delta_labels = []
@@ -83,6 +88,14 @@ class AnalyzingPowerPlotter:
         self.ana_pow_color = "black"
         self.abcd_position = (0.15, 0.9)
         self.abcd_fontsize = 14
+
+        self.exp_alpha = 0.7
+        self.exp_cap_size = 4
+        self.exp_color = "black"
+        self.exp_fill_color = "grey"
+        self.exp_marker = "o"
+        self.exp_marker_size = 6
+        self.exp_result_fill_color = 'chocolate'
 
     def evaluate(self, deltas):
         ana_pow_1 = np.zeros(len(deltas))
@@ -150,6 +163,35 @@ class AnalyzingPowerPlotter:
             ana_pow_2_max + 0.1 * ana_pow_2_ran,
         )
 
+        if self.analyzing_power_experimental is not None:
+            ana_pow_1_allowed_deltas = find_delta_brute_force(
+                AnalyzingPower(self.angular_correlation, convention=self.convention),
+                [
+                    self.analyzing_power_experimental[0][0]
+                    - self.analyzing_power_experimental[0][1],
+                    self.analyzing_power_experimental[0][0]
+                    + self.analyzing_power_experimental[0][1],
+                ],
+                self.delta_values,
+                self.theta_1,
+                return_intervals=True,
+            )
+            ana_pow_2_allowed_deltas = find_delta_brute_force(
+                AnalyzingPower(self.angular_correlation, convention=self.convention),
+                [
+                    self.analyzing_power_experimental[1][0]
+                    - self.analyzing_power_experimental[1][1],
+                    self.analyzing_power_experimental[1][0]
+                    + self.analyzing_power_experimental[1][1],
+                ],
+                self.delta_values,
+                self.theta_2,
+                return_intervals=True,
+            )
+            allowed_deltas = intersection(
+                ana_pow_1_allowed_deltas, ana_pow_2_allowed_deltas
+            )
+
         fig, ax = plt.subplots(2, 2, figsize=(7, 7))
         plt.subplots_adjust(wspace=0.1, hspace=0.1)
 
@@ -160,6 +202,49 @@ class AnalyzingPowerPlotter:
         ax[0][0].set_yticks(self.arctan_delta_ticks)
         ax[0][0].set_yticklabels(self.arctan_delta_tick_labels)
         ax[0][0].plot(ana_pow_2, arctan_delta, color=self.ana_pow_color)
+        if self.analyzing_power_experimental is not None:
+            ax[0][0].errorbar(
+                self.analyzing_power_experimental[1][0],
+                -arctan_delta_max,
+                xerr=self.analyzing_power_experimental[1][1],
+                marker=self.exp_marker,
+                capsize=self.exp_cap_size,
+                markersize=self.exp_marker_size,
+                color=self.exp_color,
+            )
+            ax[0][0].fill_betweenx(
+                self.arctan_delta_lim,
+                [
+                    self.analyzing_power_experimental[1][0]
+                    - self.analyzing_power_experimental[1][1],
+                    self.analyzing_power_experimental[1][0]
+                    - self.analyzing_power_experimental[1][1],
+                ],
+                [
+                    self.analyzing_power_experimental[1][0]
+                    + self.analyzing_power_experimental[1][1],
+                    self.analyzing_power_experimental[1][0]
+                    + self.analyzing_power_experimental[1][1],
+                ],
+                color=self.exp_fill_color,
+                alpha=self.exp_alpha
+            )
+
+            for interval in ana_pow_2_allowed_deltas:
+                ax[0][0].fill_between(
+                    ana_pow_2_lim,
+                    [np.arctan(interval[0])] * 2,
+                    [np.arctan(interval[1])] * 2,
+                    color=self.exp_fill_color,
+                    alpha=self.exp_alpha,
+                )
+            for interval in allowed_deltas:
+                ax[0][0].fill_between(
+                    ana_pow_2_lim,
+                    [np.arctan(interval[0])] * 2,
+                    [np.arctan(interval[1])] * 2,
+                    color=self.exp_result_fill_color
+                )
         ax_00x = ax[0][0].twiny()
         ax_00x.set_xlabel(r"$" + self.ana_pow_2_label + r"$")
         ax_00x.set_xlim(ana_pow_2_lim)
@@ -185,6 +270,7 @@ class AnalyzingPowerPlotter:
             delta_labels=self.level_scheme_delta_labels,
             fontsize=10,
             returns_to_initial_state=self.returns_to_initial_state,
+            show_polarization=self.show_polarization
         )
         level_scheme.plot(ax[0][1])
         if self.abcd is not None:
@@ -202,6 +288,10 @@ class AnalyzingPowerPlotter:
         ax[1][0].set_ylabel(r"$" + self.ana_pow_1_label + r"$")
         ax[1][0].set_ylim(ana_pow_1_lim)
         ax[1][0].plot(ana_pow_2, ana_pow_1, color=self.ana_pow_color)
+        if self.analyzing_power_experimental is not None:
+            ax[1][0].errorbar([self.analyzing_power_experimental[1][0]], [self.analyzing_power_experimental[0][0]], xerr=[self.analyzing_power_experimental[1][1]], yerr=[self.analyzing_power_experimental[0][1]], marker=self.exp_marker, markersize=self.exp_marker_size, capsize=self.exp_cap_size, color=self.exp_color)
+            ax[1][0].fill_between(ana_pow_2_lim, [self.analyzing_power_experimental[0][0] - self.analyzing_power_experimental[0][1]]*2, [self.analyzing_power_experimental[0][0] + self.analyzing_power_experimental[0][1]]*2, color=self.exp_fill_color, alpha=self.exp_alpha)
+            ax[1][0].fill_betweenx(ana_pow_1_lim, [self.analyzing_power_experimental[1][0] - self.analyzing_power_experimental[1][1]]*2, [self.analyzing_power_experimental[1][0] + self.analyzing_power_experimental[1][1]]*2, color=self.exp_fill_color, alpha=self.exp_alpha)
         if self.abcd is not None:
             ax[1][0].text(
                 *self.abcd_position,
@@ -216,6 +306,7 @@ class AnalyzingPowerPlotter:
         ax[1][1].set_xlim(self.arctan_delta_lim)
         ax[1][1].set_xticks(self.arctan_delta_ticks)
         ax[1][1].set_yticks([])
+        ax[1][1].set_ylim(ana_pow_1_lim)
         ax_11x = ax[1][1].twiny()
         ax_11x.set_xlabel(r"$" + self.delta_label + r"$")
         ax_11x.set_xlim(self.arctan_delta_lim)
@@ -226,6 +317,48 @@ class AnalyzingPowerPlotter:
         ax_11y.set_ylabel(r"$" + self.ana_pow_1_label + r"$")
         ax_11y.set_ylim(ana_pow_1_lim)
         ax[1][1].plot(arctan_delta, ana_pow_1, color=self.ana_pow_color)
+        if self.analyzing_power_experimental is not None:
+            ax[1][1].errorbar(-arctan_delta_max,
+                self.analyzing_power_experimental[0][0],
+                yerr=self.analyzing_power_experimental[0][1],
+                marker=self.exp_marker,
+                capsize=self.exp_cap_size,
+                markersize=self.exp_marker_size,
+                color=self.exp_color,
+            )
+            ax[1][1].fill_between(
+                self.arctan_delta_lim,
+                [
+                    self.analyzing_power_experimental[0][0]
+                    - self.analyzing_power_experimental[0][1],
+                    self.analyzing_power_experimental[0][0]
+                    - self.analyzing_power_experimental[0][1],
+                ],
+                [
+                    self.analyzing_power_experimental[0][0]
+                    + self.analyzing_power_experimental[0][1],
+                    self.analyzing_power_experimental[0][0]
+                    + self.analyzing_power_experimental[0][1],
+                ],
+                color=self.exp_fill_color,
+                alpha=self.exp_alpha
+            )
+
+            for interval in ana_pow_1_allowed_deltas:
+                ax[1][1].fill_betweenx(
+                    ana_pow_1_lim,
+                    [np.arctan(interval[0])] * 2,
+                    [np.arctan(interval[1])] * 2,
+                    color=self.exp_fill_color,
+                    alpha=self.exp_alpha,
+                )
+            for interval in allowed_deltas:
+                ax[1][1].fill_betweenx(
+                    ana_pow_1_lim,
+                    [np.arctan(interval[0])] * 2,
+                    [np.arctan(interval[1])] * 2,
+                    color=self.exp_result_fill_color,
+                )
         if self.abcd is not None:
             ax[1][1].text(
                 *self.abcd_position,
