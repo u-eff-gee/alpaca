@@ -19,7 +19,7 @@ import numpy as np
 
 from alpaca.analyzing_power import AnalyzingPower
 from alpaca.angular_correlation import AngularCorrelation
-from alpaca.find_delta import find_delta_brute_force
+from alpaca.find_delta import find_delta_brute_force, interval_intersection
 from alpaca.state import POSITIVE, State
 from alpaca.transition import ELECTRIC, MAGNETIC, Transition
 
@@ -77,3 +77,25 @@ def test_find_delta():
 
     assert len(delta_intervals) == 1
     assert np.allclose(delta_intervals[0], [-100.0, 100.0])
+
+
+def test_interval_intersection():
+    a = [0.0, 0.5]
+    b = [0.6, 1.0]
+    assert len(interval_intersection(a, b)) == 0
+
+    a = [0.0, 0.5]
+    b = [0.4, 1.0]
+    assert np.allclose(interval_intersection(a, b), [0.4, 0.5])
+
+    a = [0.0, 0.5]
+    b = [0.3, 0.4]
+    assert np.allclose(interval_intersection(a, b), [0.3, 0.4])
+
+    a = [0.3, 0.4]
+    b = [0.2, 0.5]
+    assert np.allclose(interval_intersection(a, b), [0.3, 0.4])
+
+    a = [0.3, 0.6]
+    b = [0.2, 0.5]
+    assert np.allclose(interval_intersection(a, b), [0.3, 0.5])
