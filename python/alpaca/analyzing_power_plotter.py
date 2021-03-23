@@ -99,7 +99,8 @@ class AnalyzingPowerPlotter:
         self.exp_fill_color = "lightgrey"
         self.exp_marker = "o"
         self.exp_marker_size = 6
-        self.exp_result_fill_color = "sandybrown"
+        self.exp_result_hatch_color = "black"
+        self.exp_result_hatch = "/"
 
         self.marker_color = "crimson"
         self.marker_size = 6
@@ -217,15 +218,6 @@ class AnalyzingPowerPlotter:
         ax[0][0].set_yticklabels(self.arctan_delta_tick_labels)
         ax[0][0].plot(ana_pow_2, arctan_delta, color=self.ana_pow_color)
         if self.analyzing_power_experimental is not None:
-            ax[0][0].errorbar(
-                self.analyzing_power_experimental[1][0],
-                -arctan_delta_max,
-                xerr=self.analyzing_power_experimental[1][1],
-                marker=self.exp_marker,
-                capsize=self.exp_cap_size,
-                markersize=self.exp_marker_size,
-                color=self.exp_color,
-            )
             ax[0][0].fill_betweenx(
                 self.arctan_delta_lim,
                 [
@@ -257,7 +249,9 @@ class AnalyzingPowerPlotter:
                     ana_pow_2_lim,
                     [np.arctan(interval[0])] * 2,
                     [np.arctan(interval[1])] * 2,
-                    color=self.exp_result_fill_color,
+                    facecolor="none",
+                    edgecolor=self.exp_result_hatch_color,
+                    hatch=self.exp_result_hatch,
                 )
         if self.markers:
             ax[0][0].plot(
@@ -429,15 +423,6 @@ class AnalyzingPowerPlotter:
         ax_11y.set_ylim(ana_pow_1_lim)
         ax[1][1].plot(arctan_delta, ana_pow_1, color=self.ana_pow_color)
         if self.analyzing_power_experimental is not None:
-            ax[1][1].errorbar(
-                -arctan_delta_max,
-                self.analyzing_power_experimental[0][0],
-                yerr=self.analyzing_power_experimental[0][1],
-                marker=self.exp_marker,
-                capsize=self.exp_cap_size,
-                markersize=self.exp_marker_size,
-                color=self.exp_color,
-            )
             ax[1][1].fill_between(
                 self.arctan_delta_lim,
                 [
@@ -469,7 +454,9 @@ class AnalyzingPowerPlotter:
                     ana_pow_1_lim,
                     [np.arctan(interval[0])] * 2,
                     [np.arctan(interval[1])] * 2,
-                    color=self.exp_result_fill_color,
+                    facecolor="none",
+                    edgecolor=self.exp_result_hatch_color,
+                    hatch=self.exp_result_hatch,
                 )
         if self.markers:
             ax[1][1].plot(
