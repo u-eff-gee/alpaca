@@ -63,6 +63,12 @@ After configuring, compile the code by typing:
 $ cmake --build .
 ```
 
+To install `alpaca` in the system, type:
+
+```
+$ cmake --install .
+```
+
 ### Optional Testing (C++)
 
 To run a self test of the C++ code, type:

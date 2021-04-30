@@ -39,3 +39,21 @@ add_subdirectory(source)
 if(BUILD_TESTS)
         add_subdirectory(test)
 endif(BUILD_TESTS)
+
+set(installable_libs angcorrRejectionSampler alphavCoefficient avCoefficient fCoefficient kappa_coefficient sphereRejectionSampler uvCoefficient w_dir_dir w_gamma_gamma w_pol_dir)
+install(TARGETS ${installable_libs}
+        DESTINATION lib
+        EXPORT ALPACA
+)
+
+set(_ALPACA_HEADERS AlphavCoefficient.hh AngCorrRejectionSampler.hh AvCoefficient.hh KappaCoefficient.hh SphereRejectionSampler.hh State.hh StringRepresentable.hh Transition.hh UvCoefficient.hh W_gamma_gamma.hh W_dir_dir.hh W_pol_dir.hh)
+set(ALPACA_HEADERS "")
+foreach(header ${_ALPACA_HEADERS})
+        list(APPEND ${ALPACA_HEADERS} "include/${header}")
+endforeach(header)
+install(FILES ${ALPACA_HEADERS} DESTINATION include)
+
+install(EXPORT ALPACA
+        FILE alpaca-config.cmake
+        DESTINATION lib/cmake/alpaca
+)
