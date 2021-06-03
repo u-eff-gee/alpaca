@@ -56,6 +56,16 @@ public:
     {}
 
 	/**
+	 * \brief Destructor
+	 * 
+	 * Virtual destructor needed to ensure that destructors of derived classes W_dir_dir and 
+	 * W_pol_dir are called whenever a W_gamma_gamma goes out of scope.
+	 * Since AngularCorrelation, the main user interface, is always in posession of a unique_ptr
+	 * to one of the derived classes, not having this destructor lead to memory leaks in the past.
+	 */
+	virtual ~W_gamma_gamma(){};
+
+	/**
 	 * \brief Call operator of the gamma-gamma angular correlation
 	 * 
 	 * Returns the value of the angular correlation at a polar angle \f$\theta\f$ and an azimuthal

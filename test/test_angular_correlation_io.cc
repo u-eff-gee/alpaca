@@ -43,7 +43,7 @@ int main(){
     // Error: First EM character not given
     try{
         AngularCorrelation ang_corr(
-            State(0, positive), 
+            State(0, positive),
             {
                 {
                     Transition(em_unknown, 2, magnetic, 4, 0.),

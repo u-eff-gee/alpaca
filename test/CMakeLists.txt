@@ -93,4 +93,8 @@ if(BUILD_TESTS)
     add_executable(test_string_representation test_string_representation.cc)
     target_link_libraries(test_string_representation w_dir_dir w_pol_dir)
     add_test(test_string_representation test_string_representation)
+
+    add_executable(test_memory_leak test_memory_leak.cc)
+    target_link_libraries(test_memory_leak angular_correlation)
+    add_test(test_memory_leak test_memory_leak)
 endif(BUILD_TESTS)
