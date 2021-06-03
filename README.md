@@ -23,7 +23,7 @@ In particular, the convention of Biedenharn for the multipole-mixing ratio is us
 
 ### Prerequisites (C++)
 
-* [CMake](https://cmake.org/)
+* [CMake](https://cmake.org/) (version >= 3.16 required for installation [2])
 * C++ compiler which supports at least the C++11 standard.
 * [GNU Scientific Library (GSL)](https://www.gnu.org/software/gsl/)
 * [doxygen](https://www.doxygen.nl/) and all its requirements for [displaying formulas](https://www.doxygen.nl/manual/formulas.html) (documentation, optional)
@@ -68,6 +68,8 @@ To install `alpaca` in the system, type:
 ```
 $ cmake --install .
 ```
+
+The installation is not required to use the C++ libraries (the location of the libraries can be passed to the compiler manually as shown below in the C++ example) or to install the python code. See also footnote [2].
 
 ### Optional Testing (C++)
 
@@ -199,5 +201,7 @@ The author would like to thank C. Iliadis for enlightening discussions about the
 ## References
 
 [1] L. C. Biedenharn, 'Angular Correlations in Nuclear Spectroscopy' in F. Ajzenberg-Selove (editor), 'Nuclear Spectroscopy', Part B, Academic Press New York and London (1960)
+
+[2] It was found that the compilation does not work with CMake versions as recent as 3.10 (default on Ubuntu 18 OS). Since the code that uses the most recent CMake features is related to the installation of the C++ libraries, it can help to comment out the last few lines in `ALPACA_DIR/CMakeLists.txt`, starting from `set(_ALPACA_HEADERS ...`. With this modification, it will not be possible to install the C++ libraries in the system's default paths. However, an installation is not required to be able to use the compiled C++ libraries or the python code.
 
 See also `ALPACA_DIR/bibliography.bib`.
