@@ -440,3 +440,62 @@ class AngularCorrelation:
         if scalar_output:
             return result[0]
         return np.reshape(np.array(result), original_shape)
+
+
+libangular_correlation.angular_correlation.restype = c_double
+libangular_correlation.angular_correlation.argtypes = [
+    c_double,  # Polar angle theta
+    c_double,  # Azimuthal angle phi
+    c_size_t,  # Number of cascade steps
+    POINTER(c_int),  # Angular momenta
+    POINTER(c_short),  # Parities
+    POINTER(c_short),  # EM characters
+    POINTER(c_int),  # Multipolarities
+    POINTER(c_short),  # Alternative EM characters
+    POINTER(c_int),  # Alternative multipolarities
+    POINTER(c_double),  # Multipole mixing ratios
+    POINTER(c_double),  # Euler angles Phi, Theta, and Psi
+]
+
+
+def angular_correlation(theta, phi, initial_state, cascade_steps, PhiThetaPsi=None):
+    n_cas_ste = len(cascade_steps)
+
+    two_J = [cas_ste[1].two_J for cas_ste in cascade_steps]
+    two_J.insert(0, initial_state.two_J)
+    two_J = (c_int * len(two_J))(*two_J)
+    par = [cas_ste[1].parity for cas_ste in cascade_steps]
+    par.insert(0, initial_state.parity)
+    par = (c_short * len(par))(*par)
+
+    em_char = [cas_ste[0].em_char for cas_ste in cascade_steps]
+    em_char = (c_short * len(em_char))(*em_char)
+    two_L = [cas_ste[0].two_L for cas_ste in cascade_steps]
+    two_L = (c_int * len(two_L))(*two_L)
+    em_charp = [cas_ste[0].em_charp for cas_ste in cascade_steps]
+    em_charp = (c_short * len(em_charp))(*em_charp)
+    two_Lp = [cas_ste[0].two_Lp for cas_ste in cascade_steps]
+    two_Lp = (c_int * len(two_Lp))(*two_Lp)
+    delta = [cas_ste[0].delta for cas_ste in cascade_steps]
+    delta = (c_double * len(delta))(*delta)
+
+    if PhiThetaPsi is None:
+        PhiThetaPsi = (0.0, 0.0, 0.0)
+    return libangular_correlation.angular_correlation(
+        theta,
+        phi,
+        n_cas_ste,
+        two_J,
+        par,
+        em_char,
+        two_L,
+        em_charp,
+        two_Lp,
+        delta,
+        (c_double * 3)(*PhiThetaPsi),
+    )
+
+
+angular_correlation = np.vectorize(
+    angular_correlation, excluded=("initial_state", "cascade_steps", "PhiThetaPsi")
+)

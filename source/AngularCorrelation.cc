@@ -240,6 +240,22 @@ bool AngularCorrelation::valid_em_character(const Parity p0, const Parity p1, co
 }
 
 extern "C" {
+    double angular_correlation(const double theta, const double phi, const size_t n_cas_ste, int* two_J, short* par, short* em_char, int* two_L, short* em_charp, int* two_Lp, double* delta, double* PhiThetaPsi){
+        State initial_state{two_J[0], (Parity) par[0]};
+        vector<pair<Transition, State>> cascade_steps;
+
+        for(size_t i = 0; i < n_cas_ste; ++i){
+            cascade_steps.push_back(
+                {
+                    Transition{(EMCharacter) em_char[i], two_L[i], (EMCharacter) em_charp[i], two_Lp[i], delta[i]},
+                    State{two_J[i+1], (Parity) par[i+1]}
+                }
+            );
+        }
+
+        return AngularCorrelation(initial_state, cascade_steps).operator()(theta, phi, {PhiThetaPsi[0], PhiThetaPsi[1], PhiThetaPsi[2]});
+    }
+
     void* create_angular_correlation(const size_t n_cas_ste, int* two_J, short* par, short* em_char, int* two_L, short* em_charp, int* two_Lp, double* delta){
 
         State initial_state{two_J[0], (Parity) par[0]};
