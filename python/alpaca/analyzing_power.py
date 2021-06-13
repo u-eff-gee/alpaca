@@ -54,15 +54,52 @@ class AnalyzingPower:
 
     This class supports both the 'KPZ' and the 'natural' convention.
 
+    The analyzing power quantifies the count-rate ratio between two detectors that form a
+    'polarimeter' in the limit where all geometric effects (target size, detector solid angle,
+    attenuation, ...) can be neglected, and the incoming photon beam has a perfect linear
+    polarization.
+    In a real experiment, the beam polarization :math:`P` and the so-called polarization
+    sensitivity :math:`Q` of the polarimeter will lead to an observed asymmetry :math:`\epsilon`
+    that is related to the analyzing power via :cite:`Kneissl1996`:
+
+    ..math:: \epsilon \left( \theta \right) = P Q A \left( \theta \right).
+
+    By rotation of the polarization axis or a superposition multiple linearly polarized photon
+    beams, the polarization can vary in the range
+
+    ..math:: P \in \left[ -1, 1\right].
+
+    The default value of the polarization is :math:`P = 1`, corresponding to an electric-field
+    vector along the :math:`x` axis only.
+    A value of :math:`P = -1` corresponds to a rotation of the :math:`P = 1` polarization plane by
+    90 degrees.
+
+    The polarization sensitivity :math:`Q` varies within the range
+
+    ..math:: Q \in \left[ 0, 1 \right],
+
+    i.e. it decreases the analyzing power.
+    It should be noted that :math:`Q` is in general different for each angular correlation.
+
+    The product :math:`PQ` can be given to this function as an additional parameter to return an
+    asymmetry instead of an analyzing power.
+
     Attributes
     ----------
     angular_correlation: AngularCorrelation object
         Angular correlation
+    PQ: float
+        Product of the photon polarization and the polarization sensitivity.
     convention: str
         'KPZ' for the convention of Kneissl, Pitz and Zilges, or 'natural' (default) for the natural convention.
+
+    Raises
+    ------
+    ValueError
+        If the absolute value of PQ is larger than 1.
     """
 
-    def __init__(self, angular_correlation, convention="natural"):
+    def __init__(self, angular_correlation, PQ=1.0, convention="natural"):
         """Initialization
 
         Define the angular correlation for which the analyzing power should be evaluated and the
@@ -76,6 +113,11 @@ class AnalyzingPower:
             'KPZ' for the convention of Kneissl, Pitz and Zilges, or 'natural' (default) for the natural convention.
         """
         self.angular_correlation = angular_correlation
+        if np.abs(PQ) > 1.0:
+            raise ValueError(
+                "The absolute value of PQ must be smaller than or equal to 1."
+            )
+        self.PQ = PQ
         self.convention = convention
 
     def __call__(self, theta):
@@ -93,4 +135,9 @@ class AnalyzingPower:
         w_para = self.angular_correlation(theta, 0.0)
         w_perp = self.angular_correlation(theta, 0.5 * np.pi)
 
-        return CONVENTION[self.convention] * (w_para - w_perp) / (w_para + w_perp)
+        return (
+            self.PQ
+            * CONVENTION[self.convention]
+            * (w_para - w_perp)
+            / (w_para + w_perp)
+        )

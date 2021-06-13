@@ -4,7 +4,7 @@ An object-oriented C++ library with python bindings for direction-direction and 
 
 ## Description
 
-The direction- and polarization vectors of different photons which are absorbed/emitted during a single internal electromagnetic transition sequence of a nucleus are correlated and depend on the angular-momentum ('spin') quantum numbers and parities of the involved quantum states.
+The direction- and polarization vectors of different photons which are absorbed/emitted during a single internal electromagnetic transition sequence of a nucleus are correlated, and depend on the angular-momentum ('spin') quantum numbers and parities of the involved quantum states.
 Since the relations are well known from the quantum theory of light, a measurement of the direction of emission or the polarization of photons with respect to some well-defined coordinate system gives a model-independent access to excited-state properties.
 
 This code implements analytical expressions for direction-direction and direction-polarization correlations between two photons in an arbitrarily long cascade.
