@@ -82,6 +82,24 @@ def test_find_delta():
     assert len(delta_intervals) == 1
     assert np.allclose(delta_intervals[0], [-100.0, 100.0])
 
+    ana_pow = AnalyzingPower(
+        AngularCorrelation(
+            State(1, POSITIVE),
+            [
+                [Transition(MAGNETIC, 2, ELECTRIC, 4, delta), State(3, POSITIVE)],
+                [Transition(MAGNETIC, 2, ELECTRIC, 4, -delta), State(1, POSITIVE)],
+            ],
+        )
+    )
+    ana_pow_val = ana_pow(theta)
+
+    delta_results, delta_matches = ana_pow.find_delta_brute_force(
+        ana_pow_val, ("delta", lambda x: -x), theta
+    )
+
+    assert len(delta_results) == 3
+    assert np.isclose([delta], [delta_results[2]], atol=1e-2)
+
 
 def test_intersection_of_two_intervals():
     # Test intersection of two intervals.

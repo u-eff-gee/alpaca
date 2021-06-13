@@ -328,13 +328,21 @@ class AnalyzingPower:
         asymmetry: float or [float, float]
             Value of the asymmetry or interval of possible values (coverage interval,
             standard deviations, ...)
-        delta_values: list of str and float
+        delta_values: list of str or float or callable
             This list indicates which of the mixing ratios in the cascade are variables
-            (arbitrary string) and which ones should be fixed to a value (float).
+            (arbitrary string), dependent on the variables (callable), or should be fixed to a 
+            value (float).
             The mixing-ratio values are given in the same order as the cascade transitions in `alpaca.AngularCorrelation`.
             Note that `alpaca.AnalyzingPower.find_delta_brute_force` can only solve for a single
             variable, i.e. putting in different strings for different transitions will not make
             this function solve a multi-parameter problem.
+            The option of giving a callable function instead of a value can be used to simulate 
+            what would happen if the wrong mixing-ratio convention had been used.
+            For example, in the Biedenharn convention, the mixing ratios for both mixing ratios
+            in an elastic two-step cascade are the same: `delta_values=["delta", "delta"]`.
+            In the Krane-Steffen-Wheeler convention, however, the second mixing ratio would have
+            a different sign.
+            To achieve this, put `delta_values=["delta", lambda x: -x]`.
         theta: float or ndarray
             Polar angle :math:`\theta` in radians (default: 90 degrees).
         n_delta: int
@@ -374,6 +382,19 @@ class AnalyzingPower:
                                 cas_ste[0].em_charp,
                                 cas_ste[0].two_Lp,
                                 delta,
+                            ),
+                            cas_ste[1],
+                        ]
+                    )
+                elif callable(delta_values[j]):
+                    cascade_steps.append(
+                        [
+                            Transition(
+                                cas_ste[0].em_char,
+                                cas_ste[0].two_L,
+                                cas_ste[0].em_charp,
+                                cas_ste[0].two_Lp,
+                                delta_values[j](delta),
                             ),
                             cas_ste[1],
                         ]
