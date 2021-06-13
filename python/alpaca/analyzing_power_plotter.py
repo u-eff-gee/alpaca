@@ -18,9 +18,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from .analyzing_power import AnalyzingPower
+from .analyzing_power import AnalyzingPower, intersection
 from .angular_correlation import AngularCorrelation
-from .find_delta import find_delta_brute_force, intersection
 from .level_scheme_plotter import LevelSchemePlotter
 from .state import State
 from .transition import Transition
@@ -143,10 +142,12 @@ class AnalyzingPowerPlotter:
                         ]
                     )
             ana_pow_1[i] = AnalyzingPower(
-                AngularCorrelation(initial_state, cascade_steps), self.convention
+                AngularCorrelation(initial_state, cascade_steps),
+                convention=self.convention,
             )(self.theta_1)
             ana_pow_2[i] = AnalyzingPower(
-                AngularCorrelation(initial_state, cascade_steps), self.convention
+                AngularCorrelation(initial_state, cascade_steps),
+                convention=self.convention,
             )(self.theta_2)
 
         return (ana_pow_1, ana_pow_2)
@@ -177,8 +178,9 @@ class AnalyzingPowerPlotter:
         )
 
         if self.analyzing_power_experimental is not None:
-            ana_pow_1_allowed_deltas = find_delta_brute_force(
-                AnalyzingPower(self.angular_correlation, convention=self.convention),
+            ana_pow_1_allowed_deltas = AnalyzingPower(
+                self.angular_correlation, convention=self.convention
+            ).find_delta_brute_force(
                 [
                     self.analyzing_power_experimental[0][0]
                     - self.analyzing_power_experimental[0][1],
@@ -189,8 +191,9 @@ class AnalyzingPowerPlotter:
                 self.theta_1,
                 return_intervals=True,
             )
-            ana_pow_2_allowed_deltas = find_delta_brute_force(
-                AnalyzingPower(self.angular_correlation, convention=self.convention),
+            ana_pow_2_allowed_deltas = AnalyzingPower(
+                self.angular_correlation, convention=self.convention
+            ).find_delta_brute_force(
                 [
                     self.analyzing_power_experimental[1][0]
                     - self.analyzing_power_experimental[1][1],

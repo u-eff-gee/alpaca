@@ -24,7 +24,6 @@ configure_file(alpaca/analyzing_power_plotter.py alpaca/analyzing_power_plotter.
 configure_file(alpaca/angular_correlation.py alpaca/angular_correlation.py @ONLY)
 configure_file(alpaca/angular_correlation_plotter.py alpaca/angular_correlation_plotter.py)
 configure_file(alpaca/angular_correlation_table.py alpaca/angular_correlation_table.py)
-configure_file(alpaca/find_delta.py alpaca/find_delta.py)
 configure_file(alpaca/level_scheme_plotter.py alpaca/level_scheme_plotter.py)
 configure_file(alpaca/__init__.py alpaca/__init__.py)
 configure_file(alpaca/state.py alpaca/state.py)

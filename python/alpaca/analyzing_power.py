@@ -17,7 +17,54 @@
 
 import numpy as np
 
+from alpaca.angular_correlation import AngularCorrelation
+from alpaca.transition import Transition
+
 CONVENTION = {"natural": 1.0, "KPZ": -1.0}
+
+
+def intersection_of_two_intervals(interval_1, interval_2):
+    intersection = []
+
+    if interval_1[0] > interval_2[1]:
+        return []
+    elif interval_1[0] >= interval_2[0] and interval_1[0] <= interval_2[1]:
+        if interval_1[1] <= interval_2[1]:
+            return [interval_1[0], interval_1[1]]
+        else:
+            return [interval_1[0], interval_2[1]]
+    elif interval_1[1] >= interval_2[0]:
+        if interval_1[1] <= interval_2[1]:
+            return [interval_2[0], interval_1[1]]
+        else:
+            return [interval_2[0], interval_2[1]]
+
+    return []
+
+
+def intersection_of_interval_with_list_of_intervals(interval_1, list_of_intervals):
+    intersections = []
+
+    for interval in list_of_intervals:
+        intersection = intersection_of_two_intervals(interval_1, interval)
+        if len(intersection) > 0:
+            intersections.append(intersection)
+
+    return intersections
+
+
+def intersection(list_of_intervals_1, list_of_intervals_2):
+    intersections = []
+
+    for interval_1 in list_of_intervals_1:
+        intersection = intersection_of_interval_with_list_of_intervals(
+            interval_1, list_of_intervals_2
+        )
+        if len(intersection) > 0:
+            for interval in intersection:
+                intersections.append(interval)
+
+    return intersections
 
 
 class AnalyzingPower:
@@ -141,3 +188,85 @@ class AnalyzingPower:
             * (w_para - w_perp)
             / (w_para + w_perp)
         )
+
+    def find_delta_brute_force(
+        self,
+        analyzing_power_value,
+        delta_values,
+        theta,
+        n_delta=int(1e3),
+        atol=1e-3,
+        abs_delta_max=100.0,
+        return_intervals=False,
+    ):
+
+        arctan_delta_max = np.arctan(abs_delta_max)
+        arctan_deltas = np.linspace(-arctan_delta_max, arctan_delta_max, n_delta)
+        deltas = np.tan(arctan_deltas)
+
+        delta_results = []
+        delta_matches = [False] * n_delta
+
+        for i, delta in enumerate(deltas):
+            cascade_steps = []
+            for j, cas_ste in enumerate(self.angular_correlation.cascade_steps):
+                if isinstance(delta_values[j], str):
+                    cascade_steps.append(
+                        [
+                            Transition(
+                                cas_ste[0].em_char,
+                                cas_ste[0].two_L,
+                                cas_ste[0].em_charp,
+                                cas_ste[0].two_Lp,
+                                delta,
+                            ),
+                            cas_ste[1],
+                        ]
+                    )
+                else:
+                    cascade_steps.append(
+                        [
+                            Transition(
+                                cas_ste[0].em_char,
+                                cas_ste[0].two_L,
+                                cas_ste[0].em_charp,
+                                cas_ste[0].two_Lp,
+                                delta_values[j],
+                            ),
+                            cas_ste[1],
+                        ]
+                    )
+            ana_pow = AnalyzingPower(
+                AngularCorrelation(
+                    self.angular_correlation.initial_state, cascade_steps
+                ),
+                convention=self.convention,
+            )(theta)
+
+            if isinstance(analyzing_power_value, (int, float)):
+                if np.abs(ana_pow - analyzing_power_value) < atol:
+                    delta_results.append(delta)
+                    delta_matches[i] = True
+            else:
+                if (
+                    analyzing_power_value[0] - atol
+                    <= ana_pow
+                    <= analyzing_power_value[1] + atol
+                ):
+                    delta_results.append(delta)
+                    delta_matches[i] = True
+
+        if return_intervals:
+            intervals = []
+            interval_start = None
+            for i, matching in enumerate(delta_matches):
+                if matching and interval_start is None:
+                    interval_start = deltas[i]
+                if not matching and interval_start is not None:
+                    intervals.append([interval_start, deltas[i]])
+                    interval_start = None
+                if i == n_delta - 1 and interval_start is not None:
+                    intervals.append([interval_start, deltas[-1]])
+            return intervals
+
+        return (delta_results, delta_matches)
