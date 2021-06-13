@@ -24,7 +24,47 @@ CONVENTION = {"natural": 1.0, "KPZ": -1.0}
 
 
 def intersection_of_two_intervals(interval_1, interval_2):
+    r"""Find the intersection of two intervals
+
+    Given two intervals :math:`\left[ a, b \right]` and :math:`\left[ c, d \right]`, this
+    function finds their intersection.
+
+    When searching for the intersection, all comparisons are made with the :math:`\leq` and
+    :math:`\geq` operators.
+    This means that if both arrays only have a single real number in common, i.e.
+    :math:`\left[ a, b \right]` and :math:`\left[ b, d \right]`, the returned intersection will
+    be :math:`\left[ b, b \right]`, and not an empty list.
+
+    The intervals are sorted before they are processed by this function, so the interval limits can
+    be unsorted.
+
+    Parameters
+    ----------
+    interval_1: list or ndarray of two float
+        First interval. May be unsorted.
+    interval_2: list or ndarray of two float
+        Second interval. May be unsorted.
+
+    Returns
+    -------
+    list of two float or empty list
+        Intersection of the two intervals as a new interval, or an empty list.
+
+    Examples
+    --------
+    >>> intersection_of_two_intervals([0.0, 1.0], [0.5, 1.5])
+    [0.5, 1.0]
+    >>> intersection_of_two_intervals([0.0, 1.0], [0.5, 0.6])
+    [0.5, 0.6]
+    >>> intersection_of_two_intervals([0.0, 1.0], [1.0, 1.5])
+    [1.0, 1.0]
+    >>> intersection_of_two_intervals([0.0, 1.0], [1.5, 2.0])
+    []
+    """
     intersection = []
+
+    interval_1 = np.sort(interval_1)
+    interval_2 = np.sort(interval_2)
 
     if interval_1[0] > interval_2[1]:
         return []
@@ -43,6 +83,29 @@ def intersection_of_two_intervals(interval_1, interval_2):
 
 
 def intersection_of_interval_with_list_of_intervals(interval_1, list_of_intervals):
+    r"""Find the intersection of an interval with a list of intervals
+
+    Given an interval :math:`\left[ a, b \right]` and a set of intervals :math:`\left\{ \left[ c, d \right], \left[ e, f \right], ... \right \}`, this functions determines the intersections of the former with all elements of the latter.
+
+    See also `alpaca.analyzing_power.intersection_of_two_intervals`.
+
+    Parameters
+    ----------
+    interval_1: list or ndarray of two float
+        First interval. May be unsorted.
+    list_of_intervals: list of lists or ndarrays of two float
+        List of intervals. The single intervals may be unsorted.
+
+    Returns
+    -------
+    list of lists of two float, or empty list
+        Intersection of the interval with the list of intervals as a new list of intervals, or an empty list.
+
+    Examples
+    --------
+    >>> intersection_of_interval_with_list_of_intervals([0.0, 1.0], [[0.0, 0.5], [0.8, 1.5]])
+    [[0.0, 0.5], [0.8, 1.0]]
+    """
     intersections = []
 
     for interval in list_of_intervals:
@@ -54,6 +117,29 @@ def intersection_of_interval_with_list_of_intervals(interval_1, list_of_interval
 
 
 def intersection(list_of_intervals_1, list_of_intervals_2):
+    r"""Find the intersections of a list of intervals with another list of intervals
+
+    Given a set of intervals :math:`\left\{ \left[ \alpha, \beta \right], \left[ \gamma, \delta \right], ... \right \}` and a set of intervals :math:`\left\{ \left[ a, b \right], \left[ c, d \right], ... \right \}`, this functions determines the intersections of all of the former intervals with all elements of the latter.
+
+    See also `alpaca.analyzing_power.intersection_of_two_intervals` and `alpaca.analyzing_power.intersection_of_interval_with_list_of_intervals`.
+
+    Parameters
+    ----------
+    list_of_intervals_1: list of lists or ndarrays of two float
+        First list of intervals. The single intervals may be unsorted.
+    list_of_intervals_2: list of lists or ndarrays of two float
+        Second list of intervals. The single intervals may be unsorted.
+
+    Returns
+    -------
+    list of lists of two float, or empty list
+        Intersection of the first list of intervals with the second list of intervals as a new list of intervals, or an empty list.
+
+    Examples
+    --------
+    >>> intersection([[0.0, 0.1], [0.3, 0.4], [0.6, 1.0]], [[0.3, 0.5], [0.8, 0.9]])
+    [[0.3, 0.4], [0.8, 0.9]]
+    """
     intersections = []
 
     for interval_1 in list_of_intervals_1:
@@ -191,15 +277,84 @@ class AnalyzingPower:
 
     def find_delta_brute_force(
         self,
-        analyzing_power_value,
+        asymmetry,
         delta_values,
-        theta,
+        theta=0.5 * np.pi,
         n_delta=int(1e3),
         atol=1e-3,
         abs_delta_max=100.0,
         return_intervals=False,
     ):
+        r"""Find ranges of multipole mixing ratios that are consistent with a given asymmetry
 
+        A common task in nuclear spectroscopy is to determine the multipole mixing ratio of a
+        transition from an observed angular correlation, which is manifested in a count-rate
+        asymmetry between two detectors :math:`\epsilon_\mathrm{exp}`.
+        The precision of the mixing-ratio measurement does not only depend on the precision of
+        the asymmetry, given as a coverage interval :math:`\left[ \epsilon_\mathrm{exp}^\mathrm{min}, \epsilon_\mathrm{exp}^\mathrm{max}\right]`, but also on the cascade of interest.
+        In general, multiple values of the mixing ratio can lead to the same asymmetry.
+
+        This function assumes that a cascade is studied that has a single unknown mixing ratio
+        :math:`delta`.
+        In general, :math:`delta` may appear in more than one transition of the cascade.
+        The simplest example is an 'elastic' process with a ground state - excited state - ground
+        state sequence.
+        In order to solve the system of inequalities
+
+        ..math:: \epsilon_\mathrm{exp}^\mathrm{min} \leq P Q A \left( \delta \right) \leq \epsilon_\mathrm{exp}^\mathrm{max},
+
+        this function evaluates :math:`\epsilon`/:math:`A` on an equidistant grid in
+        `\mathrm{arctan} \left( \delta_i \right)`.
+        The index :math:`i` is restricted to :math:`0 < i < N-1`, where :math:`N` is
+        the number of grid points.
+        In the given set of :math:`\epsilon_i = P Q A \left( \delta_ i \right)`, the function then finds the values of :math:`\delta_i` that fulfil the
+        inequalities.
+        If several `\delta_i` in a row fulfil the inequalities, they may belong to a contiguous
+        interval.
+        This function either returns a list of `\delta_i`, or these presumedly contiguous intervals.
+        Obviously, a high enough value for :math:`N` must be chosen to keep numerical uncertainties
+        at a minimum compared to the experimental value.
+
+        In an alternative mode, the asymmetry can also be given as a single value :math:`\epsilon_\mathrm{exp}`.
+        In this case, the inequality
+
+        ..math:: \left| \epsilon_\mathrm{exp} - P Q A \left( \delta \right) \right| \leq t,
+
+        is evaluated, where :math:`t` is a user-defined tolerance.
+        The second mode requires :math:`N` and :math:`t` to be well matched.
+
+        Parameters
+        ----------
+        asymmetry: float or [float, float]
+            Value of the asymmetry or interval of possible values (coverage interval,
+            standard deviations, ...)
+        delta_values: list of str and float
+            This list indicates which of the mixing ratios in the cascade are variables
+            (arbitrary string) and which ones should be fixed to a value (float).
+            The mixing-ratio values are given in the same order as the cascade transitions in `alpaca.AngularCorrelation`.
+            Note that `alpaca.AnalyzingPower.find_delta_brute_force` can only solve for a single
+            variable, i.e. putting in different strings for different transitions will not make
+            this function solve a multi-parameter problem.
+        theta: float or ndarray
+            Polar angle :math:`\theta` in radians (default: 90 degrees).
+        n_delta: int
+            :math:`N`, number of trial multipole-mixing ratios (default: 1000).
+        atol: float
+            :math:`t`, absolute tolerance for determining the numerical equality of a calculate
+            value and the given single-value asymmetry (default: 0.001).
+        abs_delta_max: float
+            Maximum value of the mixing ratio, which determines the positive and negative limits
+            of the search grid (default: 100).
+        return_intervals: bool
+            Determines whether a list of :math:`\delta_i` (False) or a list of intervals (True)
+            should be returned (default: False).
+
+        Returns
+        -------
+        list of float or list of [float, float]
+            Depending on the `return_intervals` setting, returns a list of all :math:`\delta_i`
+            that match the given asymmetry (interval) or a list of intervals of matching values.
+        """
         arctan_delta_max = np.arctan(abs_delta_max)
         arctan_deltas = np.linspace(-arctan_delta_max, arctan_delta_max, n_delta)
         deltas = np.tan(arctan_deltas)
@@ -243,16 +398,12 @@ class AnalyzingPower:
                 convention=self.convention,
             )(theta)
 
-            if isinstance(analyzing_power_value, (int, float)):
-                if np.abs(ana_pow - analyzing_power_value) < atol:
+            if isinstance(asymmetry, (int, float)):
+                if np.abs(ana_pow - asymmetry) < atol:
                     delta_results.append(delta)
                     delta_matches[i] = True
             else:
-                if (
-                    analyzing_power_value[0] - atol
-                    <= ana_pow
-                    <= analyzing_power_value[1] + atol
-                ):
+                if asymmetry[0] - atol <= ana_pow <= asymmetry[1] + atol:
                     delta_results.append(delta)
                     delta_matches[i] = True
 

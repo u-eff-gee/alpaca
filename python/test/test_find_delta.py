@@ -97,6 +97,10 @@ def test_intersection_of_two_intervals():
     b = [0.4, 1.0]
     assert np.allclose(intersection_of_two_intervals(a, b), [0.4, 0.5])
 
+    a = [0.5, 0.0]
+    b = [1.0, 0.4]
+    assert np.allclose(intersection_of_two_intervals(a, b), [0.4, 0.5])
+
     a = [0.0, 0.5]
     b = [0.3, 0.4]
     assert np.allclose(intersection_of_two_intervals(a, b), [0.3, 0.4])
@@ -104,6 +108,10 @@ def test_intersection_of_two_intervals():
     a = [0.3, 0.4]
     b = [0.2, 0.5]
     assert np.allclose(intersection_of_two_intervals(a, b), [0.3, 0.4])
+
+    a = [0.0, 0.3]
+    b = [0.3, 0.6]
+    assert np.allclose(intersection_of_two_intervals(a, b), [0.3, 0.3])
 
     a = [0.3, 0.6]
     b = [0.2, 0.5]
