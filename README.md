@@ -1,29 +1,33 @@
 # **alpaca**: a linearly-polarized angular-correlation application
 
-An object-oriented C++ library with python bindings for direction-direction and direction-polarization correlations of two photons in a cascade of transitions between (nuclear) quantum states.
+An object-oriented C++ library with python bindings for direction-direction and polarization-direction correlations of two photons in a cascade of transitions between (nuclear) quantum states.
 
 ## Description
 
-The direction- and polarization vectors of different photons which are absorbed/emitted during a single internal electromagnetic transition sequence of a nucleus are correlated, and depend on the angular-momentum ('spin') quantum numbers and parities of the involved quantum states.
-Since the relations are well known from the quantum theory of light, a measurement of the direction of emission or the polarization of photons with respect to some well-defined coordinate system gives a model-independent access to excited-state properties.
+The direction- and polarization vectors of different photons, which are absorbed/emitted during a single internal electromagnetic transition sequence of a nucleus, are correlated. 
+The correlation depends on the angular-momentum ('spin') quantum numbers and parities of the involved quantum states.
+Since the relations are well known from the quantum theory of light, a measurement of the direction of emission or the polarization of photons with respect to some well-defined coordinate system gives model-independent access to excited-state properties.
 
-This code implements analytical expressions for direction-direction and direction-polarization correlations between two photons in an arbitrarily long cascade.
-More explicitly, the former answers the question:
+This code implements analytical expressions for direction-direction and polarization-direction correlations between two photons in an arbitrarily long cascade.
+A direction-direction correlation answers the question:
 
-> Assume that a photon was observed which belongs to a transition between two nuclear states. What is the probability (density) for observing another photon that is emitted in the same sequence at a given polar angle relative to the direction of the first one?
+> Assume that a photon was observed which belongs to a transition between two nuclear states. What is the probability (density) for observing another photon, which is emitted in the same sequence, at a given polar angle relative to the direction of the first one?
 
-The latter takes into account polarization information as well:
+A polarization-direction correlation takes polarization information into account as well:
 
-> Assume that a photon was observed which belongs to a transition between two nuclear states. What is the probability (density) for observing another photon that is emitted in the same sequence at a given polar angle relative to the direction and a given azimuthal angle relative to the polarization vector of the first one?
+> Assume that a photon was observed which belongs to a transition between two nuclear states. What is the probability (density) for observing another photon, which is emitted in the same sequence, at a given polar angle relative to the direction and a given azimuthal angle relative to the polarization vector of the first one?
 
-The formalism used here was taken from a book chapter by L. C. Biedenharn [1].
+This code was used to produce all numerical results in our review article on the angular-correlation formalism in the European Physical Journal A [1] (see also section 'Definition of Angles' below).
+It has been tested against an equivalent code in the `R` programming language by the coauthor of Ref. [1], C. Iliadis, and against many numerical results reported in the literature.
+
+The formalism of this code, as well as the review article Ref. [1], are based a book chapter by L. C. Biedenharn [2].
 In particular, the convention of Biedenharn for the multipole-mixing ratio is used, where the sign of the mixing ratio depends on the notion of initial/final states and intermediate states of a cascade.
 
 ## Building (Linux)
 
 ### Prerequisites (C++)
 
-* [CMake](https://cmake.org/) (version >= 3.16 required for installation [2])
+* [CMake](https://cmake.org/) (version >= 3.16 required for installation [3])
 * C++ compiler which supports at least the C++11 standard.
 * [GNU Scientific Library (GSL)](https://www.gnu.org/software/gsl/)
 * [doxygen](https://www.doxygen.nl/) and all its requirements for [displaying formulas](https://www.doxygen.nl/manual/formulas.html) (documentation, optional)
@@ -69,9 +73,9 @@ To install `alpaca` in the system, type:
 $ cmake --install .
 ```
 
-The installation is not required to use the C++ libraries (the location of the libraries can be passed to the compiler manually as shown below in the C++ example) or to install the python code. See also footnote [2].
+The installation is not required to use the C++ libraries (the location of the libraries can be passed to the compiler manually as shown below in the C++ example) or to install the python code. See also footnote [3].
 
-### Optional Testing (C++)
+#### Optional Testing (C++)
 
 To run a self test of the C++ code, type:
 
@@ -82,17 +86,18 @@ $ ctest
 
 ### Build (python)
 
-Follow the steps of the previous section.
+Follow the steps for the C++ build in the previous section.
 After that, the python code can be found in `ALPACA_BUILD_DIR/python`.
 For a system-wide install of the library, type:
 
 ```
+$ cd ALPACA_BUILD_DIR/python
 $ python3 setup.py install
 ```
 
 in that directory.
 
-### Optional Testing (python)
+#### Optional Testing (python)
 
 To run a self test of the python code, type:
 
@@ -117,7 +122,7 @@ Note that all functions take the spin quantum number times 2 as their argument.
 
 Both the C++ code and the python code create an `AngularCorrelation` object, which is characterized by an initial state and a sequence of transition-state pairs that represents the steps of the cascade.
 States and Transitions are passed as `State` and `Transition` objects.
-The `AngularCorrelation` object can be called `(theta, phi)` with a polar angle `theta` and an azimuthal angle `phi`.
+The `AngularCorrelation` object can be called using the arguments `(theta, phi)`, i.e. a polar angle `theta` and an azimuthal angle `phi`.
 
 ### Example (C++)
 
@@ -182,6 +187,35 @@ In order to run this code, which is assumed to be in a file called `test.py`, ty
 $ python3 test.py
 ```
 
+## Definition of Angles
+
+In contrast to Ref. [1] (see, in particular, Fig. 1 therein, and Sec. 2 'Formalism for a two-step angular correlation'), the `alpaca` code uses a right-handed coordinate system in which the beam is assumed to propagate along the `z` axis, and the azimuthal angle is defined with respect to the `x` axis.
+With the definition of the angles in `alpaca`, the relations between a Cartesian coordinate system with `x`, `y` and `z`, and a spherical coordinate system with an azimuthal angle Φ and a polar angle θ, are given by:
+
+ * x = sin(θ) cos(Φ)
+ * y = sin(θ) sin(Φ)
+ * z = cos(θ)
+
+ This corresponds to the more common spherical coordinate system encountered in the literature [2,4].
+ In Ref. [1], the relations are:
+
+ * z = sin(θ) cos(Φ)
+ * y = sin(θ) sin(Φ)
+ * x = cos(θ)
+
+In the aforementioned section of Ref. [1], the following statements can be found:
+
+> A linearly polarized γ-ray beam (blue arrow) is incident along the positive **x** axis ...
+
+
+> The angle Φ is between the z axis and the projection of the direction of the second γ ray onto the **y**-**z(()) plane (azimuthal angle).
+
+In `alpaca`, they need to be modified to:
+
+> A linearly polarized γ-ray beam (blue arrow) is incident along the positive **z** axis ...
+
+> The angle Φ is between the **x** axis and the projection of the direction of the second γ ray onto the **x-y** plane (azimuthal angle).
+
 ## License
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -192,16 +226,20 @@ You should have received a copy of the GNU General Public License along with thi
 
 Copyright (C) 2021 Udo Friman-Gayer (ufg@email.unc.edu)
 
-This program was originally developed as part of the [Geant4](https://geant4.web.cern.ch/) application [alpaca](https://github.com/uga-uga/alpaca), published under the GNU General Public License.
+This program was originally developed as part of the [Geant4](https://geant4.web.cern.ch/) application [nutr](https://github.com/uga-uga/nutr), published under the GNU General Public License.
 
 ## Acknowledgements
 
-The author would like to thank C. Iliadis for enlightening discussions about the angular correlation formalism and for help with debugging the associated modules. The author would also like to thank O. Papst for helpful discussions about the angular correlation formalism and advertise OP's angular correlation code [angcorrwat](https://github.com/op3/angcorrwat). angcorrwat is complementary to the present code in the sense that it uses the python package [sympy](https://www.sympy.org/) to obtain symbolic expressions for the angular correlations.
+The author would like to thank C. Iliadis for enlightening discussions about the angular correlation formalism and for help with debugging the associated modules. The author would also like to thank O. Papst (OP) for helpful discussions about the angular correlation formalism and advertise OP's angular correlation code [angcorrwat](https://github.com/op3/angcorrwat). angcorrwat is complementary to the present code in the sense that it uses the python package [sympy](https://www.sympy.org/) to obtain symbolic expressions for the angular correlations.
 
 ## References
 
-[1] L. C. Biedenharn, 'Angular Correlations in Nuclear Spectroscopy' in F. Ajzenberg-Selove (editor), 'Nuclear Spectroscopy', Part B, Academic Press New York and London (1960)
+[1] C. Iliadis and U. Friman-Gayer, 'Linear polarization-direction correlations in γ-ray scattering experiments', Eur. Phys. J. A **57**, 190 (2021) (https://doi.org/10.1140/epja/s10050-021-00472-1); arXiv:2104.00228 (https://arxiv.org/abs/2104.00228)
 
-[2] It was found that the compilation does not work with CMake versions as recent as 3.10 (default on Ubuntu 18 OS). Since the code that uses the most recent CMake features is related to the installation of the C++ libraries, it can help to comment out the last few lines in `ALPACA_DIR/CMakeLists.txt`, starting from `set(_ALPACA_HEADERS ...`. With this modification, it will not be possible to install the C++ libraries in the system's default paths. However, an installation is not required to be able to use the compiled C++ libraries or the python code.
+[2] L. C. Biedenharn, 'Angular Correlations in Nuclear Spectroscopy' in F. Ajzenberg-Selove (editor), 'Nuclear Spectroscopy', Part B, Academic Press New York and London (1960)
+
+[3] It was found that the compilation does not work with CMake versions as recent as 3.10 (default on Ubuntu 18 OS). Since the code that uses the most recent CMake features is related to the installation of the C++ libraries, it can help to comment out the last few lines in `ALPACA_DIR/CMakeLists.txt`, starting from `set(_ALPACA_HEADERS ...`. With this modification, it will not be possible to install the C++ libraries in the system's default paths. However, an installation is not required to be able to use the compiled C++ libraries or the python code.
+
+[4] U. Kneissl, H. H. Pitz, and A. Zilges, 'Investigation of Nuclear Structure by Resonance Fluorescence Scattering', Prog. Part. Nucl. Phys. **37**, 349 (1996) (https://doi.org/10.1016/0146-6410(96)00055-5)
 
 See also `ALPACA_DIR/bibliography.bib`.
