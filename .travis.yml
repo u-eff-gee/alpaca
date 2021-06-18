@@ -1,0 +1,14 @@
+language: cpp
+sudo: required
+dist: focal
+compiler: gcc
+os: linux
+before install:
+- sudo apt-get install cmake libgsl-dev
+script:
+- mkdir build
+- cd build
+- cmake ..
+- cmake --build .
+- cd test
+- ctest
