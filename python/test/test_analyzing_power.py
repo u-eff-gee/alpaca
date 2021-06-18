@@ -49,3 +49,60 @@ def test_analyzing_power():
     ana_pow = AnalyzingPower(ang_cor, convention="KPZ")
 
     assert np.isclose(ana_pow(0.5 * np.pi), 1.0)
+
+    # Test AnalyzingPower.evaluate when the input is a numpy array
+    theta = 0.5 * np.pi
+    ang_cor_matrix_manual = [
+        [
+            AnalyzingPower(
+                AngularCorrelation(
+                    State(0, POSITIVE),
+                    [
+                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
+                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.1), State(4, POSITIVE)],
+                    ],
+                )
+            )(theta),
+            AnalyzingPower(
+                AngularCorrelation(
+                    State(0, POSITIVE),
+                    [
+                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
+                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.2), State(4, POSITIVE)],
+                    ],
+                )
+            )(theta),
+        ],
+        [
+            AnalyzingPower(
+                AngularCorrelation(
+                    State(0, POSITIVE),
+                    [
+                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
+                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.3), State(4, POSITIVE)],
+                    ],
+                )
+            )(theta),
+            AnalyzingPower(
+                AngularCorrelation(
+                    State(0, POSITIVE),
+                    [
+                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
+                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.4), State(4, POSITIVE)],
+                    ],
+                )
+            )(theta),
+        ],
+    ]
+
+    ang_cor_matrix = AnalyzingPower(
+        AngularCorrelation(
+            State(0, POSITIVE),
+            [
+                [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
+                [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.1), State(4, POSITIVE)],
+            ],
+        )
+    ).evaluate(np.array([[0.1, 0.2], [0.3, 0.4]]), [0.0, "delta"], theta=theta)
+
+    assert np.allclose(ang_cor_matrix, ang_cor_matrix_manual)

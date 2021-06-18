@@ -253,18 +253,19 @@ class AnalyzingPower:
         self.PQ = PQ
         self.convention = convention
 
-    def __call__(self, theta):
+    def __call__(self, theta=0.5 * np.pi):
         r"""Evaluate the analyzing power
 
         Parameters
         ----------
         theta: float or ndarray
-            Polar angle :math:`\theta` in radians.
+            Polar angle :math:`\theta` in radians (default: 90 degrees).
 
         Returns
         -------
         float, :math:`A \left( \theta \right)`
         """
+
         w_para = self.angular_correlation(theta, 0.0)
         w_perp = self.angular_correlation(theta, 0.5 * np.pi)
 
@@ -330,13 +331,13 @@ class AnalyzingPower:
             standard deviations, ...)
         delta_values: list of str or float or callable
             This list indicates which of the mixing ratios in the cascade are variables
-            (arbitrary string), dependent on the variables (callable), or should be fixed to a 
+            (arbitrary string), dependent on the variables (callable), or should be fixed to a
             value (float).
             The mixing-ratio values are given in the same order as the cascade transitions in `alpaca.AngularCorrelation`.
             Note that `alpaca.AnalyzingPower.find_delta_brute_force` can only solve for a single
             variable, i.e. putting in different strings for different transitions will not make
             this function solve a multi-parameter problem.
-            The option of giving a callable function instead of a value can be used to simulate 
+            The option of giving a callable function instead of a value can be used to simulate
             what would happen if the wrong mixing-ratio convention had been used.
             For example, in the Biedenharn convention, the mixing ratios for both mixing ratios
             in an elastic two-step cascade are the same: `delta_values=["delta", "delta"]`.
@@ -371,53 +372,7 @@ class AnalyzingPower:
         delta_matches = [False] * n_delta
 
         for i, delta in enumerate(deltas):
-            cascade_steps = []
-            for j, cas_ste in enumerate(self.angular_correlation.cascade_steps):
-                if isinstance(delta_values[j], str):
-                    cascade_steps.append(
-                        [
-                            Transition(
-                                cas_ste[0].em_char,
-                                cas_ste[0].two_L,
-                                cas_ste[0].em_charp,
-                                cas_ste[0].two_Lp,
-                                delta,
-                            ),
-                            cas_ste[1],
-                        ]
-                    )
-                elif callable(delta_values[j]):
-                    cascade_steps.append(
-                        [
-                            Transition(
-                                cas_ste[0].em_char,
-                                cas_ste[0].two_L,
-                                cas_ste[0].em_charp,
-                                cas_ste[0].two_Lp,
-                                delta_values[j](delta),
-                            ),
-                            cas_ste[1],
-                        ]
-                    )
-                else:
-                    cascade_steps.append(
-                        [
-                            Transition(
-                                cas_ste[0].em_char,
-                                cas_ste[0].two_L,
-                                cas_ste[0].em_charp,
-                                cas_ste[0].two_Lp,
-                                delta_values[j],
-                            ),
-                            cas_ste[1],
-                        ]
-                    )
-            ana_pow = AnalyzingPower(
-                AngularCorrelation(
-                    self.angular_correlation.initial_state, cascade_steps
-                ),
-                convention=self.convention,
-            )(theta)
+            ana_pow = self.evaluate(delta, delta_values, theta=theta)
 
             if isinstance(asymmetry, (int, float)):
                 if np.abs(ana_pow - asymmetry) < atol:
@@ -442,3 +397,96 @@ class AnalyzingPower:
             return intervals
 
         return (delta_results, delta_matches)
+
+    def evaluate(self, delta, delta_values, theta=0.5 * np.pi):
+        r"""Evaluate the analyzing power for a given value of the multipole mixing ratio
+
+        Based on the cascade in this AnalyzingPower object, this function creates a new object
+        with the given values of the multipole mixing ratio.
+        It is assumed that only one variable is needed to obtain all the mixing ratios of the
+        cascade.
+
+        Parameters
+        ----------
+        delta: float or ndarray
+            Value of the variable.
+        delta_values: list of str or float or callable
+            This list indicates which of the mixing ratios in the cascade are variables
+            (arbitrary string), dependent on the variables (callable), or should be fixed to a
+            value (float).
+            The mixing-ratio values are given in the same order as the cascade transitions in `alpaca.AngularCorrelation`.
+            Note that `alpaca.AnalyzingPower.find_delta_brute_force` can only solve for a single
+            variable, i.e. putting in different strings for different transitions will not make
+            this function solve a multi-parameter problem.
+            The option of giving a callable function instead of a value can be used to simulate
+            what would happen if the wrong mixing-ratio convention had been used.
+            For example, in the Biedenharn convention, the mixing ratios for both mixing ratios
+            in an elastic two-step cascade are the same: `delta_values=["delta", "delta"]`.
+            In the Krane-Steffen-Wheeler convention, however, the first mixing ratio would have
+            the opposite sign.
+            To achieve this, put `delta_values=["delta", lambda x: -x]`.
+        theta: float or ndarray
+            Polar angle :math:`\theta` in radians (default: 90 degrees).
+
+        Returns
+        -------
+        float
+            Value of the analyzing power at the given multipole mixing ratio.
+        """
+        original_shape = np.shape(delta)
+        scalar_output = isinstance(delta, (int, float))
+        delta = np.reshape(delta, (np.size(delta),))
+        asymmetries = np.zeros(len(delta))
+
+        for i, d in enumerate(delta):
+            cascade_steps = []
+            for j, cas_ste in enumerate(self.angular_correlation.cascade_steps):
+                if isinstance(delta_values[j], str):
+                    cascade_steps.append(
+                        [
+                            Transition(
+                                cas_ste[0].em_char,
+                                cas_ste[0].two_L,
+                                cas_ste[0].em_charp,
+                                cas_ste[0].two_Lp,
+                                d,
+                            ),
+                            cas_ste[1],
+                        ]
+                    )
+                elif callable(delta_values[j]):
+                    cascade_steps.append(
+                        [
+                            Transition(
+                                cas_ste[0].em_char,
+                                cas_ste[0].two_L,
+                                cas_ste[0].em_charp,
+                                cas_ste[0].two_Lp,
+                                delta_values[j](d),
+                            ),
+                            cas_ste[1],
+                        ]
+                    )
+                else:
+                    cascade_steps.append(
+                        [
+                            Transition(
+                                cas_ste[0].em_char,
+                                cas_ste[0].two_L,
+                                cas_ste[0].em_charp,
+                                cas_ste[0].two_Lp,
+                                delta_values[j],
+                            ),
+                            cas_ste[1],
+                        ]
+                    )
+            asymmetries[i] = AnalyzingPower(
+                AngularCorrelation(
+                    self.angular_correlation.initial_state, cascade_steps
+                ),
+                PQ=self.PQ,
+                convention=self.convention,
+            )(theta)
+        if scalar_output:
+            return asymmetries[0]
+        return np.reshape(asymmetries, original_shape)
