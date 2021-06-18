@@ -27,3 +27,5 @@ INPUT                  = @PROJECT_SOURCE_DIR@
 RECURSIVE              = YES
 
 CITE_BIB_FILES	       = @PROJECT_SOURCE_DIR@/bibliography.bib
+
+USE_MATHJAX            = YES
