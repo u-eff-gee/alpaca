@@ -5,6 +5,7 @@ compiler: gcc
 os: linux
 before install:
 - sudo apt-get install cmake libgsl-dev
+- pip install tox
 script:
 - mkdir build
 - cd build
@@ -12,3 +13,5 @@ script:
 - cmake --build .
 - cd test
 - ctest
+- cd ../python
+- tox

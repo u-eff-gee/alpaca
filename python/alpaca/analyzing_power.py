@@ -276,6 +276,48 @@ class AnalyzingPower:
             / (w_para + w_perp)
         )
 
+    def arctan_grid(self, n, abs_delta_max=100.0):
+        r"""Create an equidistant grid for the arctangent of a variable
+
+        Multipole mixing ratios, as defined in the present code, are variables whose range includes
+        the entire set of real numbers.
+        This is because they are defined - as their name suggests - as a ratio of real-valued
+        matrix elements.
+        However, the largest variations of the analyzing power with the mixing ratio usually occur
+        for values on the order of unity, which imply a strong competition between the two possible
+        multipoles.
+        Due to this expected behavior, it is not efficient to evaluate the analyzing power on an
+        equidistant grid in the mixing ratio.
+        Instead, this function samples :math:`N` equidistant values
+        :math:`\mathrm{arctan} \left(\delta_i\right)`
+        (:math:`i \in [0, N-1]`) in the range
+        :math:`\left[ -\delta_\mathrm{max}, \delta_\mathrm{max}\right]`
+        (the range includes both :math:`-\delta_\mathrm{max}` and :math:`-\delta_\mathrm{max}`)
+        on an arctangent-compressed axis, and returns a list of the corresponding :math:`\delta_i`.
+        The arctangent transformation does exactly what is needed, i.e. compressing the infinitely
+        large ranges where the alternative multipole dominates, while keeping a high grid density
+        in regions around 0 where the contributions by the two multipoles are approximately equal,
+        or the primary multipole dominates.
+
+        Parameters
+        ----------
+        n: int
+            Number of grid points. Must be larger than 2 to at least include the two limits.
+            Note that only odd numbers of points will include a mixing ratio of exactly zero.
+        abs_delta_max: float
+            Maximum absolute value of the multipole mixing ratio which determines the limits of
+            the symmetric grid (default: 100).
+
+        Returns
+        -------
+        ndarray
+            :math:`\delta_i`, grid points for the multipole-mixing ratio.
+        """
+
+        arctan_delta_max = np.arctan(np.abs(abs_delta_max))
+        arctan_deltas = np.linspace(-arctan_delta_max, arctan_delta_max, n)
+        return np.tan(arctan_deltas)
+
     def find_delta_brute_force(
         self,
         asymmetry,
@@ -305,7 +347,7 @@ class AnalyzingPower:
         ..math:: \epsilon_\mathrm{exp}^\mathrm{min} \leq P Q A \left( \delta \right) \leq \epsilon_\mathrm{exp}^\mathrm{max},
 
         this function evaluates :math:`\epsilon`/:math:`A` on an equidistant grid in
-        `\mathrm{arctan} \left( \delta_i \right)`.
+        `\mathrm{arctan} \left( \delta_i \right)` using `AnalyzingPower.arctan_grid`.
         The index :math:`i` is restricted to :math:`0 < i < N-1`, where :math:`N` is
         the number of grid points.
         In the given set of :math:`\epsilon_i = P Q A \left( \delta_ i \right)`, the function then finds the values of :math:`\delta_i` that fulfil the
@@ -364,9 +406,8 @@ class AnalyzingPower:
             Depending on the `return_intervals` setting, returns a list of all :math:`\delta_i`
             that match the given asymmetry (interval) or a list of intervals of matching values.
         """
-        arctan_delta_max = np.arctan(abs_delta_max)
-        arctan_deltas = np.linspace(-arctan_delta_max, arctan_delta_max, n_delta)
-        deltas = np.tan(arctan_deltas)
+
+        deltas = self.arctan_grid(n_delta, abs_delta_max)
 
         delta_results = []
         delta_matches = [False] * n_delta
