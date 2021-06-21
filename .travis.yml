@@ -9,7 +9,7 @@ before install:
 script:
 - mkdir build
 - cd build
-- cmake ..
+- cmake -DBUILD_TESTS=ON ..
 - cmake --build .
 - cd test
 - ctest
