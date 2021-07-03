@@ -72,8 +72,8 @@ def test_find_delta():
         (-100.0, 100.0), (0.0, "delta"), theta
     )
 
-    assert len(delta_results) == 1000
-    assert np.sum(delta_matches) == 1000
+    assert len(delta_results) == 1001
+    assert np.sum(delta_matches) == 1001
 
     delta_intervals = ana_pow.find_delta_brute_force(
         (-100.0, 100.0), (0.0, "delta"), theta, return_intervals=True
@@ -94,11 +94,14 @@ def test_find_delta():
     ana_pow_val = ana_pow(theta)
 
     delta_results, delta_matches = ana_pow.find_delta_brute_force(
-        ana_pow_val, ("delta", lambda x: -x), theta
+        ana_pow_val, ("delta", lambda x: -x), theta, atol=0.002
     )
 
-    assert len(delta_results) == 3
-    assert np.isclose([delta], [delta_results[2]], atol=1e-2)
+    assert len(delta_results) == 6 # It was empirically found that the given value of atol results 
+    # in 6 matching values for the mixing ratio, some of them corresponding to different 
+    # solutions for delta than the given value of 0.5 (different mixing ratios can lead to the 
+    # same analyzing power). Index 4 of delta_results contains the desired solution.
+    assert np.isclose([delta], [delta_results[4]], atol=1e-2)
 
 
 def test_intersection_of_two_intervals():

@@ -15,6 +15,8 @@
 
 # Copyright (C) 2021 Udo Friman-Gayer
 
+import warnings
+
 import numpy as np
 
 from alpaca.angular_correlation import AngularCorrelation
@@ -277,7 +279,7 @@ class AnalyzingPower:
         )
 
     def arctan_grid(self, n, abs_delta_max=100.0):
-        r"""Create an equidistant grid for the arctangent of a variable
+        r"""Create an equidistant grid for the arctangent of the multipole-mixing ratio
 
         Multipole mixing ratios, as defined in the present code, are variables whose range includes
         the entire set of real numbers.
@@ -312,8 +314,22 @@ class AnalyzingPower:
         -------
         ndarray
             :math:`\delta_i`, grid points for the multipole-mixing ratio.
+
+        Warns
+        -----
+        UserWarning
+            If the number of grid points is smaller than 2 or even.
         """
 
+        if n < 2:
+            warnings.warn(
+                "The number of grid points must be larger than one, so that at least the two limits of the interval can be included. Using n=2."
+            )
+            n = 2
+        if n % 2 == 0:
+            warnings.warn(
+                "An even number of grid points was given. While this is a perfectly valid input, please be aware that the set of points will not include a multipole mixing of exactly zero. Using any valid odd number will include it."
+            )
         arctan_delta_max = np.arctan(np.abs(abs_delta_max))
         arctan_deltas = np.linspace(-arctan_delta_max, arctan_delta_max, n)
         return np.tan(arctan_deltas)
@@ -323,7 +339,7 @@ class AnalyzingPower:
         asymmetry,
         delta_values,
         theta=0.5 * np.pi,
-        n_delta=int(1e3),
+        n_delta=int(1e3)+1,
         atol=1e-3,
         abs_delta_max=100.0,
         return_intervals=False,
@@ -389,7 +405,7 @@ class AnalyzingPower:
         theta: float or ndarray
             Polar angle :math:`\theta` in radians (default: 90 degrees).
         n_delta: int
-            :math:`N`, number of trial multipole-mixing ratios (default: 1000).
+            :math:`N`, number of trial multipole-mixing ratios (default: 1001).
         atol: float
             :math:`t`, absolute tolerance for determining the numerical equality of a calculate
             value and the given single-value asymmetry (default: 0.001).
