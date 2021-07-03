@@ -97,9 +97,11 @@ def test_find_delta():
         ana_pow_val, ("delta", lambda x: -x), theta, atol=0.002
     )
 
-    assert len(delta_results) == 6 # It was empirically found that the given value of atol results 
-    # in 6 matching values for the mixing ratio, some of them corresponding to different 
-    # solutions for delta than the given value of 0.5 (different mixing ratios can lead to the 
+    assert (
+        len(delta_results) == 6
+    )  # It was empirically found that the given value of atol results
+    # in 6 matching values for the mixing ratio, some of them corresponding to different
+    # solutions for delta than the given value of 0.5 (different mixing ratios can lead to the
     # same analyzing power). Index 4 of delta_results contains the desired solution.
     assert np.isclose([delta], [delta_results[4]], atol=1e-2)
 

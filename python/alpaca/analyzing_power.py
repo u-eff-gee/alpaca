@@ -339,7 +339,7 @@ class AnalyzingPower:
         asymmetry,
         delta_values,
         theta=0.5 * np.pi,
-        n_delta=int(1e3)+1,
+        n_delta=int(1e3) + 1,
         atol=1e-3,
         abs_delta_max=100.0,
         return_intervals=False,

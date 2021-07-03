@@ -24,6 +24,7 @@ from alpaca.state import NEGATIVE, POSITIVE, State
 from alpaca.transition import ELECTRIC, MAGNETIC, Transition
 from alpaca.analyzing_power import AnalyzingPower
 
+
 def test_analyzing_power():
 
     ang_cor = AngularCorrelation(
@@ -49,7 +50,7 @@ def test_analyzing_power():
 
     assert np.isclose(ana_pow(0.5 * np.pi), 1.0)
 
-    # Test the arctan_grid function which creates an equidistant grid of arctan(delta) between two 
+    # Test the arctan_grid function which creates an equidistant grid of arctan(delta) between two
     # limits.
     # In particular, test the warnings issued by this function.
 
@@ -58,7 +59,9 @@ def test_analyzing_power():
     assert len(grid) == 2
     with pytest.warns(UserWarning):
         grid = ana_pow.arctan_grid(4)
-    assert np.allclose(grid, np.tan(np.linspace(np.arctan(-100.), np.arctan(100.), 4)))
+    assert np.allclose(
+        grid, np.tan(np.linspace(np.arctan(-100.0), np.arctan(100.0), 4))
+    )
 
     # Test AnalyzingPower.evaluate when the input is a numpy array
     theta = 0.5 * np.pi
