@@ -60,14 +60,8 @@ def multipolarity_str_rep(two_L):
     string
         If two_L is an even number, the string representation of two_L/2 is returned. \
 If two_L is an odd number, an error is raised.
-
-    Raises
-    ------
-    ValueError
-        If two_L is not even.
     """
-    if two_L % 2 == 1:
-        raise ValueError("Odd value given for two_L.")
+
     return str(int(two_L / 2))
 
 
@@ -89,6 +83,11 @@ class Transition:
         Two times the secondary multipolarity.
     delta: float
         Multipole mixing ratio
+
+    Raises
+    ------
+    ValueError
+        If two_L is not even.
     """
 
     def __init__(self, em, t_L, emp, t_Lp, de=0.0):
@@ -106,15 +105,21 @@ class Transition:
             Two times the secondary multipolarity.
         de: float
             Multipole mixing ratio (default: 0, i.e. primary EM character dominates)
+
+
         """
 
         ## Primary EM character.
         self.em_char = em
         ## Two times the primary multipolarity.
+        if t_L % 2 == 1:
+            raise ValueError("Odd value given for two_L.")
         self.two_L = t_L
         ## Secondary EM character.
         self.em_charp = emp
         ## Two times the secondary multipolarity.
+        if t_Lp % 2 == 1:
+            raise ValueError("Odd value given for two_Lp.")
         self.two_Lp = t_Lp
         ## Multipole mixing ratio.
         self.delta = de

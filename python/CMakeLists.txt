@@ -44,3 +44,5 @@ configure_file(test/test_inversion_by_grid_evaluation.py test/test_inversion_by_
 configure_file(test/test_inversion_by_piecewise_interpolation.py test/test_inversion_by_piecewise_interpolation.py)
 configure_file(test/test_io.py test/test_io.py)
 configure_file(test/test_level_scheme_plotter.py test/test_level_scheme_plotter.py)
+configure_file(test/test_state.py test/test_state.py)
+configure_file(test/test_transition.py test/test_transition.py)
