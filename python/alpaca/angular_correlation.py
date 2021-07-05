@@ -494,8 +494,3 @@ def angular_correlation(theta, phi, initial_state, cascade_steps, PhiThetaPsi=No
         delta,
         (c_double * 3)(*PhiThetaPsi),
     )
-
-
-angular_correlation = np.vectorize(
-    angular_correlation, excluded=("initial_state", "cascade_steps", "PhiThetaPsi")
-)
