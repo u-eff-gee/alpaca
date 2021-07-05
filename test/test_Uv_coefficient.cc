@@ -17,11 +17,6 @@
     Copyright (C) 2021 Udo Friman-Gayer
 */
 
-#include <iostream>
-
-using std::cout;
-using std::endl;
-
 #include <memory>
 
 using std::make_unique;

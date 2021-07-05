@@ -20,6 +20,14 @@ if(BUILD_TESTS)
 
     enable_testing()
 
+    add_executable(test_av_coefficient test_av_coefficient.cc)
+    target_link_libraries(test_av_coefficient avCoefficient)
+    add_test(test_av_coefficient test_av_coefficient)
+
+    add_executable(test_alphav_coefficient test_alphav_coefficient.cc)
+    target_link_libraries(test_alphav_coefficient alphavCoefficient)
+    add_test(test_alphav_coefficient test_alphav_coefficient)
+
     add_executable(test_f_coefficient test_f_coefficient.cc)
     target_link_libraries(test_f_coefficient fCoefficient)
     add_test(test_f_coefficient test_f_coefficient)

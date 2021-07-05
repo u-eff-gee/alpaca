@@ -41,7 +41,3 @@ double EvCoefficient::operator()(const double delta) const {
         + delta*delta*sign_sigma_Lp_n*quadratic_f_coefficient.get_value()*(nu_times_nu_plus_one*two_Lp_times_Lp_plus_one)/(nu_times_nu_plus_one - two_Lp_times_Lp_plus_one)
     )*gsl_sf_fact(nu-2)/gsl_sf_fact(nu+2);
 }
-
-string EvCoefficient::string_representation(const unsigned int n_digits, const vector<string> variable_names) const {
-    return "E";
-}

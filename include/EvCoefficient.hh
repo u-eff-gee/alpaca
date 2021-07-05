@@ -20,7 +20,6 @@
 #pragma once
 
 #include "FCoefficient.hh"
-#include "StringRepresentable.hh"
 #include "Transition.hh"
 
 /**
@@ -55,7 +54,7 @@
  * See also the definition of the AvCoefficient class for more information.
  */
 
-class EvCoefficient : public StringRepresentable{
+class EvCoefficient{
 public:
 	/**
 	 * \brief Constructor
@@ -80,8 +79,6 @@ public:
 	 * \return \f$E_\nu \left( L, L^\prime, j_n, j, \delta_n \right)\f$
 	 */
 	double operator()(const double delta) const;
-
-	string string_representation(const unsigned int n_digits = 0, const vector<string> variable_names = {}) const;
 
 protected:
 	const int two_nu;
