@@ -4,7 +4,7 @@ dist: focal
 compiler: gcc
 os: linux
 before install:
-- sudo apt-get install cmake libgsl-dev
+- sudo apt-get install cmake libgsl-dev gcovr
 - pip install tox
 script:
 - mkdir build
@@ -13,5 +13,6 @@ script:
 - cmake --build .
 - cd test
 - ctest
+- gcovr -r ../../
 - cd ../python
 - tox

@@ -29,6 +29,10 @@ if(BUILD_DOCUMENTATION)
 endif(BUILD_DOCUMENTATION)
 
 option(BUILD_TESTS "Build self tests." OFF)
+if(BUILD_TESTS)
+        add_compile_options(-fPIC -Wall -Wextra -Wpedantic -fprofile-arcs -ftest-coverage --coverage)
+        link_libraries(gcov)
+endif(BUILD_TESTS)
 
 add_compile_options(-fPIC -Wall -Wextra -Wpedantic)
 
