@@ -31,12 +31,17 @@ def quadratic(x):
 
 
 def test_inversion_by_grid_evaluation():
+    # Test the inversion with the identity function, i.e. f(x) = x.
+    # Sample 101 points between 0 and 1 to get a step with of 1/100, which avoids periodic
+    # fractions and makes it easy to count the points that should be in a given range.
     x = np.linspace(0.0, 1.0, 101)
     fx = linear(x)
 
+    # x and fx must have the same length.
     with pytest.raises(ValueError):
         invert_grid(x, [0, 1], 0.5)
 
+    # Test with a scalar input for y. Demonstrate the use of the numerical tolerance.
     x_results = invert_grid(x, fx, 0.5)
     assert len(x_results) == 1
     assert x_results[0] == 0.5
@@ -44,12 +49,14 @@ def test_inversion_by_grid_evaluation():
     x_results = invert_grid(x, fx, 0.5, atol=0.01)
     assert len(x_results) == 3
 
+    # Test with a range input for y.
     x_results = invert_grid(x, fx, [0.3, 0.5])
     assert len(x_results) == 21
     x_intervals = invert_grid(x, fx, [0.3, 0.5], return_intervals=True)
     assert len(x_intervals) == 1
     assert np.allclose(x_intervals, [0.3, 0.5])
 
+    # Test intervals that exceed the range on which f has been evaluated.
     x_results = invert_grid(x, fx, [0.9, 1.1])
     assert len(x_results) == 11
     x_intervals = invert_grid(x, fx, [0.9, 1.1], return_intervals=True)
@@ -60,6 +67,7 @@ def test_inversion_by_grid_evaluation():
     assert len(x_intervals) == 1
     assert np.allclose(x_intervals, [0.0, 0.1])
 
+    # Test a function whose inverse is ambiguous: a standard parabola.
     x = np.linspace(-3.0, 3.0, 601)
     fx = quadratic(x)
     x_intervals = invert_grid(x, fx, [-1.0, 1.0], return_intervals=True)

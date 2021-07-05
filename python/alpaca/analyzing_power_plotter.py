@@ -15,7 +15,6 @@
 
 # Copyright (C) 2021 Udo Friman-Gayer
 
-from operator import inv
 import matplotlib.pyplot as plt
 import numpy as np
 

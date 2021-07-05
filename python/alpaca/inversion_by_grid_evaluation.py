@@ -55,7 +55,7 @@ def invert_grid(
 
     Parameters
     ----------
-    x, fx: (N,1) ndarray of float
+    x, fx: (N,1) ndarray of float or list of float
         Values of :math:`x_i` and :math:`y_i`. Both lists must have the same length.
     y: float or [float, float]
         Value of :math:`y` or range. The two limits of the range do not have to be sorted.
@@ -71,6 +71,12 @@ def invert_grid(
     list of float or list of [float, float]
         Depending on the `return_intervals` setting, returns a list of all :math:`x_i`
         that match the given :math:`y` (interval) or a list of intervals of matching values.
+
+    Raises
+    ------
+    ValueError
+        After determining the `len` of `x`, the function checks whether `x` and `fx` have the same
+        shape (`numpy.shape`) `(len(x),)`
     """
 
     n_x = len(x)

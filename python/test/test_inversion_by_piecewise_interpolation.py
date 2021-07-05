@@ -24,7 +24,10 @@ from alpaca.inversion_by_piecewise_interpolation import (
     interpolate_and_invert,
 )
 
-
+# This quartic function has a multiplicity-2 root at x=0, and two multiplicity-1 roots at x=-1 and
+# x=1.
+# There is a local maximum at x=0 with f(0) = 0 and two local minima at x=-1/sqrt(2) and
+# x=1/sqrt(1) with f(+-1/sqrt(2))=-0.25.
 def f(x):
     x_squared = x * x
     return x_squared * (x_squared - 1.0)
@@ -42,10 +45,16 @@ def test_extremum_finder():
 
 
 def test_inversion():
+    # Between -3 and 3 (actually between -infinity and infinity), the function will be split up
+    # into four pieces at the three extrema.
     x = np.linspace(-3.0, 3.0, 501)
     y = f(x)
     extrema = find_indices_of_extrema(y)
     assert len(extrema) == 3
+
+    # x and y must have the same length.
+    with pytest.raises(ValueError):
+        interpolate_and_invert(x, [0, 1])
 
     inverse_f = interpolate_and_invert(x, y)
 
@@ -54,6 +63,7 @@ def test_inversion():
     assert np.allclose(inverse_f(0.0), [-1.0, 0.0, 1.0])
     assert len(inverse_f(-1.0)) == 0
 
+    # Using the identity function, test whether the limits of the interval are treated correctly.
     y = x
     inverse_f = interpolate_and_invert(x, y)
 
