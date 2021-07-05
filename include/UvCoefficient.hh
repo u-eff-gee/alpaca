@@ -118,7 +118,7 @@
  * 
  * When testing the formulation above for transitions with half-integer angular momentum quantum 
  * numbers, it was found that the \f$U_\nu\f$ coefficients of Fagg and Hanna could cause the
- * entire angular to become negative.
+ * entire angular correlation to become negative.
  * A comparison to other definitions in the literature, for example by Biedenharn (see below) or 
  * Krane, Steffen, and Wheeler \cite KraneSteffenWheeler1973 [Eq. (53) therein] indicates that the
  * phase factor is not correct in Ref. \cite FaggHanna1959.
@@ -203,7 +203,8 @@ public:
      *      j_m \left( L_{m+1} \right) j_{m+1}.
      * \f]
      * 
-     * The multipole mixing ratio is set to zero when this constructor is used.
+     * The multipole mixing ratio is set to zero and the alternative multipolarity to 
+     * \f$L^\prime = L+1\f$when this constructor is used.
      * 
      * \param two_nu \f$2 \nu\f$
      * \param two_j \f$2 j_m\f$
@@ -245,5 +246,5 @@ protected:
     const double delta;
     const int two_jp;
 
-    double value;
+    double value, value_L, value_Lp;
 };

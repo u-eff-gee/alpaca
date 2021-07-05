@@ -118,9 +118,9 @@ string FCoefficient::string_representation(const unsigned int n_digits, [[maybe_
 	if(n_digits){
 		return float_string_representation(n_digits, value);
 	}
-	return "F_" 
+	return "F_{" 
 		+ to_string(two_nu/2) 
-		+ "\\left(" 
+		+ "}\\left(" 
 		+ to_string(two_L/2)
 		+ ","
 		+ to_string(two_Lp/2)
@@ -128,5 +128,6 @@ string FCoefficient::string_representation(const unsigned int n_digits, [[maybe_
 		+ to_string(two_j1/2)
 		+ ","
 		+ to_string(two_j/2)
-		+ "\\right)";
+		+ "\\right)"
+	;
 }

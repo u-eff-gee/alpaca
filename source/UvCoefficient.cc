@@ -28,20 +28,25 @@ using std::to_string;
 #include "UvCoefficient.hh"
 
 UvCoefficient::UvCoefficient(const unsigned int two_nu, const int two_j, const int two_L, const int two_jp):
-    two_nu(two_nu), two_j(two_j), two_L(two_L), two_Lp(two_L), delta(0.), two_jp(two_jp){
+    two_nu(two_nu), two_j(two_j), two_L(two_L), two_Lp(two_L+2), delta(0.), two_jp(two_jp){
 
-    value = phase_norm_6j_symbol(two_nu, two_j, two_L, two_jp);
+    value_L = phase_norm_6j_symbol(two_nu, two_j, two_L, two_jp);
+    value_Lp = 0.;
+    value = value_L;
 }
 
 UvCoefficient::UvCoefficient(const unsigned int two_nu, const int two_j, const int two_L, const int two_Lp, const double delta, const int two_jp):
     two_nu(two_nu), two_j(two_j), two_L(two_L), two_Lp(two_Lp), delta(delta), two_jp(two_jp){
 
-    value = phase_norm_6j_symbol(two_nu, two_j, two_L, two_jp);
+    value_L = phase_norm_6j_symbol(two_nu, two_j, two_L, two_jp);
 
     if(delta != 0.){
-        value += delta*delta*phase_norm_6j_symbol(two_nu, two_j, two_Lp, two_jp);
+        value_Lp = delta*delta*phase_norm_6j_symbol(two_nu, two_j, two_Lp, two_jp);
+    } else {
+        value_Lp = 0.;
     }
 
+    value = value_L + value_Lp;
 }
 
 double UvCoefficient::phase_norm_6j_symbol(const int two_nu, const int two_j, const int two_L, const int two_jp) const {
@@ -75,18 +80,28 @@ string UvCoefficient::string_representation(const unsigned int n_digits, vector<
 
     string delta_variable = variable_names.size() ? variable_names[0] : "\\delta";
 
-    return "U_" 
+    if(n_digits){
+        return float_string_representation(n_digits, value_L) + "+" + float_string_representation(n_digits, value_Lp) + "\\times" + delta_variable + "^{2}";
+    }
+
+    return "U_{" 
         + to_string(two_nu/2)
-        + "\\left("
+        + "}\\left("
         + to_string(two_j/2)
         + ","
         + to_string(two_L/2)
         + ","
+        + to_string(two_jp/2)
+        + "\\right)"
+        + "+"
+        + "U_{"
+        + to_string(two_nu/2)
+        + "}\\left("
+        + to_string(two_j/2)
+        + ","
         + to_string(two_Lp/2)
         + ","
-        + delta_variable
-        + ","
         + to_string(two_jp/2)
-        + ","
-        + "\\right)";
+        + "\\right)"
+        + delta_variable + "^{2}";
 }

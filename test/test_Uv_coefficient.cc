@@ -17,6 +17,11 @@
     Copyright (C) 2021 Udo Friman-Gayer
 */
 
+#include <iostream>
+
+using std::cout;
+using std::endl;
+
 #include <memory>
 
 using std::make_unique;
@@ -45,5 +50,13 @@ int main(){
 	test_numerical_equality<double>(
         uv_coef->get_value(), 
         0.68138, epsilon);
+
+    // Test the string representation for both constructors.
+    assert(uv_coef->string_representation()=="U_{4}\\left(4,1,3\\right)+U_{4}\\left(4,2,3\\right)\\delta^{2}");
+    assert(uv_coef->string_representation(3)=="0.681+0\\times\\delta^{2}");
+
+    uv_coef = make_unique<UvCoefficient>(8, 8, 2, 4, 0., 6);
+    assert(uv_coef->string_representation()=="U_{4}\\left(4,1,3\\right)+U_{4}\\left(4,2,3\\right)\\delta^{2}");
+    assert(uv_coef->string_representation(3)=="0.681+0\\times\\delta^{2}");
 
 }

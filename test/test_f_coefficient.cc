@@ -77,4 +77,7 @@ int main(){
 		assert(FCoefficient::is_nonzero(f.two_nu, f.two_L, f.two_Lp, f.two_jp, f.two_j) == (f_coef->get_value() != 0.));
 	}
 
+	f_coef = make_unique<FCoefficient>(4, 2, 2, 0, 2);
+	assert(f_coef->string_representation() == "F_{2}\\left(1,1,0,1\\right)");
+	assert(f_coef->string_representation(3) == "0.707");
 }

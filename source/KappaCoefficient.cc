@@ -69,11 +69,13 @@ string KappaCoefficient::string_representation(const unsigned int n_digits, [[ma
 	if(n_digits){
 		return float_string_representation(n_digits, value);
 	}
-    return "\\kappa_"
+    return "\\kappa_{"
         + to_string(two_nu/2)
-        + " \\left("
+        + "}"
+        + "\\left("
         + to_string(two_L/2)
         + ","
         + to_string(two_Lp/2)
-        + "\\right)";
+        + "\\right)"
+        ;
 }

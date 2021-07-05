@@ -75,4 +75,8 @@ int main(){
 		error_thrown = true;
 	}
 	assert(error_thrown);
+
+	kappa_coef = make_unique<KappaCoefficient>(4, 2, 2);
+	assert(kappa_coef->string_representation() == "\\kappa_{2}\\left(1,1\\right)");
+	assert(kappa_coef->string_representation(3) == "\\left(-0.5\\right)");
 }

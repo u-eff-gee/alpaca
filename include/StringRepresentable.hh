@@ -60,7 +60,7 @@ protected:
     string float_string_representation(const unsigned int n_digits, const double number) const {
 		stringstream str_rep;
         if(number < 0.){
-		    str_rep << "\\left( " << std::setprecision(n_digits) << number << " \\right) ";
+		    str_rep << "\\left(" << std::setprecision(n_digits) << number << "\\right)";
         } else {
             str_rep << std::setprecision(n_digits) << number;
         }
