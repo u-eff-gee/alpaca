@@ -15,11 +15,14 @@
 
 # Copyright (C) 2021 Udo Friman-Gayer
 
+from operator import inv
 import matplotlib.pyplot as plt
 import numpy as np
 
-from .analyzing_power import AnalyzingPower, intersection
+from .analyzing_power import AnalyzingPower, arctan_grid
 from .angular_correlation import AngularCorrelation
+from .interval_intersections import intersection
+from .inversion_by_grid_evaluation import invert_grid
 from .level_scheme_plotter import LevelSchemePlotter
 from .state import State
 from .transition import Transition
@@ -178,32 +181,36 @@ class AnalyzingPowerPlotter:
         )
 
         if self.analyzing_power_experimental is not None:
-            ana_pow_1_allowed_deltas = AnalyzingPower(
-                self.angular_correlation, convention=self.convention
-            ).find_delta_brute_force(
+            delta_values = arctan_grid(1001, abs_delta_max)
+            ana_pow_1_allowed_deltas = invert_grid(
+                delta_values,
+                AnalyzingPower(
+                    self.angular_correlation, convention=self.convention
+                ).evaluate(delta_values, self.delta_values, self.theta_1),
                 [
                     self.analyzing_power_experimental[0][0]
                     - self.analyzing_power_experimental[0][1],
                     self.analyzing_power_experimental[0][0]
                     + self.analyzing_power_experimental[0][1],
                 ],
-                self.delta_values,
-                self.theta_1,
                 return_intervals=True,
             )
-            ana_pow_2_allowed_deltas = AnalyzingPower(
-                self.angular_correlation, convention=self.convention
-            ).find_delta_brute_force(
+
+            delta_values = arctan_grid(1001, abs_delta_max)
+            ana_pow_2_allowed_deltas = invert_grid(
+                delta_values,
+                AnalyzingPower(
+                    self.angular_correlation, convention=self.convention
+                ).evaluate(delta_values, self.delta_values, self.theta_2),
                 [
                     self.analyzing_power_experimental[1][0]
                     - self.analyzing_power_experimental[1][1],
                     self.analyzing_power_experimental[1][0]
                     + self.analyzing_power_experimental[1][1],
                 ],
-                self.delta_values,
-                self.theta_2,
                 return_intervals=True,
             )
+
             allowed_deltas = intersection(
                 ana_pow_1_allowed_deltas, ana_pow_2_allowed_deltas
             )

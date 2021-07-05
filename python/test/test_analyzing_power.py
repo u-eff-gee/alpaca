@@ -22,7 +22,7 @@ import numpy as np
 from alpaca.angular_correlation import AngularCorrelation
 from alpaca.state import NEGATIVE, POSITIVE, State
 from alpaca.transition import ELECTRIC, MAGNETIC, Transition
-from alpaca.analyzing_power import AnalyzingPower
+from alpaca.analyzing_power import AnalyzingPower, arctan_grid
 
 
 def test_analyzing_power():
@@ -55,16 +55,42 @@ def test_analyzing_power():
     # In particular, test the warnings issued by this function.
 
     with pytest.warns(UserWarning):
-        grid = ana_pow.arctan_grid(1)
+        grid = arctan_grid(1)
     assert len(grid) == 2
     with pytest.warns(UserWarning):
-        grid = ana_pow.arctan_grid(4)
+        grid = arctan_grid(4)
     assert np.allclose(
         grid, np.tan(np.linspace(np.arctan(-100.0), np.arctan(100.0), 4))
     )
 
-    # Test AnalyzingPower.evaluate when the input is a numpy array
+    # Test AnalyzingPower.evaluate for scalar input
     theta = 0.5 * np.pi
+    ang_cor = AngularCorrelation(
+        State(0, POSITIVE),
+        [
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.5), State(2, NEGATIVE)],
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.5), State(0, POSITIVE)],
+        ],
+    )
+    ana_pow = AnalyzingPower(ang_cor)
+
+    assert ana_pow.evaluate(0.5, ["delta", "delta"], theta) == ana_pow(theta)
+
+    # Test AnalyzingPower.evaluate for scalar input when the relation between mixing ratios
+    # is an arbitrary function.
+    theta = 0.5 * np.pi
+    ang_cor = AngularCorrelation(
+        State(0, POSITIVE),
+        [
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.5), State(2, NEGATIVE)],
+            [Transition(ELECTRIC, 2, MAGNETIC, 4, -0.5), State(0, POSITIVE)],
+        ],
+    )
+    ana_pow = AnalyzingPower(ang_cor)
+
+    assert ana_pow.evaluate(0.5, ["delta", lambda x: -x], theta) == ana_pow(theta)
+
+    # Test AnalyzingPower.evaluate when the input is a numpy array
     ang_cor_matrix_manual = [
         [
             AnalyzingPower(

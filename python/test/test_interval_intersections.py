@@ -17,8 +17,7 @@
 
 import numpy as np
 
-from alpaca.analyzing_power import (
-    AnalyzingPower,
+from alpaca.interval_intersections import (
     intersection_of_two_intervals,
     intersection_of_interval_with_list_of_intervals,
     intersection,
@@ -28,85 +27,7 @@ from alpaca.state import POSITIVE, State
 from alpaca.transition import ELECTRIC, MAGNETIC, Transition
 
 
-def test_find_delta():
-
-    delta = 0.5
-
-    ana_pow = AnalyzingPower(
-        AngularCorrelation(
-            State(0, POSITIVE),
-            [
-                [Transition(MAGNETIC, 2, ELECTRIC, 4), State(2, POSITIVE)],
-                [Transition(MAGNETIC, 2, ELECTRIC, 4, delta), State(2, POSITIVE)],
-            ],
-        )
-    )
-
-    theta = 0.5 * np.pi
-
-    ana_pow_val = ana_pow(theta)
-
-    delta_results, delta_matches = ana_pow.find_delta_brute_force(
-        ana_pow_val, (0.0, "delta"), theta
-    )
-
-    assert len(delta_results) == 2
-    assert len(delta_results) == np.sum(delta_matches)
-    assert np.isclose([delta], [delta_results[0]], atol=1e-2)
-
-    delta_intervals = ana_pow.find_delta_brute_force(
-        ana_pow_val, (0.0, "delta"), theta, return_intervals=True
-    )
-
-    assert len(delta_intervals) == 2
-    assert np.isclose(delta_intervals[0][0], delta, atol=1e-2)
-
-    delta_results, delta_matches = ana_pow.find_delta_brute_force(
-        (ana_pow_val - 1e-4, ana_pow_val + 1e-4), (0.0, "delta"), theta
-    )
-
-    assert len(delta_results) == 2
-    assert np.isclose([delta], [delta_results[0]], atol=1e-2)
-
-    delta_results, delta_matches = ana_pow.find_delta_brute_force(
-        (-100.0, 100.0), (0.0, "delta"), theta
-    )
-
-    assert len(delta_results) == 1001
-    assert np.sum(delta_matches) == 1001
-
-    delta_intervals = ana_pow.find_delta_brute_force(
-        (-100.0, 100.0), (0.0, "delta"), theta, return_intervals=True
-    )
-
-    assert len(delta_intervals) == 1
-    assert np.allclose(delta_intervals[0], [-100.0, 100.0])
-
-    ana_pow = AnalyzingPower(
-        AngularCorrelation(
-            State(1, POSITIVE),
-            [
-                [Transition(MAGNETIC, 2, ELECTRIC, 4, delta), State(3, POSITIVE)],
-                [Transition(MAGNETIC, 2, ELECTRIC, 4, -delta), State(1, POSITIVE)],
-            ],
-        )
-    )
-    ana_pow_val = ana_pow(theta)
-
-    delta_results, delta_matches = ana_pow.find_delta_brute_force(
-        ana_pow_val, ("delta", lambda x: -x), theta, atol=0.002
-    )
-
-    assert (
-        len(delta_results) == 6
-    )  # It was empirically found that the given value of atol results
-    # in 6 matching values for the mixing ratio, some of them corresponding to different
-    # solutions for delta than the given value of 0.5 (different mixing ratios can lead to the
-    # same analyzing power). Index 4 of delta_results contains the desired solution.
-    assert np.isclose([delta], [delta_results[4]], atol=1e-2)
-
-
-def test_intersection_of_two_intervals():
+def test_interval_intersections():
     # Test intersection of two intervals.
     a = [0.0, 0.5]
     b = [0.6, 1.0]
