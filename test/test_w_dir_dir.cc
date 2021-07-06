@@ -72,4 +72,24 @@ int main(){
 
 		test_numerical_equality<double>(w_dir_dir_num, w_dir_dir_ana, epsilon);
 	}
+
+	// Test string representation.
+    // As a test case, use the 0->1->2 direction-direction correlation in 
+	// Sec. "4 Numerical example" of Ref. \cite Iliadis2021.
+	W_dir_dir w_0_1_2(
+		State(0),
+		{
+			{Transition(2, 4, 0.), State(2)},
+			{Transition(2, 4, 0.), State(4)},
+		}
+	);
+
+	const string str_rep = 
+		string("\\left[") + AvCoefficient(0, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]"
+		+ "\\left[" + AvCoefficient(0, 2, 4, 4, 2).string_representation(0, {"\\delta_2"}) + "\\right]"
+		+ "P_{0}\\left[\\cos\\left(\\theta\\right)\\right]"
+		+ "+\\left[" + AvCoefficient(4, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]"
+		+ "\\left[" + AvCoefficient(4, 2, 4, 4, 2).string_representation(0, {"\\delta_2"}) + "\\right]"
+		+ "P_{2}\\left[\\cos\\left(\\theta\\right)\\right]";
+	assert(w_0_1_2.string_representation() == str_rep);
 }

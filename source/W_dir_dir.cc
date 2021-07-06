@@ -197,22 +197,21 @@ string W_dir_dir::string_representation(const unsigned int n_digits, vector<stri
 
 	for(int i = 0; i <= nu_max/2; ++i){
 		if(i > 0){
-			str_rep += " + ";
+			str_rep += "+";
 		}
-		str_rep += "\\\\ \\left[ " + av_coefficients_excitation[i].string_representation(n_digits, {delta_variables[0]})
-			+ " \\right] \\\\ \\times ";
+		str_rep += "\\left[" + av_coefficients_excitation[i].string_representation(n_digits, {delta_variables[0]})
+			+ "\\right]";
 		if(n_cascade_steps > 2){
 			for(size_t j = 0; j < uv_coefficients[i].size(); ++j){
-				str_rep += uv_coefficients[i][j].string_representation(n_digits, {delta_variables[1+j]})
-					+ "\\times ";
+				str_rep += uv_coefficients[i][j].string_representation(n_digits, {delta_variables[1+j]});
 			}
 		}
 		str_rep += "\\left[" + av_coefficients_decay[i].string_representation(n_digits, {delta_variables[delta_variables.size()-1]})
-		+ "\\right] \\\\ \\times P_{"
+		+ "\\right]P_{"
 		+ to_string(2*i)
-		+ "} \\left[ \\cos \\left("
+		+ "}\\left[\\cos\\left("
 		+ polar_angle_variable
-		+ "\\right) \\right]";
+		+ "\\right)\\right]";
 	}
 
 	return str_rep;

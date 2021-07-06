@@ -169,4 +169,35 @@ int main(){
 			}
 		}
 	}
+
+	// Test string representation.
+    // As a test case, use the 0->1->2 direction-direction correlation in 
+	// Sec. "4 Numerical example" of Ref. \cite Iliadis2021.
+	// 
+	// Implement the corresponding direction-direction correlation as well for easy access to that
+	// one's string representation.
+	W_dir_dir w_0_1_2(
+		State(0),
+		{
+			{Transition(2, 4, 0.), State(2)},
+			{Transition(2, 4, 0.), State(4)},
+		}
+	);
+	W_pol_dir w_0p_1p_2p(
+		State(0, positive),
+		{
+			{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
+			{Transition(magnetic, 2, electric, 4, 0.), State(4, positive)},
+		}
+	);
+
+	const string str_rep = 
+		w_0_1_2.string_representation() 
+		+ "-\\cos\\left(2\\varphi\\right)\\left\\{"
+		+ "\\left[" + AlphavCoefficient(4, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]"
+		+ "\\left[" + AvCoefficient(4, 2, 4, 4, 2).string_representation(0, {"\\delta_2"}) + "\\right]"
+		+ "P_{2}^{\\left|2\\right|}\\left[\\cos\\left(\\theta\\right)\\right]"
+		+ "\\right\\}"
+		;
+	assert(w_0p_1p_2p.string_representation() == str_rep);
 }

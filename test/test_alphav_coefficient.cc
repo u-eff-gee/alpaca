@@ -31,7 +31,14 @@ int main(){
     // Therefore, the entire term seems to have a different sign as in Ref. \cite Iliadis2021.
     // See also the discussion in `alpaca/test/test_Ev_coefficient.cc`.
     AlphavCoefficient av_coef(4, 2, 4, 0, 2);
-    assert(av_coef.string_representation() == "(-1)\\kappa_{2}\\left(1,1\\right)F_{2}\\left(1,1,0,1\\right)+2\\kappa_{2}\\left(1,2\\right)F_{2}\\left(1,2,0,1\\right)\\delta+\\kappa_{2}\\left(2,2\\right)F_{2}\\left(2,2,0,1\\right)\\delta^{2}");
+    const string str_rep = 
+        string("(-1)") 
+        + KappaCoefficient(4, 2, 2).string_representation() + FCoefficient(4, 2, 2, 0, 2).string_representation()
+        + "+2" + KappaCoefficient(4, 2, 4).string_representation() + FCoefficient(4, 2, 4, 0, 2).string_representation()
+        + "\\delta"
+        + "+" + KappaCoefficient(4, 4, 4).string_representation() + FCoefficient(4, 4, 4, 0, 2).string_representation()
+        + "\\delta^{2}";
+    assert(av_coef.string_representation() == str_rep);
     assert(av_coef.string_representation(3) == "(-1)\\times\\left(-0.5\\right)\\times0.707+2\\times\\left(-0.167\\right)\\times0\\times\\delta+0.5\\times0\\times\\delta^{2}");
 
 }
