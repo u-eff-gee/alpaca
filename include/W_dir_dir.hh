@@ -194,6 +194,39 @@ public:
 	double get_normalization_factor() const { return normalization_factor; };
 
 	/**
+	 * \brief Return \f$U_\nu\f$ coefficients for the dir-dir correlation.
+	 * 
+	 * This function returns an \f$\nu_\mathrm{max} / 2 \times \left(n-2\right) f$ array of 
+	 * \f$U_\nu\f$ coefficient (UvCoefficient) objects as opposed to 
+	 * W_dir_dir::get_Uv_coefficient_products() and 
+	 * W_dir_dir::calculate_expansion_coefficients_Uv() (protected method), which return lists of 
+	 * the products of the columns as a \f$\nu_\mathrm{max} / 2 \times 1\f$ array.
+	 * 
+	 * \return \f$U_\nu\f$ coefficients, sorted by \f$\nu_\mathrm{max}\f$ (first index) and 
+	 * the cascade step number (second index, runs from \f$2\f$ to \f$n-1\f$).
+	 */
+	vector<vector<UvCoefficient>> get_Uv_coefficients() const { return uv_coefficients; };
+
+	/**
+	 * \brief Return products of \f$U_\nu\f$ coefficients to be inserted between the \f$A_\nu\f$/\f$/alpha_\nu\f$ coefficients .
+	 * 
+	 * As opposed to W_dir_dir::get_Uv_coefficients() (see also the documentation of that method),
+	 * this function returns products of \f$U_\nu\f$ coefficients at a given value of \f$\nu\f$ 
+	 * for all intermediate cascade steps.
+	 * These are the values that need to be inserted between the \f$A_\nu\f$ or \f$\alpha_\nu\f$
+	 * coefficients in an angular correlation to take into account the unobserved intermediate 
+	 * steps [see, e.g. Eqs. (22) and (23) in Ref. \cite Iliadis2021].
+	 * As opposed to W_dir_dir::calculate_expansion_coefficients_Uv(), this function does not 
+	 * recalculate anything and it is meant for public access.
+	 * 
+	 * \return List of products of \f$U_\nu\f$ coefficients for all values of \f$\nu\f$.
+	 */
+	vector<double> get_Uv_coefficient_products() const { return uv_coefficient_products; };
+
+	string string_representation(const unsigned int n_digits = 0, const vector<string> variable_names = {}) const override;
+
+protected:
+	/**
 	 * \brief Calculate products of \f$U_\nu\f$ coefficients for the dir-dir correlation.
 	 * 
 	 * See also the documentation of W_dir_dir::calculate_expansion_coefficients().
@@ -203,22 +236,6 @@ public:
 	 */
 	vector<double> calculate_expansion_coefficients_Uv();
 
-	/**
-	 * \brief Return \f$U_\nu\f$ coefficients for the dir-dir correlation.
-	 * 
-	 * This function returns an \f$\nu_\mathrm{max} / 2 \times \left(n-2\right) f$ array of 
-	 * \f$U_\nu\f$ coefficient (UvCoefficient) objects as opposed to 
-	 * W_dir_dir::calculate_expansion_coefficients_Uv(), which gives a list of the products of 
-	 * the columns as a \f$\nu_\mathrm{max} / 2 \times 1\f$ array.
-	 * 
-	 * \return \f$U_\nu\f$ coefficients, sorted by \f$\nu_\mathrm{max}\f$ (first index) and 
-	 * the cascade step number (second index, runs from \f$2\f$ to \f$n-1\f$).
-	 */
-	vector<vector<UvCoefficient>> get_Uv_coefficients() const { return uv_coefficients; };
-
-	string string_representation(const unsigned int n_digits = 0, const vector<string> variable_names = {}) const override;
-
-protected:
 	/**
 	 * \brief Get the maximum value \f$\nu_\mathrm{max}\f$ for which the product of coefficients
 	 * \f$A_\nu\f$ and \f$U_\nu\f$ is nonzero.
@@ -317,6 +334,7 @@ protected:
 	vector<AvCoefficient> av_coefficients_excitation; /**< Vector of AvCoefficient objects for the excitation */
 	vector<AvCoefficient> av_coefficients_decay; /**< Vector of AvCoefficient objects for the decays */
 	vector<vector<UvCoefficient>> uv_coefficients; /**< Vector of the UvCoefficient objects */
+	vector<double> uv_coefficient_products; /**< Vector of products of \f$U_\nu\f$ coefficients */
 	vector<double> expansion_coefficients; /**< Vector to store expansion coefficients */
 
 };

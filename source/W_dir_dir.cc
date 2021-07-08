@@ -19,6 +19,9 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iostream>
+
+#include "State.hh"
 
 #include <gsl/gsl_sf.h>
 
@@ -142,7 +145,7 @@ vector<double> W_dir_dir::calculate_expansion_coefficients_Av(){
 }
 
 vector<double> W_dir_dir::calculate_expansion_coefficients_Uv(){
-	
+
 	vector<double> exp_coef;
 	double uv_coef_product = 1.;
 
@@ -160,6 +163,7 @@ vector<double> W_dir_dir::calculate_expansion_coefficients_Uv(){
 			);
 			uv_coef_product = uv_coef_product*uv_coefficients[two_nu/4][i-1].get_value();
 		}
+		uv_coefficient_products.push_back(uv_coef_product);
 
 		exp_coef.push_back(uv_coef_product);
 		uv_coef_product = 1.;
@@ -200,18 +204,22 @@ string W_dir_dir::string_representation(const unsigned int n_digits, vector<stri
 			str_rep += "+";
 		}
 		str_rep += "\\left[" + av_coefficients_excitation[i].string_representation(n_digits, {delta_variables[0]})
-			+ "\\right]";
+			+ "\\right]\\\\";
 		if(n_cascade_steps > 2){
 			for(size_t j = 0; j < uv_coefficients[i].size(); ++j){
-				str_rep += uv_coefficients[i][j].string_representation(n_digits, {delta_variables[1+j]});
+				str_rep += "\\times\\left[" + uv_coefficients[i][j].string_representation(n_digits, {delta_variables[1+j]}) + "\\right]\\\\";
 			}
 		}
-		str_rep += "\\left[" + av_coefficients_decay[i].string_representation(n_digits, {delta_variables[delta_variables.size()-1]})
-		+ "\\right]P_{"
+		str_rep += "\\times\\left[" + av_coefficients_decay[i].string_representation(n_digits, {delta_variables[delta_variables.size()-1]})
+		+ "\\right]\\\\"
+		+ "\\times P_{"
 		+ to_string(2*i)
 		+ "}\\left[\\cos\\left("
 		+ polar_angle_variable
 		+ "\\right)\\right]";
+		if(i != nu_max/2){
+			str_rep += "\\\\";
+		}
 	}
 
 	return str_rep;

@@ -18,6 +18,7 @@
 */
 
 #include <cmath>
+
 #include <gsl/gsl_math.h>
 
 #include "State.hh"
@@ -85,11 +86,32 @@ int main(){
 	);
 
 	const string str_rep = 
-		string("\\left[") + AvCoefficient(0, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]"
-		+ "\\left[" + AvCoefficient(0, 2, 4, 4, 2).string_representation(0, {"\\delta_2"}) + "\\right]"
-		+ "P_{0}\\left[\\cos\\left(\\theta\\right)\\right]"
-		+ "+\\left[" + AvCoefficient(4, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]"
-		+ "\\left[" + AvCoefficient(4, 2, 4, 4, 2).string_representation(0, {"\\delta_2"}) + "\\right]"
-		+ "P_{2}\\left[\\cos\\left(\\theta\\right)\\right]";
+		string("\\left[") + AvCoefficient(0, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]\\\\"
+		+ "\\times\\left[" + AvCoefficient(0, 2, 4, 4, 2).string_representation(0, {"\\delta_2"}) + "\\right]\\\\"
+		+ "\\times P_{0}\\left[\\cos\\left(\\theta\\right)\\right]\\\\"
+		+ "+\\left[" + AvCoefficient(4, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]\\\\"
+		+ "\\times\\left[" + AvCoefficient(4, 2, 4, 4, 2).string_representation(0, {"\\delta_2"}) + "\\right]\\\\"
+		+ "\\times P_{2}\\left[\\cos\\left(\\theta\\right)\\right]";
 	assert(w_0_1_2.string_representation() == str_rep);
+
+	// Test string representation for cascade with intermediate step.
+	W_dir_dir w_0_1_1_2(
+		State(0),
+		{
+			{Transition(2, 4, 0.), State(2)},
+			{Transition(2, 4, 0.), State(2)},
+			{Transition(2, 4, 0.), State(4)},
+		}
+	);
+
+	const string str_rep_2 = 
+		string("\\left[") + AvCoefficient(0, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]\\\\"
+		+ "\\times\\left[" + UvCoefficient(0, 2, 2, 4, 0., 2).string_representation(0, {"\\delta_2"}) + "\\right]\\\\"
+		+ "\\times\\left[" + AvCoefficient(0, 2, 4, 4, 2).string_representation(0, {"\\delta_3"}) + "\\right]\\\\"
+		+ "\\times P_{0}\\left[\\cos\\left(\\theta\\right)\\right]\\\\"
+		+ "+\\left[" + AvCoefficient(4, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]\\\\"
+		+ "\\times\\left[" + UvCoefficient(4, 2, 2, 4, 0., 2).string_representation(0, {"\\delta_2"}) + "\\right]\\\\"
+		+ "\\times\\left[" + AvCoefficient(4, 2, 4, 4, 2).string_representation(0, {"\\delta_3"}) + "\\right]\\\\"
+		+ "\\times P_{2}\\left[\\cos\\left(\\theta\\right)\\right]";
+	assert(w_0_1_1_2.string_representation() == str_rep_2);
 }
