@@ -48,6 +48,10 @@ libangular_correlation.create_angular_correlation_with_transition_inference.argt
     POINTER(c_short),  # Parities
 ]
 
+libangular_correlation.free_angular_correlation.argtypes = [
+    c_void_p,  # Pointer to AngularCorrelation object
+]
+
 libangular_correlation.get_em_char.argtypes = [
     c_void_p,  # Pointer to AngularCorrelation object
     POINTER(c_short),  # Array that contains the results
@@ -338,8 +342,11 @@ class AngularCorrelation:
 
         Returns
         -------
-        float
-            \f$W_{\gamma \gamma} \left( \theta, \varphi \right)\f$
+        float or ndarray
+            \f$W_{\gamma \gamma} \left( \theta, \varphi \right)\f$, value of the angular
+            correlation. If the values for theta and phi were scalars, a scalar will be returned.
+            If at least one or both of theta and phi was a numpy array of shape (M, N, ...), a
+            numpy array of shape (M, N, ...) will be returned.
         """
 
         n_delta = len(delta)
@@ -382,7 +389,34 @@ class AngularCorrelation:
         return self.evaluate(theta, phi, PhiThetaPsi)
 
     def evaluate(self, theta, phi, PhiThetaPsi):
+        r"""Evaluate the angular correlation with scalar or numpy-array input
 
+        This function implements a numpy-array compatible call of AngularCorrelation.
+        Arbitrary-dimension arrays are accepted for the azimuthal and polar angle, as long as
+        both have the same shape.
+        The loop over the set of values for theta and phi is done by the C++ code.
+        This function only reshapes the input arrays into 1D vectors that can be passed in a
+        simple way to C++ code, and reshapes the result back to the original shape.
+        Since AngularCorrelation.__call__() calls AngularCorrelation.evaluate(), it should never
+        be necessary to call this function directly.
+
+        Parameters
+        ----------
+        theta: float or ndarray
+            Polar angle in spherical coordinates in radians (\f$\theta \in \left[ 0, \pi \right]\f$). If ndarray, must have the same shape as phi.
+        phi: float or ndarray
+            Azimuthal angle in spherical coordinates in radians (\f$\varphi \in \left[ 0, 2 \pi \right]\f$). If ndarray, must have the same shape as theta.
+        PhiThetaPsi: (float, float, float)
+            Euler angles \f$\Phi\f$, \f$\Theta\f$, and \f$\Psi\f$ in radians (default: None, i.e. no rotation).
+
+        Returns
+        -------
+        float or ndarray
+            \f$W_{\gamma \gamma} \left( \theta, \varphi \right)\f$, value of the angular
+            correlation. If the values for theta and phi were scalars, a scalar will be returned.
+            If at least one or both of theta and phi was a numpy array of shape (M, N, ...), a
+            numpy array of shape (M, N, ...) will be returned.
+        """
         theta_reshape = None
         phi_reshape = None
         original_shape = None
@@ -440,6 +474,20 @@ class AngularCorrelation:
         if scalar_output:
             return result[0]
         return np.reshape(np.array(result), original_shape)
+
+    def free(self):
+        """Free the memory occupied by the internal AngularCorrelation object
+
+        Since the AngularCorrelation C++ object owned by this class is a raw pointer, it needs to
+        be deleted explicitly to prevent significant memory leaking when many AngularCorrelation
+        objects are created (for example in the AnalyzingPower.evaluate method of the
+        corresponding module).
+        This function initiates the deletion of the pointer to the object in the C++ code (via a
+        'delete' statement).
+        The AngularCorrelation object can not be used to calculate angular correlations any more
+        after calling AngularCorrelation.free().
+        """
+        libangular_correlation.free_angular_correlation(self.angular_correlation)
 
 
 libangular_correlation.angular_correlation.restype = c_double

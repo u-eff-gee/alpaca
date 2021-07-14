@@ -62,6 +62,14 @@ def test_inversion():
     assert np.allclose(inverse_f(12.0), [-2.0, 2.0])
     assert np.allclose(inverse_f(0.0), [-1.0, 0.0, 1.0])
     assert len(inverse_f(-1.0)) == 0
+    # The following test ensures that a scalar value is returned when the interpolated function is
+    # called with a scalar argument.
+    # By default, the interpolation object returned by scipy.interpolate.interp1d returns a zero-
+    # dimensional numpy array when called with a scalar, which was found inconsistent, not only
+    # by the author of the present code, but there are also various discussions on the web about
+    # this.
+    # See also alpaca/inversion_by_piecewise_interpolation.py.
+    assert np.isclose(inverse_f(12.0)[0], -2.0)
 
     # Using the identity function, test whether the limits of the interval are treated correctly.
     y = x

@@ -288,13 +288,16 @@ class AnalyzingPower:
                             cas_ste[1],
                         ]
                     )
-            asymmetries[i] = AnalyzingPower(
+            ana_pow = AnalyzingPower(
                 AngularCorrelation(
                     self.angular_correlation.initial_state, cascade_steps
                 ),
                 PQ=self.PQ,
                 convention=self.convention,
-            )(theta)
+            )
+            asymmetries[i] = ana_pow(theta)
+            # Avoid memory leaking by deleting the temporarily created AngularCorrelation objects.
+            ana_pow.angular_correlation.free()
         if scalar_output:
             return asymmetries[0]
         return np.reshape(asymmetries, original_shape)

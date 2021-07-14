@@ -18,16 +18,16 @@
 from setuptools import setup, find_packages
 
 setup(
-        name='alpaca',
-        version='@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@',
-        description='alpaca: a linearly-polarized angular-correlation application',
-        url='http://github.com/uga-uga/alpaca',
-        author='Udo Friman-Gayer',
-        author_email='ufg@email.unc.edu',
-        license='GPLv3',
-        python_requires='>=3',
-        packages=find_packages(),
-        install_requires=['matplotlib', 'numpy'],
-        setup_requires=['pytest-runner'],
-        tests_require=['black', 'pytest', 'pytest-cov', 'tox']
+    name="alpaca",
+    version="@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@",
+    description="alpaca: a linearly-polarized angular-correlation application",
+    url="http://github.com/uga-uga/alpaca",
+    author="Udo Friman-Gayer",
+    author_email="ufg@email.unc.edu",
+    license="GPLv3",
+    python_requires=">=3",
+    packages=find_packages(),
+    install_requires=["matplotlib", "numpy"],
+    setup_requires=["pytest-runner"],
+    tests_require=["black", "pytest", "pytest-cov", "tox"],
 )

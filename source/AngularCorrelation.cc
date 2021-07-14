@@ -305,6 +305,10 @@ extern "C" {
 
     }
 
+    void free_angular_correlation(AngularCorrelation *angular_correlation){
+        delete angular_correlation;
+    }
+
     void get_em_char(AngularCorrelation *angular_correlation, short* em_char){
         
         vector<pair<Transition, State>> cascade_steps = angular_correlation->get_cascade_steps();
