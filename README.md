@@ -211,13 +211,13 @@ In the aforementioned section of Ref. [1], the following statements can be found
 > A linearly polarized γ-ray beam (blue arrow) is incident along the positive **x** axis ...
 
 
-> The angle Φ is between the z axis and the projection of the direction of the second γ ray onto the **y**-**z(()) plane (azimuthal angle).
+> The angle Φ is between the **z** axis and the projection of the direction of the second γ ray onto the **y**-**z** plane (azimuthal angle).
 
 In `alpaca`, they need to be modified to:
 
 > A linearly polarized γ-ray beam (blue arrow) is incident along the positive **z** axis ...
 
-> The angle Φ is between the **x** axis and the projection of the direction of the second γ ray onto the **x-y** plane (azimuthal angle).
+> The angle Φ is between the **x** axis and the projection of the direction of the second γ ray onto the **x**-**y** plane (azimuthal angle).
 
 ## License
 
@@ -227,7 +227,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see https://www.gnu.org/licenses/.
 
-Copyright (C) 2021 Udo Friman-Gayer (ufg@email.unc.edu)
+Copyright (C) 2021 Udo Friman-Gayer (udo.friman-gayer@duke.edu)
 
 This program was originally developed as part of the [Geant4](https://geant4.web.cern.ch/) application [nutr](https://github.com/uga-uga/nutr), published under the GNU General Public License.
 
