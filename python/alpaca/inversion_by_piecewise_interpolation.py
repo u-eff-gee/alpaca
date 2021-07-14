@@ -163,7 +163,13 @@ class PiecewiseInterpolation:
         y = []
         for inter in self.interpolations:
             try:
-                y.append(inter(x))
+                # When a scipy.polyint._Interpolator1D object, as returned by
+                # scipy.interpolate.interp1d, is called with a scalar argument, the argument is
+                # wrapped in a numpy array before evaluation.
+                # This yields to the inconsistent behavior that a call with a float returns an
+                # np.array(float), i.e. a zero-dimensional array.
+                # Using '[()]' after evaluating the interpolation unpacks the numpy array.
+                y.append(inter(x)[()])
             except ValueError:
                 pass
         return y
