@@ -15,6 +15,8 @@
 
 # Copyright (C) 2021 Udo Friman-Gayer
 
+from warnings import warn
+
 import numpy as np
 from scipy.interpolate import interp1d
 
@@ -58,6 +60,40 @@ def find_indices_of_extrema(y):
     return indices
 
 
+def safe_interp1d(x, y, kind="cubic"):
+    """Wrapper of scipy.interpolate.interp1d which automatically falls back to kind='linear'
+
+    Given a number of points larger than 3, this function works just like interp1d if only the
+    'kind' optional argument was available.
+    If the number of points is less than 4, the default cubic interpolation is not possible,
+    and the function falls back to a linear interpolation.
+    If the number of points is less than two, the usual error message of interp1d is thrown.
+
+    Parameters
+    ----------
+    x, y: (N,) array_like
+        See scipy.interpolate.interp1d.
+    kind: str or int
+        See scipy.interpolate.interp1d.
+
+    Warns
+    -----
+    UserWarning
+        If the number of points to interpolate is less than 4.
+
+    Returns
+    -------
+    _Interp1D object
+        See scipy.interpolate.interp1d.
+    """
+    if len(x) < 4:
+        warn(
+            "Interpolation of less than 4 points requested. Falling back to linear interpolation."
+        )
+        return interp1d(x, y, kind="linear", bounds_error=True)
+    return interp1d(x, y, kind=kind, bounds_error=True)
+
+
 def interpolate_and_invert(x, y, kind="cubic"):
     r"""Given pairs of values of a function, create a piecewise interpolation of its inverse
 
@@ -99,24 +135,22 @@ def interpolate_and_invert(x, y, kind="cubic"):
         interpolations.append(interp1d(y, x, kind=kind, bounds_error=True))
     else:
         interpolations.append(
-            interp1d(
+            safe_interp1d(
                 y[0 : extrema[0]],
                 x[0 : extrema[0]],
                 kind=kind,
-                bounds_error=True,
             )
         )
         for i in range(1, len(extrema)):
             interpolations.append(
-                interp1d(
+                safe_interp1d(
                     y[extrema[i - 1] : extrema[i]],
                     x[extrema[i - 1] : extrema[i]],
                     kind=kind,
-                    bounds_error=True,
                 )
             )
         interpolations.append(
-            interp1d(y[extrema[-1] :], x[extrema[-1] :], kind=kind, bounds_error=True)
+            safe_interp1d(y[extrema[-1] :], x[extrema[-1] :], kind=kind)
         )
 
     return PiecewiseInterpolation(interpolations)

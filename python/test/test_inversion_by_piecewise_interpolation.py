@@ -22,6 +22,7 @@ import numpy as np
 from alpaca.inversion_by_piecewise_interpolation import (
     find_indices_of_extrema,
     interpolate_and_invert,
+    safe_interp1d,
 )
 
 # This quartic function has a multiplicity-2 root at x=0, and two multiplicity-1 roots at x=-1 and
@@ -77,3 +78,16 @@ def test_inversion():
 
     assert np.isclose(inverse_f(y[0]), x[0])
     assert np.isclose(inverse_f(y[-1]), x[-1])
+
+
+@pytest.mark.parametrize("fx", [(range(4)), (range(3)), (range(2))])
+def test_interpolation(fx):
+    # Test special cases where only few points are available for the interpolation.
+    # In this case, the interpolator uses a linear interpolation function, no matter what value
+    # was used for the 'kind' option.
+    if len(fx) < 4:
+        with pytest.warns(UserWarning):
+            f = safe_interp1d(range(len(fx)), fx)
+    else:
+        f = safe_interp1d(range(len(fx)), fx)
+    assert np.isclose(f(0.5), 0.5)
