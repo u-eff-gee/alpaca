@@ -34,15 +34,56 @@ def f(x):
     return x_squared * (x_squared - 1.0)
 
 
-def test_extremum_finder():
+# The following functions tests the extremum finder for a few special cases.
+@pytest.mark.parametrize(
+    "array,nominal_extrema",
+    [
+        (
+            np.array([0.0, 1.0, 2.0, 3.0]),
+            [],
+        ),  # An array that has no extremum and is strictly increasing.
+        (
+            np.array([3.0, 2.0, 1.0, 0.0]),
+            [],
+        ),  # An array that has no extremum and is strictly decreasing.
+        (
+            np.array([0.0, 1.0, 1.0, 3.0]),
+            [],
+        ),  # An array that has no extremum and is monotonously increasing.
+        (
+            np.array([0.0, 1.0, 2.0, 2.0]),
+            [],
+        ),  # An array that has no extremum and is monotonously increasing.
+        (
+            np.array([1.0, 1.0, 1.0, 3.0]),
+            [],
+        ),  # An array that has no extremum and is monotonously increasing.
+        (
+            np.array([3.0, 1.0, 1.0, 0.0]),
+            [],
+        ),  # An array that has no extremum and is monotonously decreasing.
+        (
+            np.array([3.0, 1.0, 0.0, 0.0]),
+            [],
+        ),  # An array that has no extremum and is monotonously decreasing.
+        (np.array([2.0, 1.0, 2.0, 3.0]), [1]),  # An array that has a single extremum.
+        (
+            np.array([0.0, 4.0, 4.0, 3.0]),
+            [1],
+        ),  # An array that has a single, flat extremum.
+        (
+            np.array([0.0, 1.0, 1.0, 0.0, 0.0, 1.0]),
+            [1, 3],
+        ),  # An array that has two flat extrema.
+    ],
+)
+def test_extremum_finder(array, nominal_extrema):
 
-    # Test the extremum-finding method.
-
-    extrema = find_indices_of_extrema(np.array([0.0, 1.0, 2.0, 1.0, 0.0, 1.0, -2.0]))
-    assert len(extrema) == 3
-    assert extrema[0] == 2
-    assert extrema[1] == 4
-    assert extrema[2] == 5
+    extrema = find_indices_of_extrema(array)
+    assert len(extrema) == len(nominal_extrema)
+    if len(extrema):
+        for i in range(len(nominal_extrema)):
+            assert extrema[i] == nominal_extrema[i]
 
 
 def test_inversion():
@@ -61,7 +102,9 @@ def test_inversion():
 
     assert len(inverse_f.interpolations) == 4
     assert np.allclose(inverse_f(12.0), [-2.0, 2.0])
-    assert np.allclose(inverse_f(0.0), [-1.0, 0.0, 1.0])
+    # The following test shows that if the y value of an extremum is given to the inverse function,
+    # two of the interpolation pieces may be evaluated, depending on the numerical precision.
+    assert np.allclose(inverse_f(0.0), [-1.0, 0.0, 0.0, 1.0])
     assert len(inverse_f(-1.0)) == 0
     # The following test ensures that a scalar value is returned when the interpolated function is
     # called with a scalar argument.

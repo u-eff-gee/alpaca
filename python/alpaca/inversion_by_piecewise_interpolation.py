@@ -37,6 +37,29 @@ def find_indices_of_extrema(y):
 
     Whenever one of the two sets of inequalities is fulfilled, this function will report the
     index :math:`i`.
+    In the special case that
+
+    ..math:: x_i = x_{i+1},
+
+    this function will test the inequality
+
+    ..math:: x_{i-1} > x_i < x_{j}
+
+    for all
+
+    ..math:: i+1 < j < N-1
+
+    instead, until an element of the list is encountered that is different from :math:`x_i`.
+    In other words, equal elements in the list are skipped in the search for extrema.
+    Note that if
+
+    ..math:: x_i = x_{N-1}
+
+    for
+
+    ..math:: i < N-1,
+
+    then there is no extremum with an index larger or equal to :math:`i`.
 
     Parameters:
     -----------
@@ -49,13 +72,22 @@ def find_indices_of_extrema(y):
         List of indices of local extrema.
     """
     indices = []
-    for i in range(2, len(y)):
-        if y[i - 1] > y[i - 2]:
-            if y[i] < y[i - 1]:
-                indices.append(i - 1)
-        elif y[i - 1] < y[i - 2]:
-            if y[i] > y[i - 1]:
-                indices.append(i - 1)
+    last = 0
+    this = 1
+    next = 2
+    while next < len(y):
+        if y[this] == y[next]:
+            next += 1
+            continue
+        if y[this] > y[last]:
+            if y[this] > y[next]:
+                indices.append(this)
+        elif y[this] < y[last]:
+            if y[this] < y[next]:
+                indices.append(this)
+        last = this
+        this = next
+        next += 1
 
     return indices
 
@@ -134,18 +166,23 @@ def interpolate_and_invert(x, y, kind="cubic"):
     if len(extrema) == 0:
         interpolations.append(interp1d(y, x, kind=kind, bounds_error=True))
     else:
+        # Note that the definition of find_indices_of_extreme ensures that:
+        # * There are no extrema at the limits of the array, y[0] and y[-1]
+        # * extrema[i+1] > extrema[i].
+        # Therefore, any of the slices below will always yield at least a length-2 array to be used
+        # by safe_interp1d, and an interpolation should always be possible.
         interpolations.append(
             safe_interp1d(
-                y[0 : extrema[0]],
-                x[0 : extrema[0]],
+                y[0 : extrema[0] + 1],
+                x[0 : extrema[0] + 1],
                 kind=kind,
             )
         )
         for i in range(1, len(extrema)):
             interpolations.append(
                 safe_interp1d(
-                    y[extrema[i - 1] : extrema[i]],
-                    x[extrema[i - 1] : extrema[i]],
+                    y[extrema[i - 1] : extrema[i] + 1],
+                    x[extrema[i - 1] : extrema[i] + 1],
                     kind=kind,
                 )
             )
