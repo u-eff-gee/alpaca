@@ -109,7 +109,7 @@ public:
      * \param seed Random number seed.
      * \param max_tri Maximum number of sampled points 
      * \f$\left( \theta_\mathrm{rand}, \varphi_\mathrm{rand} \right)\f$
-     * before the algorithm terminates without success and returns \f$\left( 0, 0 \right)\f$.
+     * before the algorithm terminates without success and returns \f$\left( 0, 0 \right)\f$ (default: 1000).
      */
     SphereRejectionSampler(function<double(const double, const double)> dis, const double dis_max, const int seed, const unsigned int max_tri = 1000);
 

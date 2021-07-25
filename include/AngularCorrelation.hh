@@ -263,6 +263,34 @@ public:
         return w_gamma_gamma->get_cascade_steps();
     }
 
+	/**
+	 * \brief Return an upper limit for possible values of the gamma-gamma angular correlation.
+	 * 
+	 * Some applications, for example the rejection-sampling (or 'accept-reject') algorithm 
+	 * (see, e.g. Sec. 2.3 in \cite RobertCasella1999), which can be used to sample random 
+	 * directions that are distributed according to a given angular correlation, require an 
+	 * expression, or at least an estimate, for the maximum absolute value of 
+	 * \f$W \left( \theta, \varphi \right)\f$, i.e.:
+	 * 
+	 * \f[
+	 * 		\mathrm{max}_{\theta \in \left[ 0, \pi \right], \varphi \in \left[ 0, 2\pi \right]} | W \left( \theta, \varphi \right) |.
+	 * \f]
+	 * 
+	 * If a useful upper limit estimate exists for a given angular correlation, this function will
+	 * return it.
+	 * If no useful upper limit exists, or the absolute value of \f$W\f$ does not have a limit, this
+	 * function returns a negative number.
+     * 
+     * This method calls the equivalent method of the W_gamma_gamma member object.
+	 * 
+	 * \return \f$\mathrm{max}_{\theta \in \left[ 0, \pi \right], \varphi \in \left[ 0, 2\pi \right]} 
+	 * | W \left( \theta, \varphi \right) | \f$, or an upper limit for this quantity.
+	 * If no useful upper limit can be given or if there is no limit, a negative number is returned.
+	 */
+    double get_upper_limit() const {
+        return w_gamma_gamma->get_upper_limit();
+    }
+
 protected:
 /**
  * \brief Check consistency of the input.

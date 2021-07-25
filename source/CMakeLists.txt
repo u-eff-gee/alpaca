@@ -58,4 +58,4 @@ target_link_libraries(sphereIntegrator spherePointSampler)
 add_library(sphereRejectionSampler SphereRejectionSampler.cc)
 
 add_library(angcorrRejectionSampler AngCorrRejectionSampler.cc)
-target_link_libraries(angcorrRejectionSampler sphereRejectionSampler w_gamma_gamma)
+target_link_libraries(angcorrRejectionSampler sphereRejectionSampler angular_correlation)

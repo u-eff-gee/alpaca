@@ -16,7 +16,7 @@
 #    Copyright (C) 2021 Udo Friman-Gayer
 
 cmake_minimum_required(VERSION 3.16)
-project(alpaca VERSION 0.7.6)
+project(alpaca VERSION 0.8.0)
 
 find_package(GSL REQUIRED)
 include_directories(${GSL_INCLUDE_DIRS})
@@ -44,13 +44,13 @@ if(BUILD_TESTS)
         add_subdirectory(test)
 endif(BUILD_TESTS)
 
-set(installable_libs angcorrRejectionSampler alphavCoefficient avCoefficient fCoefficient kappa_coefficient sphereRejectionSampler uvCoefficient w_dir_dir w_gamma_gamma w_pol_dir)
+set(installable_libs angcorrRejectionSampler angular_correlation alphavCoefficient avCoefficient euler_angle_rotation fCoefficient kappa_coefficient sphereRejectionSampler uvCoefficient w_dir_dir w_gamma_gamma w_pol_dir)
 install(TARGETS ${installable_libs}
         DESTINATION lib
         EXPORT ALPACA
 )
 
-set(_ALPACA_HEADERS AlphavCoefficient.hh AngCorrRejectionSampler.hh AvCoefficient.hh KappaCoefficient.hh SphereRejectionSampler.hh State.hh StringRepresentable.hh Transition.hh UvCoefficient.hh W_gamma_gamma.hh W_dir_dir.hh W_pol_dir.hh)
+set(_ALPACA_HEADERS AlphavCoefficient.hh AngCorrRejectionSampler.hh AngularCorrelation.hh AvCoefficient.hh KappaCoefficient.hh SphereRejectionSampler.hh State.hh StringRepresentable.hh Transition.hh UvCoefficient.hh W_gamma_gamma.hh W_dir_dir.hh W_pol_dir.hh)
 set(ALPACA_HEADERS "")
 foreach(header ${_ALPACA_HEADERS})
         list(APPEND ${ALPACA_HEADERS} "include/${header}")

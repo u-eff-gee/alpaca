@@ -19,9 +19,9 @@
 
 #include "AngCorrRejectionSampler.hh"
 
-AngCorrRejectionSampler::AngCorrRejectionSampler(W_gamma_gamma* w, const int seed, const unsigned int max_tri): 
-    SphereRejectionSampler(nullptr, w->get_upper_limit(), seed, max_tri),
-    w_gamma_gamma(w)
+AngCorrRejectionSampler::AngCorrRejectionSampler(AngularCorrelation &w, const int seed, const unsigned int max_tri): 
+    SphereRejectionSampler(nullptr, w.get_upper_limit(), seed, max_tri),
+    angular_correlation(w.get_initial_state(), w.get_cascade_steps())
 {}
 
 tuple<unsigned int, double, double> AngCorrRejectionSampler::sample(){
@@ -34,7 +34,7 @@ tuple<unsigned int, double, double> AngCorrRejectionSampler::sample(){
         theta_phi = sample_theta_phi();
         dis_val = uniform_random(random_engine)*distribution_maximum;
 
-        if(dis_val <= w_gamma_gamma->operator()(theta_phi.first, theta_phi.second)){
+        if(dis_val <= angular_correlation(theta_phi.first, theta_phi.second)){
             return {i+1, theta_phi.first, theta_phi.second};
         }
 
