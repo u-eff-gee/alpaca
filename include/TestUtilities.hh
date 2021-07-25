@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include <cassert>
 #include <cmath>
 #include <stdexcept>
 #include <sstream>

@@ -17,6 +17,7 @@
     Copyright (C) 2021 Udo Friman-Gayer
 */
 
+#include <cassert>
 #include <stdexcept>
 #include <vector>
 

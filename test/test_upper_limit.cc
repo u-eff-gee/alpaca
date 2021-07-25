@@ -18,12 +18,10 @@
 */
 
 #include <array>
-// #include <iostream>
+#include <cassert>
 #include <vector>
 
 using std::array;
-// using std::cout;
-// using std::endl;
 using std::vector;
 
 #include <gsl/gsl_sf.h>
@@ -754,8 +752,5 @@ int main(){
                 ang_cor_max = ang_cor_val;
             }
         }
-
-        // Test output
-        // cout << std::scientific << ang_cor_max << " <-> " << ang_cor_upp_lim << " ( " << std::defaultfloat << ang_cor_upp_lim/ang_cor_max*100. << " % ) " << endl;
     }
 }
