@@ -21,9 +21,9 @@
 
 #include "EulerAngleRotation.hh"
 
-array<double, 3> EulerAngleRotation::rotate(const array<double, 3> x_y_z, const array<double, 3> phi_theta_psi) const {
+array<double, 3> EulerAngleRotation::rotate(const array<double, 3> x_y_z, const array<double, 3> Phi_Theta_Psi) const {
 
-    const array<array<double, 3>, 3> A = rotation_matrix(phi_theta_psi);
+    const array<array<double, 3>, 3> A = rotation_matrix(Phi_Theta_Psi);
 
     return array<double, 3>{
         A[0][0]*x_y_z[0] + A[0][1]*x_y_z[1] + A[0][2]*x_y_z[2],
@@ -32,18 +32,18 @@ array<double, 3> EulerAngleRotation::rotate(const array<double, 3> x_y_z, const 
     };
 }
 
-array<double, 2> EulerAngleRotation::rotate(const array<double, 2> theta_phi, const array<double, 3> phi_theta_psi) const {
+array<double, 2> EulerAngleRotation::rotate(const array<double, 2> theta_phi, const array<double, 3> Phi_Theta_Psi) const {
 
-    return get_theta_phi(rotate(get_x_y_z_norm(theta_phi), phi_theta_psi));
+    return get_theta_phi(rotate(get_x_y_z_norm(theta_phi), Phi_Theta_Psi));
 }
 
-array<double, 3> EulerAngleRotation::rotate_back(const array<double, 3> xp_yp_zp, const array<double, 3> phi_theta_psi) const {
-    return rotate(xp_yp_zp, {-phi_theta_psi[2], -phi_theta_psi[1], -phi_theta_psi[0]});
+array<double, 3> EulerAngleRotation::rotate_back(const array<double, 3> xp_yp_zp, const array<double, 3> Phi_Theta_Psi) const {
+    return rotate(xp_yp_zp, {-Phi_Theta_Psi[2], -Phi_Theta_Psi[1], -Phi_Theta_Psi[0]});
 }
 
-array<double, 2> EulerAngleRotation::rotate_back(const array<double, 2> thetap_phip, const array<double, 3> phi_theta_psi) const {
+array<double, 2> EulerAngleRotation::rotate_back(const array<double, 2> thetap_phip, const array<double, 3> Phi_Theta_Psi) const {
 
-    return get_theta_phi(rotate_back(get_x_y_z_norm(thetap_phip), phi_theta_psi));
+    return get_theta_phi(rotate_back(get_x_y_z_norm(thetap_phip), Phi_Theta_Psi));
 }
 
 array<double, 2> EulerAngleRotation::get_theta_phi(const array<double, 3> x_y_z_norm) const {
@@ -72,9 +72,9 @@ array<double, 3> EulerAngleRotation::get_x_y_z_norm(const array<double, 2> theta
 
 }
 
-array<array<double, 3>, 3> EulerAngleRotation::rotation_matrix(const array<double, 3> phi_theta_psi) const {
+array<array<double, 3>, 3> EulerAngleRotation::rotation_matrix(const array<double, 3> Phi_Theta_Psi) const {
     
-    const double cos_phi{cos(phi_theta_psi[0])}, sin_phi{sin(phi_theta_psi[0])}, cos_the{cos(phi_theta_psi[1])}, sin_the{sin(phi_theta_psi[1])}, cos_psi{cos(phi_theta_psi[2])}, sin_psi{sin(phi_theta_psi[2])};
+    const double cos_phi{cos(Phi_Theta_Psi[0])}, sin_phi{sin(Phi_Theta_Psi[0])}, cos_the{cos(Phi_Theta_Psi[1])}, sin_the{sin(Phi_Theta_Psi[1])}, cos_psi{cos(Phi_Theta_Psi[2])}, sin_psi{sin(Phi_Theta_Psi[2])};
 
     return array<array<double, 3>, 3> {
         array<double, 3>{ 

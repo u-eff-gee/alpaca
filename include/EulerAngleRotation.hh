@@ -126,17 +126,17 @@ public:
      * 
      * \return \f$v^\prime\f$, 3D vector
      */
-    array<double, 3> rotate(const array<double, 3> x_y_z, const array<double, 3> phi_theta_psi) const;
+    array<double, 3> rotate(const array<double, 3> x_y_z, const array<double, 3> Phi_Theta_Psi) const;
 
     /**
      * \brief Rotate a 3D vector.
      * 
      * \param theta_phi \f$v\f$, spherical coordinates \f$\theta\f$ and \f$\varphi\f$ in radians.
-     * \param phi_theta_psi Euler angles in radians
+     * \param Phi_Theta_Psi Euler angles in radians
      * 
      * \return \f$v^\prime\f$, spherical coordinates \f$\theta\f$ and \f$\varphi\f$ in radians.
      */
-    array<double, 2> rotate(const array<double, 2> theta_phi, const array<double, 3> phi_theta_psi) const;
+    array<double, 2> rotate(const array<double, 2> theta_phi, const array<double, 3> Phi_Theta_Psi) const;
 
     /**
      * \brief Rotate a 3D vector back.
@@ -146,11 +146,11 @@ public:
      * the negative value of each angle is used.
      * 
      * \param x_y_z \f$v^\prime\f$, 3D vector
-     * \param phi_theta_psi Euler angles in radians
+     * \param Phi_Theta_Psi Euler angles in radians
      * 
      * \return \f$v\f$, 3D vector
      */
-    array<double, 3> rotate_back(const array<double, 3> xp_yp_zp, const array<double, 3> phi_theta_psi) const;
+    array<double, 3> rotate_back(const array<double, 3> xp_yp_zp, const array<double, 3> Phi_Theta_Psi) const;
     
     /**
      * \brief Rotate a 3D vector back.
@@ -158,11 +158,11 @@ public:
      * See also the implementation of rotate_back for Cartesian vectors.
      * 
      * \param theta_phi \f$v^\prime\f$, spherical coordinates \f$\theta\f$ and \f$\varphi\f$ in radians.
-     * \param phi_theta_psi Euler angles in radians
+     * \param Phi_Theta_Psi Euler angles in radians
      * 
      * \return \f$v\f$, spherical coordinates \f$\theta\f$ and \f$\varphi\f$ in radians.
      */
-    array<double, 2> rotate_back(const array<double, 2> thetap_phip, const array<double, 3> phi_theta_psi) const;
+    array<double, 2> rotate_back(const array<double, 2> thetap_phip, const array<double, 3> Phi_Theta_Psi) const;
 
 protected:
     /**
@@ -195,9 +195,9 @@ protected:
     /**
      * \brief Calculate rotation matrix for the three Euler angles.
      * 
-     * \param phi_theta_psi Euler angles in radians
+     * \param Phi_Theta_Psi Euler angles in radians
      * 
      * \return \f$3 \times 3\f$ matrix \f$A\f$
      */
-    array<array<double, 3>, 3> rotation_matrix(const array<double, 3> phi_theta_psi) const;
+    array<array<double, 3>, 3> rotation_matrix(const array<double, 3> Phi_Theta_Psi) const;
 };
