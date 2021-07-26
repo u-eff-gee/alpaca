@@ -31,14 +31,43 @@ using std::array;
  * Here, an arbitrary orientation of a coordinate system with the axes \f$x\f$, \f$y\f$, and 
  * \f$z\f$ into a coordinate system with the new axes \f$x^\prime\f$, \f$y^\prime\f$, and 
  * \f$z^\prime\f$ is achieved by the 'zxz' scheme or the 'x-convention':
- *  First, the original vector \f$v\f$ in the \f$xyz\f$ system is rotated around the original 
+ * First, the original vector \f$v\f$ in the \f$xyz\f$ system is rotated around the original 
  * \f$z\f$ axis by an angle \f$\Phi\f$.
- * Then, the resulting vector is rotated around the new \f$x^\prime\f$ axis by an angle 
- * \f$\Theta\f$.
- * At last, the vector is rotated around the new \f$z^\prime\f$ axis by an angle \f$\Psi\f$, which
- * results in the new vector \f$v^\prime\f$.
- * The procedure can be expressed in terms of rotation matrices \f$B\f$, \f$C\f$, and \f$D\f$ 
- * as {Eq. (1) in Ref. \cite Weisstein2020 with explicit angle arguments}:
+ * The rotation matrix is given by:
+ * 
+ * \f[
+ *      D\left( \Phi \right) = \begin{pmatrix}
+ *           \cos \left( \Phi \right) &  \sin \left( \Phi \right) & 0 \\
+ *          -\sin \left( \Phi \right) &  \cos \left( \Phi \right) & 0 \\
+ *           0                        &  0                        & 1 \\
+ *      \end{pmatrix}
+ * \f]
+ * 
+ * Then, the resulting vector is rotated around the original \f$x\f$ axis by an angle 
+ * \f$\Theta\f$:
+ * 
+ * \f[
+ *      C\left( \Theta \right) = \begin{pmatrix}
+ *           1                        &  0                          & 0 \\
+ *           0                        &  \cos \left( \Theta \right) &  \sin \left( \Theta \right) \\
+ *           0                        & -\sin \left( \Theta \right) &  \cos \left( \Theta \right) \\
+ *      \end{pmatrix}
+ * \f]
+ * 
+ * At last, the vector is rotated around the original \f$z\f$ axis by an angle \f$\Psi\f$.
+ * 
+ * \f[
+ *      B\left( \Psi \right) = \begin{pmatrix}
+ *           \cos \left( \Psi \right) &  \sin \left( \Psi \right) & 0 \\
+ *          -\sin \left( \Psi \right) &  \cos \left( \Psi \right) & 0 \\
+ *           0                        &  0                        & 1 \\
+ *      \end{pmatrix}
+ * \f]
+ * 
+ * The matrices are named in the same way as Eq. (1) in Ref. \cite Weisstein2020, but they have 
+ * explicit angle arguments.
+ * The action of the three rotation matrices on the vector \f$v\f$ results in a new vector 
+ * \f$v^\prime\f$:
  * 
  * \f[
  *      v^\prime = \underbrace{B \left( \Psi \right) C \left( \Theta \right) D \left( \Phi \right)}_{\equiv A \left( \Phi, \Theta, \Psi \right)} v.
@@ -53,7 +82,37 @@ using std::array;
  * 
  * This is equivalent to calculating the inverse matrix \f$A^{-1}\f$ of \f$A\f$.
  * 
- * For the representation of 3D vectors, this class uses the std::array container class.
+ * For the present application, it is instructive to consider the action of the three matrices on a
+ * unit vector along the positive \f$z\f$ axis, since the default orientation of all angular 
+ * correlations is along the \f$z\f$ axis (in other words: the first photon is supposed to be 
+ * emitted/propagating along the \f$z\f$ axis):
+ * 
+ * \f[ 
+ *      B \left( \Psi \right) C \left( \Theta \right) D \left( \Phi \right) \begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix} 
+ *      = B \left( \Psi \right) C \left( \Theta \right) \begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix}
+ *      = \begin{pmatrix} \sin \left( \Theta \right) \sin \left( \Psi \right) \\ \sin \left( \Theta \right) \cos \left( \Psi \right) \\ \cos \left( \Theta \right) \end{pmatrix}.
+ * \f]
+ * 
+ * For the convention used in this code, an arbitrary vector in spherical coordinates is identified
+ * by its polar angle \f$\theta\f$ and its azimuthal angle \f$\varphi\f$:
+ * 
+ * \f[
+ *      \begin{pmatrix} \sin \left( \theta \right) \cos \left( \varphi \right) \\ \sin \left( \theta \right) \sin \left( \varphi \right) \\ \cos \left( \theta \right) \end{pmatrix}.
+ * \f]
+ * 
+ * By comparing the two equations above, it can be seen that a given vector in spherical 
+ * coordinates can be obtained by applying the matrix \f$B C\f$ to a unit vector along the positive
+ * \f$z\f$ axis with the following choice of the Euler angles:
+ * 
+ * \f[
+ *      \Theta = \theta
+ * \f]
+ * \f[
+ *      \Psi = -\varphi + \frac{\pi}{2}.
+ * \f]
+ * 
+ * For the representation of 2D and 3D vectors, this class uses the std::array container class.
+ * 
  */
 class EulerAngleRotation{
 
