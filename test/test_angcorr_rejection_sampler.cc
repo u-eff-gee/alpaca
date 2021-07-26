@@ -17,6 +17,10 @@
     Copyright (C) 2021 Udo Friman-Gayer
 */
 
+#include <array>
+
+using std::array;
+
 #include <cassert>
 
 #include <gsl/gsl_sf.h>
@@ -53,15 +57,15 @@ int main(){
 		+0.5*cos(2.*phi)*gsl_sf_legendre_Plm(2, 2, cos(theta))); }, ang_cor.get_upper_limit(), seed
     );
 
-    pair<double, double> theta_phi_1;
-    pair<double, double> theta_phi_2;
+    array<double, 2> theta_phi_1;
+    array<double, 2> theta_phi_2;
 
     for(unsigned int n = 0; n < 1000; ++n){
         theta_phi_1 = ang_cor_sam();
         theta_phi_2 = sph_rej_sam();
 
-        test_numerical_equality<double>(theta_phi_1.first, theta_phi_2.first, 1e-6);
-        test_numerical_equality<double>(theta_phi_1.second, theta_phi_2.second, 1e-6);
+        test_numerical_equality<double>(theta_phi_1[0], theta_phi_2[0], 1e-6);
+        test_numerical_equality<double>(theta_phi_1[1], theta_phi_2[1], 1e-6);
     }
 
     // Check that the default values 
@@ -74,6 +78,6 @@ int main(){
     // This way, the random sampling is bypassed.
     AngCorrRejectionSampler ang_cor_sam_2(ang_cor, 0, 0);
     theta_phi_1 = ang_cor_sam_2();    
-    assert(theta_phi_1.first == 0.);
-    assert(theta_phi_1.second == 0.);
+    assert(theta_phi_1[0] == 0.);
+    assert(theta_phi_1[1] == 0.);
 }

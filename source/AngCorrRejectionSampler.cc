@@ -17,6 +17,10 @@
     Copyright (C) 2021 Udo Friman-Gayer
 */
 
+#include <array>
+
+using std::array;
+
 #include "AngCorrRejectionSampler.hh"
 
 AngCorrRejectionSampler::AngCorrRejectionSampler(AngularCorrelation &w, const int seed, const unsigned int max_tri): 
@@ -24,9 +28,9 @@ AngCorrRejectionSampler::AngCorrRejectionSampler(AngularCorrelation &w, const in
     angular_correlation(w.get_initial_state(), w.get_cascade_steps())
 {}
 
-tuple<unsigned int, double, double> AngCorrRejectionSampler::sample(){
+pair<unsigned int, array<double, 2>> AngCorrRejectionSampler::sample(){
 
-    pair<double, double> theta_phi;
+    array<double, 2> theta_phi;
     double dis_val;
 
     for(unsigned int i = 0; i < max_tries; ++i){
@@ -34,11 +38,11 @@ tuple<unsigned int, double, double> AngCorrRejectionSampler::sample(){
         theta_phi = sample_theta_phi();
         dis_val = uniform_random(random_engine)*distribution_maximum;
 
-        if(dis_val <= angular_correlation(theta_phi.first, theta_phi.second)){
-            return {i+1, theta_phi.first, theta_phi.second};
+        if(dis_val <= angular_correlation(theta_phi[0], theta_phi[1])){
+            return {i+1, {theta_phi[0], theta_phi[1]}};
         }
 
     }
 
-    return {max_tries, 0., 0.};
+    return {max_tries, {0., 0.}};
 }

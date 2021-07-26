@@ -20,14 +20,20 @@
 #pragma once
 
 #include <functional>
-#include <random>
-#include <utility>
 
 using std::function;
+
+#include <random>
+
 using std::mt19937;
+using std::uniform_real_distribution;
+
+#include <utility>
+
 using std::pair;
 using std::tuple;
-using std::uniform_real_distribution;
+
+#include "EulerAngleRotation.hh"
 
 /**
  * \brief Sample from a probability distribution in spherical coordinates using rejection sampling.
@@ -42,7 +48,7 @@ using std::uniform_real_distribution;
  * \f$\mathrm{d}\Omega\f$ (expressed as 
  * \f$\sin \left( \theta \right) \mathrm{d} \theta \mathrm{d} \varphi\f$ in spherical coordinates, 
  * with the polar angle \f$\theta\f$ and the aximuthal angle \f$\varphi\f$)
- * this class samples random tuples \f$\left( \theta, \varphi \right)\f$ distributed according to \f$W\f$.
+ * this class samples random pairs \f$\left( \theta, \varphi \right)\f$ distributed according to \f$W\f$.
  * 
  * The sampling algorithm used here is 'rejection sampling' (see, e.g. Sec. 2.3 in Ref.
  * \cite RobertCasella1999).
@@ -116,13 +122,12 @@ public:
     /**
      * \brief Sample a random vector from probability distribution and record the number of tries.
      * 
-     * \return Triple \f$\left( N, \theta_\mathrm{rand}, \varphi_\mathrm{rand}\right)\f$ which 
-     * contains an accepted vector \f$\left( \theta_\mathrm{rand}, \varphi_\mathrm{rand}\right)\f$
-     * and the number of tries \f$N\f$ which were needed to find this vector.
-     * Returns \f$\left( N_\mathrm{max}, 0, 0 \right)\f$ if the maximum number of trials \f$N_\mathrm{max}\f$ is
-     * reached by the algorithm and no random vector was accepted.
+     * \return std::pair which contains \f$N\f$, the number of tries that were needed to find a 
+     * valid vector, and the accepted vector \f$\left( \theta_\mathrm{rand}, \varphi_\mathrm{rand}\right)\f$.
+     * Returns a std::pair of \f$N_\mathrm{max}\f$ and \f$\left(0, 0 \right)\f$, if the maximum 
+     * number of trials \f$N_\mathrm{max}\f$ is reached by the algorithm and no random vector was accepted.
      */
-    virtual tuple<unsigned int, double, double> sample();
+    virtual pair<unsigned int, array<double, 2>> sample();
 
     /**
      * \brief Sample a random vector from probability distribution.
@@ -131,7 +136,7 @@ public:
      * Returns \f$\left( 0, 0 \right)\f$ if the maximum number of trials \f$N_\mathrm{max}\f$ is
      * reached by the algorithm and no random vector was accepted.
      */
-    pair<double, double> operator()();
+    array<double, 2> operator()();
 
     /**
      * \brief Estimate the efficiency of rejection sampling for the given distribution.
@@ -166,7 +171,7 @@ protected:
      * \return \f$\left( \theta_\mathrm{rand}, \varphi_\mathrm{rand} \right)\f$, random point on
      * sphere surface.
      */
-    pair<double, double> sample_theta_phi();
+    array<double, 2> sample_theta_phi();
 
     function<double(const double, const double)> distribution; /**< \f$W \left( \theta, \varphi \right)\f$, (unnormalized) probability distribution. */
     const double distribution_maximum; /**< \f$W_\mathrm{max}\f$, maximum of probability distribution. */
@@ -174,4 +179,5 @@ protected:
 
     mt19937 random_engine; /**< Deterministic random number engine. */
     uniform_real_distribution<double> uniform_random; /**< Uniform distribution from which all random numbers are derived here. */
+    const EulerAngleRotation euler_angle_rotation; /**< Instance of the EulerAngleRotation class */
 };

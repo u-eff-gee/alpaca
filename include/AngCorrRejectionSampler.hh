@@ -19,15 +19,11 @@
 
 #pragma once
 
-#include <memory>
-
-using std::unique_ptr;
-
-#include "SphereRejectionSampler.hh"
 #include "AngularCorrelation.hh"
+#include "SphereRejectionSampler.hh"
 
 /**
- * \brief Sample from a gamma-ray angular correlation in spherical coordinates.
+ * \brief Sample directions in spherical coordinates from an angular correlation.
  * 
  * Compared to its base class, SphereRejectionSampler, this class provides a member variable to
  * store an AngularCorrelation object that acts as the probability distribution \f$W\f$.
@@ -57,13 +53,12 @@ public:
     /**
      * \brief Sample random vector from a probability distribution and record the number of tries.
      * 
-     * \return Triple \f$\left( N, \theta_\mathrm{rand}, \varphi_\mathrm{rand}\right)\f$ which 
-     * contains an accepted vector \f$\left( \theta_\mathrm{rand}, \varphi_\mathrm{rand}\right)\f$
-     * and the number of tries \f$N\f$ which were needed to find this vector.
-     * Returns \f$\left( N_\mathrm{max}, 0, 0 \right)\f$ if the maximum number of trials \f$N_\mathrm{max}\f$ is
-     * reached by the algorithm and no random vector was accepted.
+     * \return std::pair which contains \f$N\f$, the number of tries that were needed to find a 
+     * valid vector, and the accepted vector \f$\left( \theta_\mathrm{rand}, \varphi_\mathrm{rand}\right)\f$.
+     * Returns a std::pair of \f$N_\mathrm{max}\f$ and \f$\left(0, 0 \right)\f$, if the maximum 
+     * number of trials \f$N_\mathrm{max}\f$ is reached by the algorithm and no random vector was accepted.
      */
-    tuple<unsigned int, double, double> sample() override final;
+    pair<unsigned int, array<double, 2>> sample() override final;
 
 protected:
     AngularCorrelation angular_correlation; /**< Gamma-gamma angular correlation */

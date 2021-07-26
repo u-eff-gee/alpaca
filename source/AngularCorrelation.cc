@@ -18,15 +18,17 @@
 */
 
 #include <stdexcept>
+
+using std::invalid_argument;
+
 #include <string>
+
+using std::to_string;
 
 #include "AngularCorrelation.hh"
 #include "TestUtilities.hh"
 #include "W_dir_dir.hh"
 #include "W_pol_dir.hh"
-
-using std::invalid_argument;
-using std::to_string;
 
 AngularCorrelation::AngularCorrelation(const State ini_sta, const vector<pair<Transition, State>> cas_ste):
     euler_angle_rotation(EulerAngleRotation()), w_gamma_gamma(nullptr)
