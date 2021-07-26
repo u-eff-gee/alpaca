@@ -222,6 +222,7 @@ public:
      * \return \f$W_{\gamma \gamma} \left( \theta, \varphi \right)\f$
      */
     double operator()(const double theta, const double phi) const;
+
     /**
      * \brief Return the angular correlation for an arbitrary coordinate system.
      * 

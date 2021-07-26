@@ -56,6 +56,7 @@ add_library(sphereIntegrator SphereIntegrator.cc)
 target_link_libraries(sphereIntegrator spherePointSampler)
 
 add_library(sphereRejectionSampler SphereRejectionSampler.cc)
+target_link_libraries(sphereRejectionSampler euler_angle_rotation)
 
 add_library(angcorrRejectionSampler AngCorrRejectionSampler.cc)
 target_link_libraries(angcorrRejectionSampler sphereRejectionSampler angular_correlation)

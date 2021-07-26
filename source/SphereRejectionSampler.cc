@@ -67,6 +67,10 @@ array<double, 2> SphereRejectionSampler::operator()(){
     return {sampled_theta_phi.second[0], sampled_theta_phi.second[1]};
 }
 
+array<double, 2> SphereRejectionSampler::operator()(const array<double, 3> euler_angles){
+    return euler_angle_rotation.rotate(operator()(), euler_angles);
+}
+
 double SphereRejectionSampler::estimate_efficiency(const unsigned int n_tries){
     vector<unsigned int> required_tries(n_tries);
     

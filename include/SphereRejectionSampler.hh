@@ -139,6 +139,27 @@ public:
     array<double, 2> operator()();
 
     /**
+     * \brief Sample a random vector from an arbitrarily rotated probability distribution.
+     * 
+     * This function allows to rotate the probability distribution using Euler angles in the 
+     * x convention.
+     * In the present code, this is an important feature in gamma-ray cascades, where the 
+     * direction of emission/propagation and the polarization axis of the initial photon define
+     * the reference frame for the emission of a subsequent photon.
+     * [Usually the analytical expressions for these angular correlations are implemented in a fixed
+     * reference frame (here, the direction of emission/propagation is along the positive \f$z\f$ 
+     * axis, and the polarization along the \f$x\f$ axis) for simplicity.]
+     * 
+     * \param euler_angles Euler angles \f$\Phi\f$, \f$\Theta\f$, and \f$\Psi\f$ in radians which define an 
+     * arbitrary rotation in 3D space in the x convention.
+     * 
+     * \return Accepted vector \f$\left( \theta_\mathrm{rand}, \varphi_\mathrm{rand}\right)\f$.
+     * Returns \f$\left( 0, 0 \right)\f$ if the maximum number of trials \f$N_\mathrm{max}\f$ is
+     * reached by the algorithm and no random vector was accepted.
+     */
+    array<double, 2> operator()(const array<double, 3> euler_angles);
+
+    /**
      * \brief Estimate the efficiency of rejection sampling for the given distribution.
      * 
      * The efficiency \f$\epsilon\f$ is estimated by sampling \f$n\f$ vectors from the 
