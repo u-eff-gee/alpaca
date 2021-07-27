@@ -23,6 +23,10 @@
 
 array<double, 3> EulerAngleRotation::rotate(const array<double, 3> x_y_z, const array<double, 3> Phi_Theta_Psi) const {
 
+    if(no_rotation_required(Phi_Theta_Psi)){
+        return x_y_z;
+    }
+
     const array<array<double, 3>, 3> A = rotation_matrix(Phi_Theta_Psi);
 
     return array<double, 3>{
@@ -34,30 +38,50 @@ array<double, 3> EulerAngleRotation::rotate(const array<double, 3> x_y_z, const 
 
 array<double, 2> EulerAngleRotation::rotate(const array<double, 2> theta_phi, const array<double, 3> Phi_Theta_Psi) const {
 
+    if(no_rotation_required(Phi_Theta_Psi)){
+        return theta_phi;
+    }
+
     return get_theta_phi(rotate(get_x_y_z_norm(theta_phi), Phi_Theta_Psi));
 }
 
 array<double, 3> EulerAngleRotation::rotate_back(const array<double, 3> xp_yp_zp, const array<double, 3> Phi_Theta_Psi) const {
+
+    if(no_rotation_required(Phi_Theta_Psi)){
+        return xp_yp_zp;
+    }
+ 
     return rotate(xp_yp_zp, {-Phi_Theta_Psi[2], -Phi_Theta_Psi[1], -Phi_Theta_Psi[0]});
 }
 
 array<double, 2> EulerAngleRotation::rotate_back(const array<double, 2> thetap_phip, const array<double, 3> Phi_Theta_Psi) const {
 
+    if(no_rotation_required(Phi_Theta_Psi)){
+        return thetap_phip;
+    }
+
     return get_theta_phi(rotate_back(get_x_y_z_norm(thetap_phip), Phi_Theta_Psi));
 }
 
 array<double, 2> EulerAngleRotation::get_theta_phi(const array<double, 3> x_y_z_norm) const {
-    
-    return array<double, 2>{
-        acos(x_y_z_norm[2]),
-        // atan can handle 'INFINITY', but 
-        // (double) d / (double) 0.
-        // returns nan, so this situation must be treated as a special case here.
-        atan(x_y_z_norm[0] != 0. ? 
-            x_y_z_norm[1]/x_y_z_norm[0] : 
-            x_y_z_norm[1] >=0 ? INFINITY : -INFINITY) 
-    };
 
+    // Convention for the special case where both the x and y component of the vector are zero.
+    if(x_y_z_norm[0] == 0. && x_y_z_norm[1] == 0.){
+        if(x_y_z_norm[2] >= 0.){
+            return {0., 0.};
+        }
+        return {M_PI, 0.};
+    }
+    
+    const double theta = acos(x_y_z_norm[2]);
+    if(x_y_z_norm[0] != 0.){
+        if(x_y_z_norm[1] == 0.){
+            return {theta, x_y_z_norm[0] > 0. ? 0. : M_PI};
+        }
+        return {theta, atan(x_y_z_norm[1]/x_y_z_norm[0])};
+    }
+
+    return {theta, atan(x_y_z_norm[1] >=0 ? INFINITY : -INFINITY)};
 }
 
 array<double, 3> EulerAngleRotation::get_x_y_z_norm(const array<double, 2> theta_phi) const {
@@ -94,4 +118,11 @@ array<array<double, 3>, 3> EulerAngleRotation::rotation_matrix(const array<doubl
         }
     };
 
+}
+
+bool EulerAngleRotation::no_rotation_required(const array<double, 3> Phi_Theta_Psi) const {
+    if(Phi_Theta_Psi[0] == 0. && Phi_Theta_Psi[1] == 0. && Phi_Theta_Psi[2] == 0.){
+        return true;
+    }
+    return false;
 }

@@ -164,7 +164,6 @@ public:
      */
     array<double, 2> rotate_back(const array<double, 2> thetap_phip, const array<double, 3> Phi_Theta_Psi) const;
 
-protected:
     /**
      * \brief Convert Cartesian to spherical coordinates.
      * 
@@ -180,6 +179,7 @@ protected:
      */
     array<double, 2> get_theta_phi(const array<double, 3> x_y_z_norm) const;
 
+protected:
    /**
      * \brief Convert spherical to Cartesian coordinates.
      * 
@@ -200,4 +200,16 @@ protected:
      * \return \f$3 \times 3\f$ matrix \f$A\f$
      */
     array<array<double, 3>, 3> rotation_matrix(const array<double, 3> Phi_Theta_Psi) const;
+
+    /**
+     * \brief Check if all three Euler angles are zero.
+     * 
+     * This function is used in the code to decide whether a calculation needs to be performed
+     * or whether the input value can simply be returned.
+     * 
+     * \param Phi_Theta_Psi Euler angles in radians
+     * 
+     * \return true, if all Euler angles are zero, else false.
+     */
+    bool no_rotation_required(const array<double, 3> Phi_Theta_Psi) const;
 };

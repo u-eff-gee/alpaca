@@ -153,4 +153,31 @@ int main(){
     test_numerical_equality<double>(thetap_phip[0], z_axis_sph[0], epsilon);
     test_numerical_equality<double>(eul_ang_rot.rotate_back(thetap_phip, euler_angles)[0], z_axis_sph[0], epsilon);
 
+    // Test the get_theta_phi method which calculates the corresponding spherical coordinates
+    // theta and phi for a given normalized Cartesian vector.
+    // The test uses the positive and negative x-, y-, and z axis.
+    array<double, 2> theta_phi;
+    theta_phi = eul_ang_rot.get_theta_phi({1., 0., 0.});
+    test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
+    test_numerical_equality<double>(theta_phi[1], 0., epsilon);
+
+    theta_phi = eul_ang_rot.get_theta_phi({-1., 0., 0.});
+    test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
+    test_numerical_equality<double>(theta_phi[1], M_PI, epsilon);
+
+    theta_phi = eul_ang_rot.get_theta_phi({0., 1., 0.});
+    test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
+    test_numerical_equality<double>(theta_phi[1], M_PI_2, epsilon);
+
+    theta_phi = eul_ang_rot.get_theta_phi({0., -1., 0.});
+    test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
+    test_numerical_equality<double>(theta_phi[1], -M_PI_2, epsilon);
+
+    theta_phi = eul_ang_rot.get_theta_phi({0., 0., 1.});
+    test_numerical_equality<double>(theta_phi[0], 0., epsilon);
+    test_numerical_equality<double>(theta_phi[1], 0., epsilon);
+
+    theta_phi = eul_ang_rot.get_theta_phi({0., 0., -1.});
+    test_numerical_equality<double>(theta_phi[0], M_PI, epsilon);
+    test_numerical_equality<double>(theta_phi[1], 0., epsilon);
 }
