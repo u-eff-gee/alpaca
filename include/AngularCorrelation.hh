@@ -207,6 +207,13 @@ public:
     AngularCorrelation(const State ini_sta, const vector<State> cas_sta);
 
     /**
+     * Copy constructor
+     */
+    AngularCorrelation(const AngularCorrelation& ang_cor):AngularCorrelation(
+        ang_cor.get_initial_state(), ang_cor.get_cascade_steps()
+    ){};
+
+    /**
      * \brief Return the angular correlation for given spherical coordinates.
      * 
      * This function assumes that the direction of propagation of the first photon is in the

@@ -17,6 +17,8 @@
     Copyright (C) 2021 Udo Friman-Gayer
 */
 
+#include <cassert>
+
 #include <gsl/gsl_math.h>
 
 #include "AngularCorrelation.hh"
@@ -126,4 +128,8 @@ int main(){
 
 		}
 	}
+
+    // Test the copy constructor
+    AngularCorrelation ang_corr_0_1_0_prime = ang_corr_0_1_0;
+    assert(ang_corr_0_1_0_prime(0.1, 0.2) == ang_corr_0_1_0(0.1, 0.2));
 }
