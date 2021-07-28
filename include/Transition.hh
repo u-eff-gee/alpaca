@@ -53,7 +53,7 @@ struct Transition{
 	 * \throw invalid_argument if an invalid value for \f$2 L\f$ or \f$2 L^\prime\f$ was given,
 	 * or if the two are equal.
 	 */
-	Transition(const int t_L, const int t_Lp, const double del):
+	Transition(const int t_L, const int t_Lp, const double del=0.):
 		em_char(em_unknown),
 		two_L(check_two_L(t_L)),
 		em_charp(em_unknown),
