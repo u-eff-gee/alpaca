@@ -109,4 +109,8 @@ if(BUILD_TESTS)
     add_executable(test_memory_leak test_memory_leak.cc)
     target_link_libraries(test_memory_leak angular_correlation)
     add_test(test_memory_leak test_memory_leak)
+
+    add_executable(test_cascade_rejection_sampler test_cascade_rejection_sampler.cc)
+    target_link_libraries(test_cascade_rejection_sampler angular_correlation cascadeRejectionSampler)
+    add_test(test_cascade_rejection_sampler test_cascade_rejection_sampler)
 endif(BUILD_TESTS)

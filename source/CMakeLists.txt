@@ -60,3 +60,6 @@ target_link_libraries(sphereRejectionSampler euler_angle_rotation)
 
 add_library(angcorrRejectionSampler AngCorrRejectionSampler.cc)
 target_link_libraries(angcorrRejectionSampler sphereRejectionSampler angular_correlation)
+
+add_library(cascadeRejectionSampler CascadeRejectionSampler.cc)
+target_link_libraries(cascadeRejectionSampler angular_correlation angcorrRejectionSampler)
