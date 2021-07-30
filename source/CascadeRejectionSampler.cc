@@ -41,19 +41,25 @@ CascadeRejectionSampler::CascadeRejectionSampler(vector<AngularCorrelation> &cas
 
 vector<array<double, 2>> CascadeRejectionSampler::operator()(){
     vector<array<double, 2>> directions;
+    vector<array<double, 3>> reference_frames;
 
     if(initial_direction_random){
-        array<double, 2> reference_frame_theta_phi = uniform_direction_sampler();
-        PhiThetaPsi = {0., reference_frame_theta_phi[0], phi_to_Psi(reference_frame_theta_phi[1])};
+        const array<double, 2> initial_theta_phi = uniform_direction_sampler();
+        reference_frames.push_back({0., initial_theta_phi[0], phi_to_Psi(initial_theta_phi[1])}); 
+    } else {
+        reference_frames.push_back(PhiThetaPsi);
     }
 
-    directions.push_back(angular_correlation_samplers[0](PhiThetaPsi));
-    for(size_t i = 1; i < angular_correlation_samplers.size(); ++i){
-        directions.push_back(angular_correlation_samplers[i](array<double, 3>{0., directions[i-1][0], phi_to_Psi(directions[i-1][1])}));
+    if(return_first_direction){
+        directions.push_back({reference_frames[0][1], Psi_to_phi(reference_frames[0][2])});
     }
 
-    if(!return_first_direction){
-        directions.erase(directions.begin());
+    array<double, 2> theta_phi_random;
+    for(size_t i = 0; i < angular_correlation_samplers.size(); ++i){
+        theta_phi_random = angular_correlation_samplers[i](reference_frames[i]);
+        directions.push_back(theta_phi_random);
+        reference_frames.push_back({0., theta_phi_random[0], phi_to_Psi(theta_phi_random[1])});
     }
+
     return directions;
 }

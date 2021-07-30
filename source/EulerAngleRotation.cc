@@ -72,7 +72,7 @@ array<double, 2> EulerAngleRotation::get_theta_phi(const array<double, 3> x_y_z_
         }
         return {M_PI, 0.};
     }
-    
+
     const double theta = acos(x_y_z_norm[2]);
     if(x_y_z_norm[0] != 0.){
         if(x_y_z_norm[1] == 0.){

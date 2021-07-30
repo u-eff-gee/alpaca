@@ -54,6 +54,8 @@ using std::vector;
  * AngCorrRejectionSampler, the task of the present class is to rotate the directional vectors
  * from AngCorrRejectionSampler, which are defined with respect to the \f$z\f$ axis, into the 
  * reference frame given by the direction of emission sampled for the previous step.
+ * For the rotations, Euler angles in the x convention (see also the EulerAngleRotation class) are
+ * used.
  * 
  * In order to set up a cascade between \f$n > 3\f$ states with \f$n-1\f$ transitions
  * 
@@ -84,9 +86,12 @@ using std::vector;
  * The first angular correlation is special in the sense that a reference frame must be defined.
  * There are two possibilities:
  *  
- *  1. The cascade originates from an unoriented source. In that case, the first gamma ray is emitted in a direction sampled from a uniform random distribution on the surface of a sphere.
+ *  1. The cascade originates from an unoriented source. In that case, the first gamma ray is 
+ * emitted in a direction sampled from a uniform random distribution on the surface of a sphere.
  *  2. The first gamma ray represents one of the mechanisms described by Krane, Steffen, and 
- * Wheeler \cite KraneSteffenWheeler1973 that orients the second state. For example, in a nuclear resonance fluorescence experiment, the first transition could correspond to the capture of a beam photon.
+ * Wheeler \cite KraneSteffenWheeler1973 that orients the second state. For example, in a nuclear 
+ * resonance fluorescence experiment, the first transition could correspond to the capture of a 
+ * beam photon.
  * 
  * In the first case, it is usually desirable to return the direction of the first gamma ray, 
  * since it belongs to the cascade.
@@ -105,6 +110,23 @@ using std::vector;
  * \f[
  *      j_1 \left( {\vec{L_1}} \atop {L_1^\prime} \right) j_2 \left( {L_2} \atop {L_2^\prime} \right) j_3 ... j_{n-1} \left( {L_{n-1}} \atop {L_{n-1}^\prime} \right) j_n.
  * \f]
+ * 
+ * Since only the orientation of the polarization plane of the first transition can be controlled 
+ * by the user (only in case 2, where the second state is oriented) by passing a set of Euler 
+ * angles to the constructor of CascadeRejectionSampler, all other transitions can be treated 
+ * as if they were rotationally symmetric around the \f$z\f$ axis.
+ * This means that if the single polarized transition that may show up in the cascade is not the 
+ * second transition, the polarization plane can simply be sampled from a uniform random 
+ * distribution because there is nothing known about its orientation.
+ * This implies that the relation between a vector \f$\left( \theta, \varphi \right)\f$ in 
+ * spherical coordinates and a set of Euler angles \f$\left( \Phi, \Theta, \Psi \right)\f$ which, 
+ * applied to the Cartesian vector \f$\left( 0, 0, 1 \right)\f$ (i.e the \f$z\f$ axis), generates 
+ * this vector, is unique:
+ * The first Euler rotation around the \f$z\f$ axis by the angle \f$\Phi\f$ has no effect on a 
+ * rotationally symmetric body, therefore it can be neglected.
+ * Internally, it is set to zero.
+ * The orientation of the angular-correlation pattern along the last emitted gamma ray can be 
+ * achieved using the Euler angles \f$\Theta\f$ and \f$\Psi\f$ only.
  * 
  * The CascadeRejectionSampler class uses a single random-number seed and a single maximum number 
  * of iterations for all of its random-number sampling members (\f$n-2\f$ instances of 
@@ -166,7 +188,8 @@ public:
     vector<array<double, 2>> operator()();
 
 protected:
-    double phi_to_Psi(const double phi) const { return -phi - M_PI_2; } /**< Conversion from the azimuthal angle \f$\varphi\f$ in spherical coordinates to the first Euler angle \f$\Psi\f$ in the x convention. See also the EulerAngleRotation class.*/
+    double phi_to_Psi(const double phi) const { return M_PI_2 - phi; } /**< Conversion from the azimuthal angle \f$\varphi\f$ in spherical coordinates to the first Euler angle \f$\Psi\f$ in the x convention. See also the EulerAngleRotation class.*/
+    double Psi_to_phi(const double Psi) const { return M_PI_2 - Psi; } /**< Conversion from the first Euler angle \f$\Psi\f$ in the x convention to the azimuthal angle \f$\varphi\f$ in spherical coordinates. See also the EulerAngleRotation class.*/
 
     const bool initial_direction_random; /**< Indicates whether the direction of the first gamma ray was given by the user (false) or should be sampled (true).*/
     array<double, 3> PhiThetaPsi; /**< Euler angles to control the orientation of the first gamma ray. */
