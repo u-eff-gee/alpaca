@@ -50,6 +50,14 @@ def test_analyzing_power():
 
     assert np.isclose(ana_pow(0.5 * np.pi), 1.0)
 
+    # Test the arbitrary-angle input
+
+    assert np.isclose(
+        ana_pow(0.1, 0.2, 0.3, 0.4),
+        (ang_cor(0.2, 0.4) - ang_cor(0.1, 0.3))
+        / (ang_cor(0.1, 0.3) + ang_cor(0.2, 0.4)),
+    )
+
     # Test the arctan_grid function which creates an equidistant grid of arctan(delta) between two
     # limits.
     # In particular, test the warnings issued by this function.

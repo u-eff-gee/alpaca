@@ -95,7 +95,7 @@ class AnalyzingPower:
     i.e. it quantifies the relative difference of the probabilities.
 
     Due to the symmetry of the angular correlations in nuclear physics experiments, they often use
-    a definition where :math:`\theta = \theta^\prime` and :math:`\varphi, \varphi^\prime \in \left\{ 0, \pi/2 \right\}`.
+    a definition where :math:`\theta = \theta^\prime` and :math:`\varphi, \varphi^\prime \in \left\{ 0, \pi/2 \right\}`, but the code supports arbitrary values for the angles.
     The most recent review article on the nuclear resonance fluorescence technique by Kneissl,
     Pitz, and Zilges (KPZ) :cite:`Kneissl1996` gives the analyzing power as:
 
@@ -164,7 +164,7 @@ class AnalyzingPower:
     def __init__(self, angular_correlation, PQ=1.0, convention="natural"):
         """Initialization
 
-        Define the angular correlation for which the analyzing power should be evaluated and the
+        Define the angular correlation for which the analyzing power should be evaluated, and the
         convention.
 
         Parameters
@@ -182,21 +182,25 @@ class AnalyzingPower:
         self.PQ = PQ
         self.convention = convention
 
-    def __call__(self, theta=0.5 * np.pi):
+    def __call__(self, theta=0.5 * np.pi, thetap=None, phi=0.0, phip=0.5 * np.pi):
         r"""Evaluate the analyzing power
 
         Parameters
         ----------
         theta: float or ndarray
             Polar angle :math:`\theta` in radians (default: 90 degrees).
+        thetap: float or ndarray
+            Polar angle :math:`\theta^\prime` in radians (default: None, i.e. use the same value as theta).
+        phi, phip: float or ndarray
+            Azimuthal angles :math:`\varphi` and :math:`\varphi^\prime` in radians (default: 0 and 90 degrees).
 
         Returns
         -------
         float, :math:`A \left( \theta \right)`
         """
 
-        w_para = self.angular_correlation(theta, 0.0)
-        w_perp = self.angular_correlation(theta, 0.5 * np.pi)
+        w_para = self.angular_correlation(theta, phi)
+        w_perp = self.angular_correlation(thetap if thetap is not None else theta, phip)
 
         return (
             self.PQ
@@ -205,7 +209,15 @@ class AnalyzingPower:
             / (w_para + w_perp)
         )
 
-    def evaluate(self, delta, delta_values, theta=0.5 * np.pi):
+    def evaluate(
+        self,
+        delta,
+        delta_values,
+        theta=0.5 * np.pi,
+        thetap=None,
+        phi=0.0,
+        phip=0.5 * np.pi,
+    ):
         r"""Evaluate the analyzing power for a given value of the multipole mixing ratio
 
         Based on the cascade in this AnalyzingPower object, this function creates a new object
@@ -235,6 +247,10 @@ class AnalyzingPower:
             To achieve this, put `delta_values=["delta", lambda x: -x]`.
         theta: float or ndarray
             Polar angle :math:`\theta` in radians (default: 90 degrees).
+        thetap: float or ndarray
+            Polar angle :math:`\theta^\prime` in radians (default: None, i.e. use the same value as theta).
+        phi, phip: float or ndarray
+            Azimuthal angles :math:`\varphi` and :math:`\varphi^\prime` in radians (default: 0 and 90 degrees).
 
         Returns
         -------
@@ -295,7 +311,9 @@ class AnalyzingPower:
                 PQ=self.PQ,
                 convention=self.convention,
             )
-            asymmetries[i] = ana_pow(theta)
+            asymmetries[i] = ana_pow(
+                theta, thetap if thetap is not None else theta, phi, phip
+            )
             # Avoid memory leaking by deleting the temporarily created AngularCorrelation objects.
             ana_pow.angular_correlation.free()
         if scalar_output:

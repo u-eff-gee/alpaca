@@ -146,11 +146,11 @@ class AnalyzingPowerPlotter:
             ana_pow_1[i] = AnalyzingPower(
                 AngularCorrelation(initial_state, cascade_steps),
                 convention=self.convention,
-            )(self.theta_1)
+            )(theta=self.theta_1)
             ana_pow_2[i] = AnalyzingPower(
                 AngularCorrelation(initial_state, cascade_steps),
                 convention=self.convention,
-            )(self.theta_2)
+            )(theta=self.theta_2)
 
         return (ana_pow_1, ana_pow_2)
 
@@ -185,7 +185,11 @@ class AnalyzingPowerPlotter:
                 delta_values,
                 AnalyzingPower(
                     self.angular_correlation, convention=self.convention
-                ).evaluate(delta_values, self.delta_values, self.theta_1),
+                ).evaluate(
+                    delta=delta_values,
+                    delta_values=self.delta_values,
+                    theta=self.theta_1,
+                ),
                 [
                     self.analyzing_power_experimental[0][0]
                     - self.analyzing_power_experimental[0][1],
@@ -200,7 +204,11 @@ class AnalyzingPowerPlotter:
                 delta_values,
                 AnalyzingPower(
                     self.angular_correlation, convention=self.convention
-                ).evaluate(delta_values, self.delta_values, self.theta_2),
+                ).evaluate(
+                    delta=delta_values,
+                    delta_values=self.delta_values,
+                    theta=self.theta_2,
+                ),
                 [
                     self.analyzing_power_experimental[1][0]
                     - self.analyzing_power_experimental[1][1],
