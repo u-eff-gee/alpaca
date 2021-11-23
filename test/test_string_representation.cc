@@ -39,7 +39,7 @@ vector<W_gamma_gamma*> w_gamma_gamma{
 		State(0),
 		{
 			{Transition(2, 4, 0.), State(2)},
-			{Transition(0, 4, 0.), State(4)},
+			{Transition(2, 4, 0.), State(4)},
 		}        
     ),
     new W_dir_dir(
@@ -47,14 +47,14 @@ vector<W_gamma_gamma*> w_gamma_gamma{
 		{
 			{Transition(2, 4, 0.), State(2)},
 			{Transition(2, 4, 0.), State(2)},
-			{Transition(0, 4, 0.), State(4)},
+			{Transition(2, 4, 0.), State(4)},
 		}        
     ),
     new W_pol_dir(
 		State(0, positive),
 		{
 			{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-			{Transition(magnetic, 0, electric, 4, 0.), State(4, positive)},
+			{Transition(magnetic, 2, electric, 4, 0.), State(4, positive)},
 		}        
     ),
     new W_pol_dir(
@@ -62,7 +62,7 @@ vector<W_gamma_gamma*> w_gamma_gamma{
 		{
 			{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
 			{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-			{Transition(magnetic, 0, electric, 4, 0.), State(4, positive)},
+			{Transition(magnetic, 2, electric, 4, 0.), State(4, positive)},
 		}        
     ),
 };

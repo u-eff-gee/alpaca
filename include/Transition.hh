@@ -163,8 +163,8 @@ struct Transition{
 	 */
 	int check_two_L(const int two_L) const {
 		
-		if(two_L < 0){
-			throw invalid_argument("two_L (two_Lp) must be a nonnegative integer.");
+		if(two_L < 1){
+			throw invalid_argument("two_L (two_Lp) must be a nonzero, nonnegative integer.");
 		}
 
 		return two_L;
