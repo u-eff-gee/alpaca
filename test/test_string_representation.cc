@@ -58,6 +58,13 @@ vector<W_gamma_gamma*> w_gamma_gamma{
 		}        
     ),
     new W_pol_dir(
+		State(3, negative),
+		{
+			{Transition(magnetic, 2, electric, 4, 0.), State(5, negative)},
+			{Transition(magnetic, 2, electric, 4, 0.), State(3, negative)},
+		}        
+    ),
+    new W_pol_dir(
 		State(0, positive),
 		{
 			{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},

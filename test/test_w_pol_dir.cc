@@ -195,7 +195,7 @@ int main(){
 	const string str_rep = 
 		w_0_1_2.string_representation() + "\\\\"
 		+ "-\\cos\\left(2\\varphi\\right)\\left\\{\\right.\\\\"
-		+ "\\times\\left[" + AlphavCoefficient(4, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]\\\\"
+		+ "\\left[" + AlphavCoefficient(4, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]\\\\"
 		+ "\\times\\left[" + AvCoefficient(4, 2, 4, 4, 2).string_representation(0, {"\\delta_2"}) + "\\right]\\\\"
 		+ "\\times P_{2}^{\\left|2\\right|}\\left[\\cos\\left(\\theta\\right)\\right]"
 		+ "\\left.\\right\\}"
@@ -223,7 +223,7 @@ int main(){
 	const string str_rep_2 = 
 		w_0_1_1_2.string_representation() + "\\\\"
 		+ "-\\cos\\left(2\\varphi\\right)\\left\\{\\right.\\\\"
-		+ "\\times\\left[" + AlphavCoefficient(4, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]\\\\"
+		+ "\\left[" + AlphavCoefficient(4, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]\\\\"
 		+ "\\times\\left[" + UvCoefficient(4, 2, 2, 4, 0., 2).string_representation(0, {"\\delta_2"}) + "\\right]\\\\"
 		+ "\\times\\left[" + AvCoefficient(4, 2, 4, 4, 2).string_representation(0, {"\\delta_3"}) + "\\right]\\\\"
 		+ "\\times P_{2}^{\\left|2\\right|}\\left[\\cos\\left(\\theta\\right)\\right]"

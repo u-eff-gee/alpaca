@@ -132,7 +132,7 @@ string W_pol_dir::string_representation(const unsigned int n_digits, vector<stri
 			str_rep += "+";
 		}
 
-		str_rep += "\\times\\left[" + alphav_coefficients[i-1].string_representation(n_digits, {delta_variables[0]}) + "\\right]\\\\";
+		str_rep += "\\left[" + alphav_coefficients[i-1].string_representation(n_digits, {delta_variables[0]}) + "\\right]\\\\";
 		if(n_cascade_steps > 2){
 			for(size_t j = 0; j < uv_coefficients[i].size(); ++j){
 				str_rep += "\\times\\left[" + uv_coefficients[i][j].string_representation(n_digits, {delta_variables[1+j]}) + "\\right]\\\\";

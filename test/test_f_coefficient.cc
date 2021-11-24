@@ -81,4 +81,8 @@ int main(){
 	f_coef = make_unique<FCoefficient>(4, 2, 2, 0, 2);
 	assert(f_coef->string_representation() == "F_{2}\\left(1,1,0,1\\right)");
 	assert(f_coef->string_representation(3) == "0.707");
+
+	f_coef = make_unique<FCoefficient>(8, 4, 4, 3, 5);
+	assert(f_coef->string_representation() == "F_{4}\\left(2,2,3/2,5/2\\right)");
+	assert(f_coef->string_representation(3) == "0.705");
 }

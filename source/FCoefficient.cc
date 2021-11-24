@@ -118,16 +118,24 @@ string FCoefficient::string_representation(const unsigned int n_digits, [[maybe_
 	if(n_digits){
 		return float_string_representation(n_digits, value);
 	}
-	return "F_{" 
+	string str_rep = "F_{" 
 		+ to_string(two_nu/2) 
 		+ "}\\left(" 
 		+ to_string(two_L/2)
 		+ ","
 		+ to_string(two_Lp/2)
+		+ ",";
+	if(two_j1 % 2){
+		str_rep += to_string(two_j1)
+		+ "/2,"
+		+ to_string(two_j)
+		+ "/2";
+	} else {
+		str_rep += to_string(two_j1/2)
 		+ ","
-		+ to_string(two_j1/2)
-		+ ","
-		+ to_string(two_j/2)
-		+ "\\right)"
-	;
+		+ to_string(two_j/2);
+	}
+	str_rep += "\\right)";
+	
+	return str_rep;
 }
