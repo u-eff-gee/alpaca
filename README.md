@@ -5,7 +5,12 @@
 
 An object-oriented C++ library with python bindings for direction-direction and polarization-direction correlations of two photons in a cascade of transitions between (nuclear) quantum states.
 
-## Description
+## Table of Contents
+
+1. [Description](#1-description)
+2. [Build](#2-build)
+
+## 1. Description
 
 The direction- and polarization vectors of different photons, which are absorbed/emitted during a single internal electromagnetic transition sequence of a nucleus, are correlated. 
 The correlation depends on the angular-momentum ('spin') quantum numbers and parities of the involved quantum states.
@@ -26,7 +31,11 @@ It has been tested against an equivalent code in the `R` programming language by
 The formalism of this code, as well as the review article Ref. [1], are based a book chapter by L. C. Biedenharn [2].
 In particular, the convention of Biedenharn for the multipole-mixing ratio is used, where the sign of the mixing ratio depends on the notion of initial/final states and intermediate states of a cascade.
 
-## Building (Linux)
+## 2. Build
+
+This section describes how to build, and optionally install, the `alpaca` code.
+The C++ libraries can be used without building/installing the python code.
+The python bindings of this project, on the other hand, invoke the shared C++ libraries via [ctypes](https://docs.python.org/3/library/ctypes.html#module-ctypes). This means that all mandatory prerequisites for the C++ libraries are also prerequisites for the python code, and the former has to be built first.
 
 ### Prerequisites (C++)
 
@@ -37,8 +46,7 @@ In particular, the convention of Biedenharn for the multipole-mixing ratio is us
 
 ### Prerequisites (python)
 
-The python bindings of this project invoke the shared C++ libraries via [ctypes](https://docs.python.org/3/library/ctypes.html#module-ctypes), which means that all mandatory prerequisites for the C++ code are also prerequisites for the python code.
-In addition, the following libraries/tools are required:
+Besides all prerequisites for the C++ libraries, the following libraries/tools are required:
 
 * [python3](https://www.python.org/) (it is assumed that the command-line executable is called 'python3')
 * [numpy](https://numpy.org/)
