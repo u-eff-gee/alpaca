@@ -9,6 +9,21 @@ An object-oriented C++ library with python bindings for direction-direction and 
 
 1. [Description](#1-description)
 2. [Build](#2-build)
+   1. [Prerequisites (C++)](#2i-prerequisites-c)
+   2. [Prerequisites (python)](#2ii-prerequisites-python)
+   3. [Build (C++)](#2iii-build-c)
+   4. [Optional Testing (C++)](#2iv-optional-testing-c)
+   5. [Build (python)](#2v-build-python)
+   6. [Optional Testing (python)](#2vi-optional-testing-python)
+3. [Usage](#3-usage)
+   1. [Example (C++)](#3i-example-c) 
+   2. [Example (python)](#3ii-example-python) 
+4. [Conventions](#4-conventions)
+   1. [Coordinate System](#4i-coordinate-system)
+   2. [Phases of Multipole Mixing Ratios](#4ii-phases-of-multipole-mixing-ratios)
+5. [License](#5-license)
+6. [Acknowledgments](#6-acknowledgments)
+7. [References](#7-references)
 
 ## 1. Description
 
@@ -37,14 +52,14 @@ This section describes how to build, and optionally install, the `alpaca` code.
 The C++ libraries can be used without building/installing the python code.
 The python bindings of this project, on the other hand, invoke the shared C++ libraries via [ctypes](https://docs.python.org/3/library/ctypes.html#module-ctypes). This means that all mandatory prerequisites for the C++ libraries are also prerequisites for the python code, and the former has to be built first.
 
-### Prerequisites (C++)
+### 2.i Prerequisites (C++)
 
 * [CMake](https://cmake.org/) (version >= 3.16 required for installation [3])
 * C++ compiler which supports at least the C++11 standard.
 * [GNU Scientific Library (GSL)](https://www.gnu.org/software/gsl/)
 * [doxygen](https://www.doxygen.nl/) and all its requirements for [displaying formulas](https://www.doxygen.nl/manual/formulas.html) (documentation, optional)
 
-### Prerequisites (python)
+### 2.ii Prerequisites (python)
 
 Besides all prerequisites for the C++ libraries, the following libraries/tools are required:
 
@@ -56,7 +71,7 @@ Besides all prerequisites for the C++ libraries, the following libraries/tools a
 * [pytest-cov](https://pypi.org/project/pytest-cov/) (testing, optional)
 * [tox](https://tox.readthedocs.io) (testing, optional)
 
-### Build (C++)
+### 2.iii Build (C++)
 
 In the following, it is assumed that `ALPACA_SOURCE_DIR` is the directory that contains the top-level `CMakeLists.txt` and this README.
 Furthermore, it is assumed that `ALPACA_BUILD_DIR` is the directory where the user wants to build the code.
@@ -86,7 +101,7 @@ $ cmake --install .
 
 The installation is not required to use the C++ libraries (the location of the libraries can be passed to the compiler manually as shown below in the C++ example) or to install the python code. See also footnote [3].
 
-#### Optional Testing (C++)
+#### 2.iv Optional Testing (C++)
 
 To run a self test of the C++ code, type:
 
@@ -95,7 +110,7 @@ $ cd ALPACA_BUILD_DIR/test
 $ ctest
 ```
 
-### Build (python)
+### 2.v Build (python)
 
 Follow the steps for the C++ build in the previous section.
 After that, the python code can be found in `ALPACA_BUILD_DIR/python`.
@@ -108,7 +123,7 @@ $ python3 setup.py install
 
 in that directory.
 
-#### Optional Testing (python)
+#### 2.vi Optional Testing (python)
 
 To run a self test of the python code, type:
 
@@ -123,7 +138,7 @@ Using `pytest-cov`, a coverage report for the self tests will be created.
 Note that the python tests only ensure that the python API works.
 A detailed test of the angular correlation formalism is performed for the C++ code only.
 
-## Usage
+## 3. Usage
 
 As an example, consider an experiment in which a nucleus with a 0^+ ground state is excited by a photon beam that propagates along the positive z axis and has a linear polarization along the x axis.
 The corresponding electric-dipole excitation renders the nucleus in an excited state with the quantum numbers 1^-, from which it decays to a low-lying 2^+ state via a mixed electric-dipole/magnetic-quadrupole transition with a mixing ratio of 1.
@@ -135,7 +150,7 @@ Both the C++ code and the python code create an `AngularCorrelation` object, whi
 States and Transitions are passed as `State` and `Transition` objects.
 The `AngularCorrelation` object can be called using the arguments `(theta, phi)`, i.e. a polar angle `theta` and an azimuthal angle `phi`.
 
-### Example (C++)
+### 3.i Example (C++)
 
 ```
 #include <gsl/gsl_math.h> // To be able to use pi
@@ -172,7 +187,7 @@ $ g++ test.cpp -I ALPACA_SOURCE_DIR/include -L ALPACA_BUILD_DIR/source -langular
 
 This will create an executable binary for the test.
 
-### Example (python)
+### 3.ii Example (python)
 
 ```
 import numpy as np # To be able to use pi
@@ -198,7 +213,9 @@ In order to run this code, which is assumed to be in a file called `test.py`, ty
 $ python3 test.py
 ```
 
-## Definition of Angles
+## 4. Conventions
+
+### 4.i Coordinate System
 
 In contrast to Ref. [1] (see, in particular, Fig. 1 therein, and Sec. 2 'Formalism for a two-step angular correlation'), the `alpaca` code uses a right-handed coordinate system in which the beam is assumed to propagate along the `z` axis, and the azimuthal angle is defined with respect to the `x` axis.
 With the definition of the angles in `alpaca`, the relations between a Cartesian coordinate system with `x`, `y` and `z`, and a spherical coordinate system with an azimuthal angle Φ and a polar angle θ, are given by:
@@ -227,7 +244,9 @@ In `alpaca`, they need to be modified to:
 
 > The angle Φ is between the **x** axis and the projection of the direction of the second γ ray onto the **x**-**y** plane (azimuthal angle).
 
-## License
+### 4.ii Phases of Multipole Mixing Ratios
+
+## 5. License
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -239,11 +258,11 @@ Copyright (C) 2021 Udo Friman-Gayer (udo.friman-gayer@duke.edu)
 
 This program was originally developed as part of the [Geant4](https://geant4.web.cern.ch/) application [nutr](https://github.com/uga-uga/nutr), published under the GNU General Public License.
 
-## Acknowledgements
+## 6. Acknowledgments
 
 The author would like to thank C. Iliadis for enlightening discussions about the angular correlation formalism and for help with debugging the associated modules. The author would also like to thank O. Papst (OP) for helpful discussions about the angular correlation formalism and advertise OP's angular correlation code [angcorrwat](https://github.com/op3/angcorrwat). angcorrwat is complementary to the present code in the sense that it uses the python package [sympy](https://www.sympy.org/) to obtain symbolic expressions for the angular correlations.
 
-## References
+## 7. References
 
 [1] C. Iliadis and U. Friman-Gayer, 'Linear polarization-direction correlations in γ-ray scattering experiments', Eur. Phys. J. A **57**, 190 (2021) (https://doi.org/10.1140/epja/s10050-021-00472-1); arXiv:2104.00228 (https://arxiv.org/abs/2104.00228)
 
