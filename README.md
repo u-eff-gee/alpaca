@@ -45,6 +45,7 @@ It has been tested against an equivalent code in the `R` programming language by
 
 The formalism of this code, as well as the review article Ref. [1], are based a book chapter by L. C. Biedenharn [2].
 In particular, the convention of Biedenharn for the multipole-mixing ratio is used, where the sign of the mixing ratio depends on the notion of initial/final states and intermediate states of a cascade.
+See also [Sec. 4.ii](#4ii-phases-of-multipole-mixing-ratios) for more information.
 
 ## 2. Build
 
@@ -246,6 +247,29 @@ In `alpaca`, they need to be modified to:
 
 ### 4.ii Phases of Multipole Mixing Ratios
 
+The sign of a transition matrix element is not an experimental observable.
+For this reason, there is an ambiguity in the sign of the multipole mixing ratio that describes the contribution of different electromagnetic multipoles to the same transition.
+Historically, different conventions have been in use, which are identified by the names of the proposing authors:
+
+- Biedenharn (used in this work)
+- Krane, Steffen, and Wheeler (KSW)
+- Rose and Brink
+
+The differences between the conventions and conversion rules are listed in our review article [1].
+As already mentioned, Ref. [1] and `alpaca` use the Biedenharn convention.
+While it has advantages for some nuclear resonance fluorescence (NRF) applications [1], its disadvantage is the dependence of the sign of the mixing ratio on the position of the step in the cascade.
+The KSW convention, on the other hand, enforces an order in the matrix elements (initial state on the right-hand side of the matrix element, "decay matrix elements") that makes them independent of the measurement process.
+
+Recently, a review article for the NRF method was published [5].
+In contrast to our article, Zilges *et al.* use the KSW convention.
+For the NRF process, where the first cascade step is an excitation and not a decay, they propose to modify the expression of KSW [6] to take into account the change of sign (see their footnote 2).
+With the modified expression, the mixing ratios for both steps of an "elastic" NRF cascade have the same sign.
+This seems natural, because both steps are the same transition.
+Please note that - in contrast to Zilges *et al.* - the manual of the Evaluated Nuclear Structure Data File (ENSDF) [7] recommends to use the original expression of KSW with two different signs in that case.
+These conflicting interpretations of the KSW conventions by the NRF community [4,5] and the ENSDF [7] are potentially confusing.
+
+As stated in Ref. [1], it is recommended to state unambiguously in publications which convention has been used.
+
 ## 5. License
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -260,7 +284,11 @@ This program was originally developed as part of the [Geant4](https://geant4.web
 
 ## 6. Acknowledgments
 
-The author would like to thank C. Iliadis for enlightening discussions about the angular correlation formalism and for help with debugging the associated modules. The author would also like to thank O. Papst (OP) for helpful discussions about the angular correlation formalism and advertise OP's angular correlation code [angcorrwat](https://github.com/op3/angcorrwat). angcorrwat is complementary to the present code in the sense that it uses the python package [sympy](https://www.sympy.org/) to obtain symbolic expressions for the angular correlations.
+The author would like to thank 
+
+- C. Iliadis for enlightening discussions about the angular correlation formalism and for help with debugging the associated modules.
+- O. Papst (OP) for helpful discussions about the angular correlation formalism and advertise OP's angular correlation code [angcorrwat](https://github.com/op3/angcorrwat). angcorrwat is complementary to the present code in the sense that it uses the python package [sympy](https://www.sympy.org/) to obtain symbolic expressions for the angular correlations.
+- N. Pietralla (NP) for helpful discussions about the mixing-ratio conventions. The writing of Ref. [5] had been in progress when our review article [1] appeared. Our use of the Biedenharn convention sparked the aforementioned discussion, and NP helped us realize the discrepancy between the nuclear resonance fluorescence literature and the ENSDF recommendations (see [Sec. 4.ii](#4ii-phases-of-multipole-mixing-ratios)). Footnote 2 in Ref. [5] addresses the issue from the point of view of Zilges *et al.*.
 
 ## 7. References
 
@@ -271,5 +299,11 @@ The author would like to thank C. Iliadis for enlightening discussions about the
 [3] It was found that the compilation does not work with CMake versions as recent as 3.10 (default on Ubuntu 18 OS). Since the code that uses the most recent CMake features is related to the installation of the C++ libraries, it can help to comment out the last few lines in `ALPACA_DIR/CMakeLists.txt`, starting from `set(_ALPACA_HEADERS ...`. With this modification, it will not be possible to install the C++ libraries in the system's default paths. However, an installation is not required to be able to use the compiled C++ libraries or the python code.
 
 [4] U. Kneissl, H. H. Pitz, and A. Zilges, 'Investigation of Nuclear Structure by Resonance Fluorescence Scattering', Prog. Part. Nucl. Phys. **37**, 349 (1996) (https://doi.org/10.1016/0146-6410(96)00055-5)
+
+[5] A. Zilges, D. L. Balabanski, J. Isaak, and N. Pietralla, 'Photonuclear reactions - From basic research to applications', Prog. Part. Nucl. Phys. **122**, 103903 (2022) (https://doi.org/10.1016/j.ppnp.2021.103903)
+
+[6] K. S. Krane, R. M. Steffen, and R. M. Wheeler, 'Directional correlations of gamma radiations emitted from nuclear states oriented by nuclear reactions or cryogenic methods', Atom. Data Nucl. Data **11**, 351-406 (1973) (https://doi.org/10.1016/S0092-640X(73)80016-6)
+
+[7] M. J. Martin, 'Phase convention for mixing ratios in electromagnetic transitions from angular correlations and angular distributions', in 'Procedures Manual for the Evaluated Nuclear Structure Data File', ed. by M. R. Bhat., The National Nuclear Data Center, Brookhaven National Laboratory, Upton, BNL-NCS-40503 Informal Report (1987) (https://doi.org/10.2172/5262270)
 
 See also `ALPACA_DIR/bibliography.bib`.
