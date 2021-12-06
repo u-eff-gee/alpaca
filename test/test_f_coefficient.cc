@@ -66,7 +66,7 @@ vector<FCoefficientLiteratureValue> f_coefficient_values {
 
 int main(){
 
-	unique_ptr<FCoefficient> f_coef;
+	unique_ptr<FCoefficient> f_coef = make_unique<FCoefficient>(4, 0, 0, 0, 0);
 	const double epsilon = 1e-7;
 
 	for(auto f : f_coefficient_values){

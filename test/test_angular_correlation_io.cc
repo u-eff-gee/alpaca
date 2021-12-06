@@ -151,25 +151,19 @@ int main(){
     error_thrown = false;
 
     // Not an error: Triangle inequality fulfilled by second transition
-    try{
-        AngularCorrelation ang_corr(
-            State(0, positive), 
+    AngularCorrelation ang_corr(
+        State(0, positive), 
+        {
             {
-                {
-                    Transition(electric, 10, electric, 2, 0.),
-                    State(2, negative)
-                },
-                {
-                    Transition(electric, 2, magnetic, 4, 0.),
-                    State(0, positive)
-                }
+                Transition(electric, 10, electric, 2, 0.),
+                State(2, negative)
+            },
+            {
+                Transition(electric, 2, magnetic, 4, 0.),
+                State(0, positive)
             }
-        );
-    } catch(const std::invalid_argument &e) {
-        error_thrown = true;
-    }
-
-    assert(!error_thrown);
+        }
+    );
 
     // Error: First electromagnetic character wrong
     try{

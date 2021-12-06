@@ -32,7 +32,7 @@ int main(){
     // [Eqs. (66) - (68)] of Ref. \cite AjzenbergSelove1960, which gives the values of two
     // coefficients explicitly.
 
-	unique_ptr<UvCoefficient> uv_coef;
+	unique_ptr<UvCoefficient> uv_coef = make_unique<UvCoefficient>(0, 0, 0, 0);
 	const double epsilon = 1e-4;
 
     // Test the coefficient \f$U_2\f$

@@ -58,6 +58,13 @@ int main(){
 
     test_numerical_equality<double>(efficiency, 0.25, 1e-3);
 
+    // Test the case in which no vector can be found.
+    SphereRejectionSampler sph_rej_sam_3([]([[maybe_unused]] const double theta, [[maybe_unused]] const double phi){ return -1.; }, 0.5, 0);
+    const pair<unsigned int, array<double, 2>> theta_phi_default = sph_rej_sam_3.sample();
+    assert(theta_phi_default.first == 1000);
+    assert(theta_phi_default.second[0] == 0.);
+    assert(theta_phi_default.second[1] == 0.);
+
     // Test Euler-angle rotation
 
     SphereRejectionSampler sph_rej_sam_uni([]([[maybe_unused]] const double theta, [[maybe_unused]] const double phi){return 1.;}, 1., 0);

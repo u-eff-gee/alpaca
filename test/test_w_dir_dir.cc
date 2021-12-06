@@ -28,19 +28,6 @@
 #include "W_dir_dir.hh"
 
 /**
- * \brief Analytical expression for the angular distribution of a \f$0 \to 1 \to 0\f$ sequence
- *
- * The expression is { Eq. (10) in \cite Kneissl1996}:
- * 
- * \f[
- * 		W\left( \theta \right) = \frac{3}{4} \left[ 1 + \cos^2 \left( \theta \right) \right].
- * \f]
- */ 
-double w_dir_dir_0_1_0(const double theta){
-	return 0.75*(1.+ pow(cos(theta), 2));
-}
-
-/**
  * \brief Analytical expression for the angular distribution of a \f$0 \to 2 \to 0\f$ sequence
  *
  * The expression is { Eq. (11) in \cite Kneissl1996}:

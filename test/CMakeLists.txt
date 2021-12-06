@@ -98,9 +98,11 @@ if(BUILD_TESTS)
 
     add_executable(test_upper_limit test_upper_limit.cc)
     target_link_libraries(test_upper_limit spherePointSampler w_dir_dir w_gamma_gamma w_pol_dir)
+    add_test(test_upper_limit test_upper_limit)
 
     add_executable(test_sphere_rejection_sampler test_sphere_rejection_sampler.cc)
     target_link_libraries(test_sphere_rejection_sampler sphereRejectionSampler euler_angle_rotation)
+    add_test(test_sphere_rejection_sampler test_sphere_rejection_sampler)
 
     add_executable(test_string_representation test_string_representation.cc)
     target_link_libraries(test_string_representation w_dir_dir w_pol_dir)

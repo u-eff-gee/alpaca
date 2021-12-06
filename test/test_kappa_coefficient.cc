@@ -59,7 +59,7 @@ vector<KappaCoefficientLiteratureValue> kappa_coefficient_values {
 
 int main(){
 
-	unique_ptr<KappaCoefficient> kappa_coef;
+	unique_ptr<KappaCoefficient> kappa_coef = make_unique<KappaCoefficient>(4, 0, 0);
 	const double epsilon = 1e-7;
 
 	for(auto k : kappa_coefficient_values){
