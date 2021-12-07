@@ -16,7 +16,7 @@
 #    Copyright (C) 2021 Udo Friman-Gayer
 
 cmake_minimum_required(VERSION 3.16)
-project(alpaca VERSION 1.0.2)
+project(alpaca VERSION 1.0.3)
 
 find_package(GSL REQUIRED)
 include_directories(${GSL_INCLUDE_DIRS})
@@ -44,7 +44,7 @@ if(BUILD_TESTS)
         add_subdirectory(test)
 endif(BUILD_TESTS)
 
-set(installable_libs angcorrRejectionSampler angular_correlation alphavCoefficient avCoefficient cascadeRejectionSampler euler_angle_rotation fCoefficient kappa_coefficient sphereRejectionSampler state uvCoefficient w_dir_dir w_gamma_gamma w_pol_dir)
+set(installable_libs angcorrRejectionSampler angular_correlation alphavCoefficient avCoefficient cascadeRejectionSampler euler_angle_rotation fCoefficient kappa_coefficient sphereRejectionSampler state transition uvCoefficient w_dir_dir w_gamma_gamma w_pol_dir)
 install(TARGETS ${installable_libs}
         DESTINATION lib
         EXPORT ALPACA
