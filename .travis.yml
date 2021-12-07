@@ -11,8 +11,8 @@ script:
 - cd build
 - cmake -DBUILD_TESTS=ON ..
 - cmake --build .
-- cd test
+- cd python
+- tox
+- cd ../test
 - ctest
 - gcovr -r ../../
-- cd ../python
-- tox
