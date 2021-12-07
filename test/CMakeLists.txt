@@ -20,6 +20,9 @@ if(BUILD_TESTS)
 
     enable_testing()
 
+    add_executable(test_test_utilities test_test_utilities.cc)
+    add_test(test_test_utilities test_test_utilities)
+
     add_executable(test_av_coefficient test_av_coefficient.cc)
     target_link_libraries(test_av_coefficient avCoefficient)
     add_test(test_av_coefficient test_av_coefficient)
@@ -99,6 +102,10 @@ if(BUILD_TESTS)
     add_executable(test_upper_limit test_upper_limit.cc)
     target_link_libraries(test_upper_limit spherePointSampler state w_dir_dir w_gamma_gamma w_pol_dir)
     add_test(test_upper_limit test_upper_limit)
+
+    add_executable(test_sphere_point_sampler test_sphere_point_sampler.cc)
+    target_link_libraries(test_sphere_point_sampler spherePointSampler)
+    add_test(test_sphere_point_sampler test_sphere_point_sampler)
 
     add_executable(test_sphere_rejection_sampler test_sphere_rejection_sampler.cc)
     target_link_libraries(test_sphere_rejection_sampler sphereRejectionSampler euler_angle_rotation)

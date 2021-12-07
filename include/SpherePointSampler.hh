@@ -276,7 +276,7 @@ public:
      * for the intended application to use \f$c < 1\f$ or even \f$c \approx 1\f$).
      * Therefore, the author of Ref. \cite Koay2011 simply uses a constant for the convergence 
      * criterion for \f$c\f$.
-     * The difference between two subsequent iteration for \f$\Theta_j\f$, however, may become an 
+     * The difference between two subsequent iterations for \f$\Theta_j\f$, however, may become an 
      * arbitrarily small number. 
      * Therefore, convergence is assumed here if the \f$l+1\f$-th element of the sequence 
      * \f$\Theta_{j, l}\f$ differs from the \f$l\f$-th element by less than a number 

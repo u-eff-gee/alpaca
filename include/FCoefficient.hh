@@ -162,7 +162,6 @@ public:
 
 	string string_representation([[maybe_unused]] const unsigned int n_digits = 0, vector<string> variable_names = {}) const;
 
-protected:
 	/**
 	 * \brief Check whether given Clebsch-Gordan coefficient is nonzero.
 	 *
@@ -205,6 +204,7 @@ protected:
 	 */
 	static bool racah_is_nonzero(const int two_j1, const int two_j2, const int two_j3, const int two_J1, const int two_J2, const int two_J3);
 
+protected:
 	/**
 	 * \brief Check whether the sum of three integers is an even number
 	 *

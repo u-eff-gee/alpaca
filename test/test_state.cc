@@ -52,24 +52,12 @@ int main(){
     // A user may falsely assume that a half-integer spin is given by a floating-point number.
     // In this case, alpaca will quietly convert the false argument to an integer, and the
     // user will end up with a spin of 1 instead of the desired 3/2.
-    try{
-        State state(1.5);
-    } catch (const std::invalid_argument &e) {
-        error_thrown = true;
-    }
 
-    assert(!error_thrown);
-    error_thrown = false;
+    State state_with_implicitly_converted_spin(1.5);
 
     // Test alternative constructor that takes an excitation energy as the second argument.
-    try{
-        State state(1, 1.);
-    } catch (const std::invalid_argument &e) {
-        error_thrown = true;
-    }
-
-    assert(!error_thrown);
-    error_thrown = false;
+    
+    State state_initialized_with_spin_and_energy(1, 1.);
 
     // Error: Negative excitation energy given.
     try{

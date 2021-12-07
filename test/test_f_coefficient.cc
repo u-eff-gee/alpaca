@@ -85,4 +85,44 @@ int main(){
 	f_coef = make_unique<FCoefficient>(8, 4, 4, 3, 5);
 	assert(f_coef->string_representation() == "F_{4}\\left(2,2,3/2,5/2\\right)");
 	assert(f_coef->string_representation(3) == "0.705");
+
+	// Test some of the safety functions that prevent alpaca from calling GSL functions with false
+	// sets of arguments.
+
+	// Test Clebsch-Gordan coefficients.
+	// This is a correct expression.
+	assert(f_coef->cg_is_nonzero(1, 1, 2, 1, -1, 0));
+	// Error: m (M) larger than j (J).
+	assert(!f_coef->cg_is_nonzero(1, 1, 2, 2, -1, 1));
+	assert(!f_coef->cg_is_nonzero(1, 1, 2, 1, -2, -1));
+	// The expression below also violates the conservation of angular momentum and the triangle 
+	// inequality.
+	// However, the magnitudes of J and M are compared first in cg_is_nonzero, so this is truly
+	// a test of the condition of interest.
+	assert(!f_coef->cg_is_nonzero(1, 1, 2, 1, -1, 3));
+	// Error: Conservation of angular momentum violated.
+	assert(!f_coef->cg_is_nonzero(1, 1, 2, 1, -1, 2));
+	// Error: Triangle inequality violated.
+	assert(!f_coef->cg_is_nonzero(1, 1, 3, 1, -1, 0));
+
+	// Test Racah coefficients
+	// This is a correct expression.
+	assert(f_coef->racah_is_nonzero(1, 1, 2, 1, 1, 2));
+	// Error: Sum of j1, j2, j3 not even.
+	assert(!f_coef->racah_is_nonzero(1, 1, 1, 1, 1, 2));
+	// Error: Sum of j1, J2, J3 not even.
+	assert(!f_coef->racah_is_nonzero(1, 1, 1, 1, 1, 2));
+	// Error: Sum of J1, j2, J3 not even.
+	assert(!f_coef->racah_is_nonzero(1, 1, 2, 2, 1, 1));
+	// Error: Sum of J1, J2, J3 not even.
+	assert(!f_coef->racah_is_nonzero(1, 1, 2, 1, 1, 1));
+
+	// Error: j1, j2, and j3 do not fulfil the triangle inequality.
+	assert(!f_coef->racah_is_nonzero(1, 1, 4, 1, 1, 2));
+	// Error: j1, J2, and J3 do not fulfil the triangle inequality.
+	assert(!f_coef->racah_is_nonzero(1, 1, 2, 3, 1, 4));
+	// Error: J1, j2, and J3 do not fulfil the triangle inequality.
+	assert(!f_coef->racah_is_nonzero(3, 1, 2, 1, 1, 4));
+	// Error: J1, J2, and J3 do not fulfil the triangle inequality.
+	assert(!f_coef->racah_is_nonzero(1, 1, 2, 1, 1, 4));
 }

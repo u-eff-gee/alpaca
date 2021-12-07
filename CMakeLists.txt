@@ -16,7 +16,7 @@
 #    Copyright (C) 2021 Udo Friman-Gayer
 
 cmake_minimum_required(VERSION 3.16)
-project(alpaca VERSION 1.0.1)
+project(alpaca VERSION 1.0.2)
 
 find_package(GSL REQUIRED)
 include_directories(${GSL_INCLUDE_DIRS})

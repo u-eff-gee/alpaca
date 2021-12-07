@@ -80,9 +80,9 @@ bool FCoefficient::cg_is_nonzero(const int two_j1, const int two_j2, const int t
 
 	// Maximum projection of angular momentum.
 	if(
-		   (two_m1 > two_j1)
-		|| (two_m2 > two_j2)
-		|| (two_M  > two_J)
+		   (abs(two_m1) > two_j1)
+		|| (abs(two_m2) > two_j2)
+		|| (abs(two_M)  > two_J)
 	)
 		return false;
 
