@@ -25,6 +25,9 @@ target_link_libraries(avCoefficient fCoefficient)
 
 add_library(state State.cc)
 
+add_library(transition Transition.cc)
+target_link_libraries(transition state)
+
 add_library(w_gamma_gamma W_gamma_gamma.cc)
 
 add_library(w_dir_dir W_dir_dir.cc)

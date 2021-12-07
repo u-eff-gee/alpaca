@@ -22,7 +22,7 @@
 #include "State.hh"
 
 int main(){
-    // Test IO of the state class.
+    // Test IO of the State class.
 
     bool error_thrown = false;
     const State state(2);
