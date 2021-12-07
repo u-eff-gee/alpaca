@@ -62,6 +62,28 @@ int main(){
     assert(error_thrown);
     error_thrown = false;
 
+    // Error: First EM character not given for second transition
+    try{
+        AngularCorrelation ang_corr(
+            State(0, positive),
+            {
+                {
+                    Transition(electric, 2, magnetic, 4, 0.),
+                    State(2, negative)
+                },
+                {
+                    Transition(em_unknown, 2, magnetic, 4, 0.),
+                    State(0, positive)
+                }
+            }
+        );
+    } catch(const std::invalid_argument &e) {
+        error_thrown = true;
+    }
+
+    assert(error_thrown);
+    error_thrown = false;
+
     // Error: Second EM character not given
     try{
         AngularCorrelation ang_corr(
@@ -84,7 +106,29 @@ int main(){
     assert(error_thrown);
     error_thrown = false;
 
-    // Error: EM character given, but first spin missing
+    // Error: Second EM character not given for second transition
+    try{
+        AngularCorrelation ang_corr(
+            State(0, positive), 
+            {
+                {
+                    Transition(electric, 2, magnetic, 4, 0.),
+                    State(2, negative)
+                },
+                {
+                    Transition(electric, 2, em_unknown, 4, 0.),
+                    State(0, positive)
+                }
+            }
+        );
+    } catch(const std::invalid_argument &e) {
+        error_thrown = true;
+    }
+
+    assert(error_thrown);
+    error_thrown = false;
+
+    // Error: EM character given, but first parity missing
     try{
         AngularCorrelation ang_corr(
             State(0, parity_unknown), 
@@ -106,7 +150,7 @@ int main(){
     assert(error_thrown);
     error_thrown = false;
 
-    // Error: EM character given, but second spin missing
+    // Error: EM character given, but second parity missing
     try{
         AngularCorrelation ang_corr(
             State(0, positive), 
@@ -128,7 +172,29 @@ int main(){
     assert(error_thrown);
     error_thrown = false;
 
-    // Error: Triangle inequality violated
+    // Error: EM character given, but parity missing for final state of second transition
+    try{
+        AngularCorrelation ang_corr(
+            State(0, positive), 
+            {
+                {
+                    Transition(electric, 2, magnetic, 4, 0.),
+                    State(2, negative)
+                },
+                {
+                    Transition(electric, 2, magnetic, 4, 0.),
+                    State(0, parity_unknown)
+                }
+            }
+        );
+    } catch(const std::invalid_argument &e) {
+        error_thrown = true;
+    }
+
+    assert(error_thrown);
+    error_thrown = false;
+
+    // Error: Triangle inequality violated for first transition
     try{
         AngularCorrelation ang_corr(
             State(0, positive), 
@@ -139,6 +205,28 @@ int main(){
                 },
                 {
                     Transition(electric, 2, magnetic, 4, 0.),
+                    State(0, positive)
+                }
+            }
+        );
+    } catch(const std::invalid_argument &e) {
+        error_thrown = true;
+    }
+
+    assert(error_thrown);
+    error_thrown = false;
+
+    // Error: Triangle inequality violated for second transition
+    try{
+        AngularCorrelation ang_corr(
+            State(0, positive), 
+            {
+                {
+                    Transition(magnetic, 2, electric, 4, 0.),
+                    State(2, negative)
+                },
+                {
+                    Transition(electric, 4, magnetic, 6, 0.),
                     State(0, positive)
                 }
             }
@@ -187,6 +275,70 @@ int main(){
     assert(error_thrown);
     error_thrown = false;
 
+    try{
+        AngularCorrelation ang_corr(
+            State(0, positive), 
+            {
+                {
+                    Transition(electric, 2, magnetic, 4, 0.),
+                    State(2, positive)
+                },
+                {
+                    Transition(electric, 2, magnetic, 4, 0.),
+                    State(0, positive)
+                }
+            }
+        );
+    } catch(const std::invalid_argument &e) {
+        error_thrown = true;
+    }
+
+    assert(error_thrown);
+    error_thrown = false;
+
+    try{
+        AngularCorrelation ang_corr(
+            State(0, positive), 
+            {
+                {
+                    Transition(magnetic, 4, magnetic, 6, 0.),
+                    State(4, positive)
+                },
+                {
+                    Transition(electric, 4, magnetic, 6, 0.),
+                    State(0, positive)
+                }
+            }
+        );
+    } catch(const std::invalid_argument &e) {
+        error_thrown = true;
+    }
+
+    assert(error_thrown);
+    error_thrown = false;
+
+    // Error: First electromagnetic character wrong for second transition
+    try{
+        AngularCorrelation ang_corr(
+            State(0, positive), 
+            {
+                {
+                    Transition(electric, 2, magnetic, 4, 0.),
+                    State(2, negative)
+                },
+                {
+                    Transition(magnetic, 2, magnetic, 4, 0.),
+                    State(0, positive)
+                }
+            }
+        );
+    } catch(const std::invalid_argument &e) {
+        error_thrown = true;
+    }
+
+    assert(error_thrown);
+    error_thrown = false;
+
     // Error: Second electromagnetic character wrong
     try{
         AngularCorrelation ang_corr(
@@ -208,6 +360,29 @@ int main(){
 
     assert(error_thrown);
     error_thrown = false;
+
+    // Error: Second electromagnetic character wrong for second transition
+    try{
+        AngularCorrelation ang_corr(
+            State(0, positive), 
+            {
+                {
+                    Transition(electric, 2, magnetic, 4, 0.),
+                    State(2, negative)
+                },
+                {
+                    Transition(electric, 2, electric, 4, 0.),
+                    State(0, positive)
+                }
+            }
+        );
+    } catch(const std::invalid_argument &e) {
+        error_thrown = true;
+    }
+
+    assert(error_thrown);
+    error_thrown = false;
+
 
     // Error: Mixing of half-integer and integer spins
     try{
@@ -232,7 +407,7 @@ int main(){
     assert(error_thrown);
     error_thrown = false;
 
-    // Simplified constructor
+    // Simplified constructor. Check transition inference with various possibilities.
     // Error: Transition between spin-0 states
     try{
         AngularCorrelation ang_corr_0_1_0{
@@ -255,6 +430,21 @@ int main(){
 		State(0, parity_unknown), 
             {
                 State(2, negative),
+            }
+        }; 
+    } catch(const std::invalid_argument &e) {
+        error_thrown = true;
+    }
+
+    assert(error_thrown);
+    error_thrown = false;
+
+    // Error: Same as above with more general constructor.
+    try{
+        AngularCorrelation ang_corr_0p_1p{
+		State(0, positive), 
+            {
+                {Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
             }
         }; 
     } catch(const std::invalid_argument &e) {
@@ -323,5 +513,24 @@ int main(){
     assert(cas_ste[1].first.em_char == magnetic);
     assert(cas_ste[1].first.two_L == 2);
     assert(cas_ste[1].first.em_charp == electric);
+    assert(cas_ste[1].first.two_Lp == 4);
+
+   AngularCorrelation ang_corr_0_4m_4 = AngularCorrelation{
+        State(0, positive), 
+        {
+            State(4, negative),
+            State(4, positive),
+        }
+    };
+
+    cas_ste = ang_corr_0_4m_4.get_cascade_steps();
+
+    assert(cas_ste[0].first.em_char == magnetic);
+    assert(cas_ste[0].first.two_L == 4);
+    assert(cas_ste[0].first.em_charp == electric);
+    assert(cas_ste[0].first.two_Lp == 6);
+    assert(cas_ste[1].first.em_char == electric);
+    assert(cas_ste[1].first.two_L == 2);
+    assert(cas_ste[1].first.em_charp == magnetic);
     assert(cas_ste[1].first.two_Lp == 4);
 }
