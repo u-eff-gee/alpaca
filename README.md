@@ -58,7 +58,7 @@ The python bindings of this project, on the other hand, invoke the shared C++ li
 * [CMake](https://cmake.org/) (version >= 3.16 required for installation [3])
 * C++ compiler which supports at least the C++11 standard.
 * [GNU Scientific Library (GSL)](https://www.gnu.org/software/gsl/)
-* [doxygen](https://www.doxygen.nl/) and all its requirements for [displaying formulas](https://www.doxygen.nl/manual/formulas.html) (documentation, optional)
+* [doxygen](https://www.doxygen.nl/) and all its requirements for [displaying formulas](https://www.doxygen.nl/manual/formulas.html) and [graphs](https://www.doxygen.nl/manual/diagrams.html) (documentation, optional)
 
 ### 2.ii Prerequisites (python)
 
