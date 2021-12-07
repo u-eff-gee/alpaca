@@ -23,8 +23,9 @@ target_link_libraries(fCoefficient ${GSL_LIBRARIES})
 add_library(avCoefficient AvCoefficient.cc)
 target_link_libraries(avCoefficient fCoefficient)
 
+add_library(state State.cc)
+
 add_library(w_gamma_gamma W_gamma_gamma.cc)
-target_compile_options(w_gamma_gamma PUBLIC -Wall -Wextra)
 
 add_library(w_dir_dir W_dir_dir.cc)
 target_link_libraries(w_dir_dir avCoefficient uvCoefficient)
@@ -45,7 +46,7 @@ add_library(w_pol_dir W_pol_dir.cc)
 target_link_libraries(w_pol_dir alphavCoefficient avCoefficient w_dir_dir)
 
 add_library(angular_correlation SHARED AngularCorrelation.cc)
-target_link_libraries(angular_correlation euler_angle_rotation w_dir_dir w_pol_dir)
+target_link_libraries(angular_correlation euler_angle_rotation state w_dir_dir w_pol_dir)
 
 add_library(euler_angle_rotation EulerAngleRotation.cc)
 

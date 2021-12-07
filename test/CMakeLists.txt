@@ -37,7 +37,7 @@ if(BUILD_TESTS)
     add_test(test_uv_coefficient test_uv_coefficient)
 
     add_executable(test_w_dir_dir test_w_dir_dir.cc)
-    target_link_libraries(test_w_dir_dir w_dir_dir)
+    target_link_libraries(test_w_dir_dir state w_dir_dir)
     add_test(test_w_dir_dir test_w_dir_dir)
 
     add_executable(test_kappa_coefficient test_kappa_coefficient.cc)
@@ -49,11 +49,11 @@ if(BUILD_TESTS)
     add_test(test_ev_coefficient test_ev_coefficient)
 
     add_executable(test_w_pol_dir test_w_pol_dir.cc)
-    target_link_libraries(test_w_pol_dir w_pol_dir ${GSL_LIBRARIES})
+    target_link_libraries(test_w_pol_dir state w_pol_dir ${GSL_LIBRARIES})
     add_test(test_w_pol_dir test_w_pol_dir)
 
     add_executable(test_unobserved test_unobserved.cc)
-    target_link_libraries(test_unobserved w_dir_dir ${GSL_LIBRARIES})
+    target_link_libraries(test_unobserved state w_dir_dir ${GSL_LIBRARIES})
     add_test(test_unobserved test_unobserved)
 
     add_executable(test_euler_angle_rotation test_euler_angle_rotation.cc)
@@ -89,7 +89,7 @@ if(BUILD_TESTS)
     add_test(test_sphere_integrator test_sphere_integrator)
 
     add_executable(test_normalization test_normalization.cc)
-    target_link_libraries(test_normalization sphereIntegrator w_dir_dir w_pol_dir)
+    target_link_libraries(test_normalization sphereIntegrator state w_dir_dir w_pol_dir)
     add_test(test_normalization test_normalization)
 
     add_executable(test_find_Theta_j test_find_Theta_j.cc)
@@ -97,15 +97,19 @@ if(BUILD_TESTS)
     add_test(test_find_Theta_j test_find_Theta_j)
 
     add_executable(test_upper_limit test_upper_limit.cc)
-    target_link_libraries(test_upper_limit spherePointSampler w_dir_dir w_gamma_gamma w_pol_dir)
+    target_link_libraries(test_upper_limit spherePointSampler state w_dir_dir w_gamma_gamma w_pol_dir)
     add_test(test_upper_limit test_upper_limit)
 
     add_executable(test_sphere_rejection_sampler test_sphere_rejection_sampler.cc)
     target_link_libraries(test_sphere_rejection_sampler sphereRejectionSampler euler_angle_rotation)
     add_test(test_sphere_rejection_sampler test_sphere_rejection_sampler)
 
+    add_executable(test_state test_state.cc)
+    target_link_libraries(test_state state)
+    add_test(test_state test_state)
+
     add_executable(test_string_representation test_string_representation.cc)
-    target_link_libraries(test_string_representation w_dir_dir w_pol_dir)
+    target_link_libraries(test_string_representation state w_dir_dir w_pol_dir)
     add_test(test_string_representation test_string_representation)
 
     add_executable(test_memory_leak test_memory_leak.cc)
