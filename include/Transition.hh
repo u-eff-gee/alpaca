@@ -82,7 +82,7 @@ struct Transition{
 		
 		if(em == electric){
 			return "E";
-		} 
+		}
 		if(em == magnetic){
 			return "M";
 		}
