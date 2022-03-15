@@ -74,14 +74,14 @@ Besides all prerequisites for the C++ libraries, the following libraries/tools a
 
 ### 2.iii Build (C++)
 
-In the following, it is assumed that `ALPACA_SOURCE_DIR` is the directory that contains the top-level `CMakeLists.txt` and this README.
+In the following, it is assumed that `ALPACA_ROOT_DIR` is the directory that contains the top-level `CMakeLists.txt` and this README.
 Furthermore, it is assumed that `ALPACA_BUILD_DIR` is the directory where the user wants to build the code.
 
 First, go to the build directory and configure the code:
 
 ```
 $ cd ALPACA_BUILD_DIR
-$ cmake -DBUILD_DOCUMENTATION=ON -DBUILD_TESTS=ON ALPACA_SOURCE_DIR
+$ cmake -DBUILD_DOCUMENTATION=ON -DBUILD_TESTS=ON ALPACA_ROOT_DIR
 ```
 
 The code above contains the optional `-DBUILD_DOCUMENTATION=ON` and `-DBUILD_TESTS=ON` arguments, which are the custom build options of `alpaca` at the moment.
@@ -183,7 +183,7 @@ In order to run this code, which is assumed to be in a file called `test.cpp`, i
 For example, when using the GNU Compiler Collection ([GCC](https://gcc.gnu.org/)), type:
 
 ```
-$ g++ test.cpp -I ALPACA_SOURCE_DIR/include -L ALPACA_BUILD_DIR/source -langular_correlation -Wl,-rpath,ALPACA_BUILD_DIR/source
+$ g++ test.cpp -I ALPACA_ROOT_DIR/include -L ALPACA_BUILD_DIR/source -langular_correlation -Wl,-rpath,ALPACA_BUILD_DIR/source
 ```
 
 This will create an executable binary for the test.
