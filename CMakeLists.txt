@@ -36,7 +36,7 @@ endif(BUILD_TESTS)
 
 add_compile_options(-fPIC -Wall -Wextra -Wpedantic)
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
+include(GNUInstallDirs)
 
 add_subdirectory(python)
 add_subdirectory(source)
@@ -45,17 +45,12 @@ if(BUILD_TESTS)
 endif(BUILD_TESTS)
 
 set(installable_libs angcorrRejectionSampler angular_correlation alphavCoefficient avCoefficient cascadeRejectionSampler euler_angle_rotation fCoefficient kappa_coefficient sphereRejectionSampler state transition uvCoefficient w_dir_dir w_gamma_gamma w_pol_dir)
-install(TARGETS ${installable_libs}
-        DESTINATION lib
-        EXPORT ALPACA
+install(
+    TARGETS ${installable_libs}
+    EXPORT ALPACA
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
-
-set(_ALPACA_HEADERS AlphavCoefficient.hh AngCorrRejectionSampler.hh AngularCorrelation.hh AvCoefficient.hh CascadeRejectionSampler.hh EulerAngleRotation.hh KappaCoefficient.hh SphereRejectionSampler.hh State.hh StringRepresentable.hh Transition.hh UvCoefficient.hh W_gamma_gamma.hh W_dir_dir.hh W_pol_dir.hh)
-set(ALPACA_HEADERS "")
-foreach(header ${_ALPACA_HEADERS})
-        list(APPEND ALPACA_HEADERS "include/${header}")
-endforeach(header)
-install(FILES ${ALPACA_HEADERS} DESTINATION include)
 
 install(EXPORT ALPACA
         FILE alpaca-config.cmake
