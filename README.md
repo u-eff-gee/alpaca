@@ -278,7 +278,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see https://www.gnu.org/licenses/.
 
-Copyright (C) 2021 Udo Friman-Gayer (udo.friman-gayer@duke.edu)
+Copyright (C) 2021, 2022 Udo Friman-Gayer (udo.friman-gayer@ess.eu)
 
 This program was originally developed as part of the [Geant4](https://geant4.web.cern.ch/) application [nutr](https://github.com/uga-uga/nutr), published under the GNU General Public License.
 
@@ -287,7 +287,7 @@ This program was originally developed as part of the [Geant4](https://geant4.web
 The author would like to thank 
 
 - C. Iliadis for enlightening discussions about the angular correlation formalism and for help with debugging the associated modules.
-- O. Papst (OP) for helpful discussions about the angular correlation formalism and advertise OP's angular correlation code [angcorrwat](https://github.com/op3/angcorrwat). angcorrwat is complementary to the present code in the sense that it uses the python package [sympy](https://www.sympy.org/) to obtain symbolic expressions for the angular correlations.
+- O. Papst (OP) for helpful discussions about the angular correlation formalism and testing of the code. Furthermore, the author would like to advertise OP's angular correlation code [angcorrwat](https://github.com/op3/angcorrwat). angcorrwat is complementary to the present code in the sense that it uses the python package [sympy](https://www.sympy.org/) to obtain symbolic expressions for the angular correlations.
 - N. Pietralla (NP) for helpful discussions about the mixing-ratio conventions. The writing of Ref. [5] had been in progress when our review article [1] appeared. Our use of the Biedenharn convention sparked the aforementioned discussion, and NP helped us realize the discrepancy between the nuclear resonance fluorescence literature and the ENSDF recommendations (see [Sec. 4.ii](#4ii-phases-of-multipole-mixing-ratios)). Footnote 2 in Ref. [5] addresses the issue from the point of view of Zilges *et al.*.
 
 ## 7. References
