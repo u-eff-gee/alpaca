@@ -74,14 +74,11 @@ array<double, 2> EulerAngleRotation::get_theta_phi(const array<double, 3> x_y_z_
     }
 
     const double theta = acos(x_y_z_norm[2]);
-    if(x_y_z_norm[0] != 0.){
-        if(x_y_z_norm[1] == 0.){
-            return {theta, x_y_z_norm[0] > 0. ? 0. : M_PI};
-        }
-        return {theta, atan(x_y_z_norm[1]/x_y_z_norm[0])};
+    if(x_y_z_norm[1] == 0.){
+        return {theta, x_y_z_norm[0] > 0. ? 0. : M_PI};
     }
+    return {theta, atan2(x_y_z_norm[1], x_y_z_norm[0])};
 
-    return {theta, atan(x_y_z_norm[1] >=0 ? INFINITY : -INFINITY)};
 }
 
 array<double, 3> EulerAngleRotation::get_x_y_z_norm(const array<double, 2> theta_phi) const {

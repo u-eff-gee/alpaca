@@ -180,4 +180,20 @@ int main(){
     theta_phi = eul_ang_rot.get_theta_phi({0., 0., -1.});
     test_numerical_equality<double>(theta_phi[0], M_PI, epsilon);
     test_numerical_equality<double>(theta_phi[1], 0., epsilon);
+
+    theta_phi = eul_ang_rot.get_theta_phi({1., 1., 0.});
+    test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
+    test_numerical_equality<double>(theta_phi[1], M_PI_4, epsilon);
+
+    theta_phi = eul_ang_rot.get_theta_phi({-1., 1., 0.});
+    test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
+    test_numerical_equality<double>(theta_phi[1], 3.*M_PI_4, epsilon);
+
+    theta_phi = eul_ang_rot.get_theta_phi({1., -1., 0.});
+    test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
+    test_numerical_equality<double>(theta_phi[1], -M_PI_4, epsilon);
+
+    theta_phi = eul_ang_rot.get_theta_phi({-1., -1., 0.});
+    test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
+    test_numerical_equality<double>(theta_phi[1], -3.*M_PI_4, epsilon);
 }
