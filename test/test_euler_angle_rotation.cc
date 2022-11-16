@@ -155,8 +155,9 @@ int main(){
 
     // Test the get_theta_phi method which calculates the corresponding spherical coordinates
     // theta and phi for a given normalized Cartesian vector.
-    // The test uses the positive and negative x-, y-, and z axis.
     array<double, 2> theta_phi;
+
+    // Test the x, y, z, -x, -y, and -z axis.
     theta_phi = eul_ang_rot.get_theta_phi({1., 0., 0.});
     test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
     test_numerical_equality<double>(theta_phi[1], 0., epsilon);
@@ -171,7 +172,7 @@ int main(){
 
     theta_phi = eul_ang_rot.get_theta_phi({0., -1., 0.});
     test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
-    test_numerical_equality<double>(theta_phi[1], -M_PI_2, epsilon);
+    test_numerical_equality<double>(theta_phi[1], 3.*M_PI_2, epsilon);
 
     theta_phi = eul_ang_rot.get_theta_phi({0., 0., 1.});
     test_numerical_equality<double>(theta_phi[0], 0., epsilon);
@@ -181,6 +182,7 @@ int main(){
     test_numerical_equality<double>(theta_phi[0], M_PI, epsilon);
     test_numerical_equality<double>(theta_phi[1], 0., epsilon);
 
+    // Test more vectors in the xy plane to see whether phi is set in the correct quadrant.
     theta_phi = eul_ang_rot.get_theta_phi({1., 1., 0.});
     test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
     test_numerical_equality<double>(theta_phi[1], M_PI_4, epsilon);
@@ -189,11 +191,11 @@ int main(){
     test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
     test_numerical_equality<double>(theta_phi[1], 3.*M_PI_4, epsilon);
 
-    theta_phi = eul_ang_rot.get_theta_phi({1., -1., 0.});
-    test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
-    test_numerical_equality<double>(theta_phi[1], -M_PI_4, epsilon);
-
     theta_phi = eul_ang_rot.get_theta_phi({-1., -1., 0.});
     test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
-    test_numerical_equality<double>(theta_phi[1], -3.*M_PI_4, epsilon);
+    test_numerical_equality<double>(theta_phi[1], 5.*M_PI_4, epsilon);
+
+    theta_phi = eul_ang_rot.get_theta_phi({1., -1., 0.});
+    test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
+    test_numerical_equality<double>(theta_phi[1], 7.*M_PI_4, epsilon);
 }
