@@ -22,7 +22,10 @@
 /**
  * @brief Class for generalized Q coefficients to incorporate realistic detector-response effects.
  * 
- * This class description starts by introducing the problem of treating realistic detection 
+ * Q coefficients are the results of integrals involving Legendre polynomials and 
+ * detector-response function that can increase the efficiency of realistic angular-correlation 
+ * calculations.
+ * This class description starts by introducing the problem of treating real-world detection 
  * systems.
  * After that, common methods to solve the complicated integrals that arise are introduced, and it
  * is shown how the introduction of (generalized) Q coefficients can lead to a large boost in efficiency.
@@ -31,8 +34,9 @@
  * \f$\epsilon \left( \Omega, ... \right)\f$ that depends on the solid angle 
  * \f$\Omega = \left( \theta, \varphi\right)\f$
  * (there are usually also other dependencies like the photon energy, but they will not be 
- * shown explicitly here without loss of generality.).
- * The notion of a "detection system" is very general.
+ * shown explicitly here without loss of generality because the angular correlations only depend on 
+ * the solid angle.).
+ * Please note that the notion of a "detection system" is very general.
  * For example, it may also include anything that attenuates photons on their way to the actual detector.
  * 
  * Due to the existence of a response function, an effective angular correlation 
@@ -49,6 +53,9 @@
  *      }
  * \f]
  * 
+ * Since the result of the integrations has no dependence on the solid angle, the arguments 
+ * "$\left( \theta, \varphi \right)$" of the effective angular correlation should be seen as 
+ * symbols indicating the position of a detector rather than variables.
  * The equation above is a generalized version of Eq. (2) from an article by M. E. Rose \cite Rose1953 
  * (not to be confused with H. J. Rose from \cite BiedenharnRose1953 and \cite RoseBrink1967).
  * The angles \f$\theta_{1,2}\f$ and \f$\varphi_{1,2}\f$ are defined by
@@ -77,8 +84,11 @@
  * first photon, without loss of generality.
  * 
  * Usually, the detection system consists of a certain amount of detectors \f$i, j\f$ with their 
- * respective response function \f$\epsilon_{i, j}\f$.
- * In this case, the integrals over the solid angles will be restricted, and it is important to indicate whether the two photons can be distinguished, i.e., for example,
+ * respective response functions \f$\epsilon_i\f$, \f$\epsilon_j\f$.
+ * In this case, the integrals over the solid angles will be restricted, and it is important to 
+ * indicate whether the two photons can be distinguished.
+ * For example, if the first photon is detected by detector \f$i\f$, and the second photon by 
+ * detector \f$j\f$, then
  * 
  * \f[
  *  \tilde{W} \left( \theta, \varphi \right) = 
@@ -89,9 +99,10 @@
  *      }
  * \f]
  * 
- * or not {See, for example, Eq. (4) in \cite CampvanLehn1969 , which is a practical application 
- * of Ref. \cite Rose1953. It is already formulated in terms of the Q coefficients to be 
- * introduced here.}
+ * If the two photons cannot be distinguished, for example because the data acquisition system 
+ * cannot resolve the energy {this example is given for Eq. (4) in \cite CampvanLehn1969 , which 
+ * is a practical application of Ref. \cite Rose1953. It is already formulated in terms of the Q 
+ * coefficients.}, all possible contributions to an event of interest must be added up:
  * 
  * \f[
  *  \tilde{W} \left( \theta, \varphi \right) = 
@@ -105,11 +116,12 @@
  * Distinguishability is even more important when polarization measurement is involved, since the
  * formalism implemented in alpaca is only capable of a single polarization measurement per
  * cascade.
- * Depending on whether one or both detectors are polarization sensitive, even more terms may have to be summed in the equation above.
+ * Depending on whether one or both detectors are polarization sensitive, even more terms may have 
+ * to be summed in the equation above.
  * 
- * Although analytical \cite Rose1953 and experimental \cite CampvanLehn1969 methods for the 
- * determination of the effective angular correlation exist, the complicated integral is usually
- * solved by Monte Carlo particle simulations or Monte Carlo integration.
+ * Although analytical and experimental methods for the determination of the effective angular 
+ * correlation exist \cite Rose1953 \cite CampvanLehn1969, the complicated integral is usually
+ * solved by Monte Carlo particle simulations i.e. Monte Carlo integration.
  * In the most simple case that uses isotropically sampled emission angles 
  * \f$\theta_\mathrm{rand}\f$ and \f$\varphi_\mathrm{rand}\f$, the integral in the numerator can be
  * approximated by:
@@ -119,26 +131,27 @@
  * \f]
  * 
  * where \f$N\f$ is the number of randomly sampled particles.
- * This is probably the computationally most expensive method, since it requires resampling for 
- * every new angular correlation of interest.
+ * This is a computationally expensive method compared to the methods described below, since it 
+ * requires resampling for every new angular correlation of interest.
  * 
  * Post-processing methods like the one proposed by Longland \cite Longland2010 (Sec. 4.2.2) record
  * the emission angles of the detected events from a Monte Carlo simulation with isotropic 
  * emission, and then re-weight the detected events with the angular correlation of interest.
  * Usually, the re-weighting procedure is faster than the Monte Carlo simulation, which has to be
- * performed only a single time in this approach.
+ * performed only once in this approach.
  * 
  * Instead of performing the post-processing procedure for every angular correlation of interest,
- * it is instructive to realize that any two-step dir-dir or pol-dir angular-correlation function 
- * can be described by a finite series of terms that contain the angular dependence as (associated)
- * Legendre polynomials (see, e.g., \cite Iliadis2021):
+ * it is instructive to realize that every two-step dir-dir or pol-dir angular-correlation function 
+ * can be described by a finite series with a few terms that contain the angular dependence as 
+ * (associated) Legendre polynomials (see, e.g., \cite Iliadis2021):
  * 
  * \f[
  *      W \left( \theta, \varphi \right) = a_0 P_0 \left[ \cos \left( \theta \right) \right] + \sum_{n = 2, 4, ...} a_n P_n \left[ \cos \left( \theta \right) \right] + b_n P_n^{|2|} \left[ \cos \left( \theta \right) \right] \cos \left( 2 \varphi \right).
  * \f]
  * 
- * The expansion coefficients \f$a_n\f$ and \f$b_n\f$ are factors that depend on the spins and 
- * parities of the angular correlation, and they can usually be computed directly and efficiently.
+ * The expansion coefficients \f$a_n\f$ and \f$b_n\f$ are factors that depend on the spins, 
+ * parities, and mixing ratios of the angular correlation, and the time required to compute them
+ * is usually negligible compared to geometrical calculations.
  * By inserting the expression above in the general equation for the effective angular 
  * correlation, it can be seen that Monte Carlo integrations over (associated) Legendre polynomials
  * up to the required order (note that the order is limited by the involved spin quantum numbers
@@ -168,11 +181,12 @@
  * 
  * In this equation, the weighted averages of the (associated) Legendre Polynomials have been 
  * denoted as generalized Q coefficients for the dir-dir-correlation-related terms 
- * [\f$Q_n \left( \theta \right)\f$] and the pol-dir-related terms 
- * [\f$Q_n \left( \theta, \varphi \right)\f$].
+ * [using a single variable, i.e. \f$Q_n \left( \theta \right)\f$] and the pol-dir-related terms 
+ * [using two variables, i.e. \f$Q_n \left( \theta, \varphi \right)\f$].
  * The dir-dir-correlation related terms can be simplified further to the product of a 
  * Legendre polynomial and the "real" angle-independent Q coefficients from the literature 
- * {\cite Rose1953 [Eq. (5), the unnumbered equation above that one, and Eq. (6)] \cite CampvanLehn1969 \cite Longland2010 }:
+ * {\cite Rose1953 [Eq. (5), the unnumbered equation above that one, and Eq. (6)] 
+ * \cite CampvanLehn1969 \cite Longland2010 }:
  * 
  * \f[
  *      Q_n \left( \theta \right) = \frac{
@@ -183,12 +197,16 @@
  * \f]
  * 
  * The real Q coefficients allow one to calculate the effective angular correlation for any
- * spin sequence and any placement of the detectors, while the general Q coefficients 
- * introduced here have lost the latter property because the rotational symmetry is broken by
- * the parity measurement.
+ * spin sequence and any placement of the detectors.
+ * The general Q coefficients introduced here have lost the latter property because the rotational 
+ * symmetry is broken by the parity measurement.
  * Nevertheless, any Q-coefficient based calculation can be expected to be a lot more efficient 
  * in cases where many different effective angular-correlation function need to be evaluated, for
  * example in a minimization procedure to determine spins, parities, and mixing ratios.
+ * 
+ * Due to the way unobserved intermediate transitions are treated in the formalism 
+ * {see, e.g., Eqs. (22) and (23) in Ref. \cite Iliadis2021 }, i.e. by the simple insertion of 
+ * another expansion coefficient, the application of Q coefficients to this case is straightforward. 
  * 
  * Please note that the Q-coefficient formalism is possible due to the knowledge of the analytical
  * form of the dir-dir and pol-dir angular correlations.
