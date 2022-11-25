@@ -36,6 +36,10 @@ target_link_libraries(transition state)
 target_include_directories(transition PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 set_target_properties(transition PROPERTIES PUBLIC_HEADER include/Transition.hh)
 
+add_library(q_coefficients QCoefficients.cc)
+target_include_directories(q_coefficients PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+set_target_properties(q_coefficients PROPERTIES PUBLIC_HEADER include/QCoefficients.hh)
+
 add_library(w_gamma_gamma W_gamma_gamma.cc)
 target_include_directories(w_gamma_gamma PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 set_target_properties(w_gamma_gamma PROPERTIES PUBLIC_HEADER include/W_gamma_gamma.hh)
