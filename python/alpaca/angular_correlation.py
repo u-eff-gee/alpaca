@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with alpaca.  If not, see <https://www.gnu.org/licenses/>.
 
-# Copyright (C) 2021 Udo Friman-Gayer
+# Copyright (C) 2021, 2022 Udo Friman-Gayer
 
 from ctypes import byref, cdll, c_double, c_int, c_short, c_size_t, c_void_p, POINTER
 import warnings

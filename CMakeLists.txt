@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with alpaca.  If not, see <https://www.gnu.org/licenses/>.
 #
-#    Copyright (C) 2021 Udo Friman-Gayer
+#    Copyright (C) 2021, 2022 Udo Friman-Gayer
 
 cmake_minimum_required(VERSION 3.16)
 project(alpaca VERSION 1.0.5)
