@@ -1,11 +1,12 @@
 language: cpp
 sudo: required
-dist: focal
+dist: jammy
 compiler: gcc
 os: linux
 before install:
 - sudo apt-get install cmake libgsl-dev gcovr python3-pip
-- pip3 install tox
+- pip install pipx
+- pipx install tox
 script:
 - mkdir build
 - cd build
