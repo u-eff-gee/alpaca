@@ -15,7 +15,9 @@
 #
 #    Copyright (C) 2021 Udo Friman-Gayer
 
-#include_directories(${PROJECT_SOURCE_DIR}/include/)
+add_library(stringRepresentable StringRepresentable.cc)
+target_include_directories(stringRepresentable PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+set_target_properties(stringRepresentable PROPERTIES PUBLIC_HEADER include/StringRepresentable.hh)
 
 add_library(fCoefficient FCoefficient.cc)
 target_link_libraries(fCoefficient ${GSL_LIBRARIES})

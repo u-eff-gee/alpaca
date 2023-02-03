@@ -44,7 +44,7 @@ if(BUILD_TESTS)
         add_subdirectory(test)
 endif(BUILD_TESTS)
 
-set(installable_libs angcorrRejectionSampler angular_correlation alphavCoefficient avCoefficient cascadeRejectionSampler euler_angle_rotation fCoefficient kappa_coefficient sphereRejectionSampler state transition uvCoefficient w_dir_dir w_gamma_gamma w_pol_dir)
+set(installable_libs angcorrRejectionSampler angular_correlation alphavCoefficient avCoefficient cascadeRejectionSampler euler_angle_rotation fCoefficient kappa_coefficient sphereRejectionSampler state stringRepresentable transition uvCoefficient w_dir_dir w_gamma_gamma w_pol_dir)
 install(
     TARGETS ${installable_libs}
     EXPORT ALPACA
