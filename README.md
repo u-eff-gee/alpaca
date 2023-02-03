@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.com/uga-uga/alpaca.svg?branch=master)](https://app.travis-ci.com/github/uga-uga/alpaca)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 # **alpaca**: a linearly-polarized angular-correlation application
