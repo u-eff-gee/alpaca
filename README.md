@@ -277,7 +277,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see https://www.gnu.org/licenses/.
 
-Copyright (C) 2021, 2022 Udo Friman-Gayer (udo.friman-gayer@ess.eu)
+Copyright (C) 2021-2023 Udo Friman-Gayer (udo.friman-gayer@ess.eu)
 
 This program was originally developed as part of the [Geant4](https://geant4.web.cern.ch/) application [nutr](https://github.com/uga-uga/nutr), published under the GNU General Public License.
 
