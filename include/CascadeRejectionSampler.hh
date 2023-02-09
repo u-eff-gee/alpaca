@@ -23,6 +23,10 @@
 
 using std::array;
 
+#include <memory>
+
+using std::unique_ptr;
+
 #include <vector>
 
 using std::vector;
@@ -31,6 +35,7 @@ using std::vector;
 
 #include "AngCorrRejectionSampler.hh"
 #include "AngularCorrelation.hh"
+#include "DirectionSampler.hh"
 
 /**
  * \brief Sample directions of emission from an arbitrarily long cascade of
@@ -240,7 +245,7 @@ protected:
   const bool
       return_first_direction; /**< Indicates whether the direction of the first
                                  gamma ray should be returned or not */
-  vector<AngCorrRejectionSampler>
+  vector<unique_ptr<DirectionSampler>>
       angular_correlation_samplers; /**< List of AngCorrRejectionSamplers which
                                        are initialized on construction with
                                        AngularCorrelation objects. */

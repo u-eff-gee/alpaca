@@ -91,8 +91,13 @@ target_link_libraries(sphereIntegrator spherePointSampler)
 target_include_directories(sphereIntegrator PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 set_target_properties(sphereIntegrator PROPERTIES PUBLIC_HEADER include/SphereIntegrator.hh)
 
+add_library(directionSampler DirectionSampler.cc)
+target_link_libraries(directionSampler euler_angle_rotation)
+target_include_directories(directionSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+set_target_properties(directionSampler PROPERTIES PUBLIC_HEADER include/DirectionSampler.hh)
+
 add_library(sphereRejectionSampler SphereRejectionSampler.cc)
-target_link_libraries(sphereRejectionSampler euler_angle_rotation)
+target_link_libraries(sphereRejectionSampler directionSampler)
 target_include_directories(sphereRejectionSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 set_target_properties(sphereRejectionSampler PROPERTIES PUBLIC_HEADER include/SphereRejectionSampler.hh)
 

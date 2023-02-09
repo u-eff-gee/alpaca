@@ -36,8 +36,7 @@ using std::vector;
 SphereRejectionSampler::SphereRejectionSampler(
     function<double(const double, const double)> dis, const double dis_max,
     const int seed, const unsigned int max_tri)
-    : distribution(dis), distribution_maximum(dis_max), max_tries(max_tri),
-      euler_angle_rotation(EulerAngleRotation()) {
+    : distribution(dis), distribution_maximum(dis_max), max_tries(max_tri) {
   random_engine = mt19937(seed);
 }
 
@@ -57,17 +56,6 @@ pair<unsigned int, array<double, 2>> SphereRejectionSampler::sample() {
   }
 
   return {max_tries, {0., 0.}};
-}
-
-array<double, 2> SphereRejectionSampler::operator()() {
-  pair<unsigned int, array<double, 2>> sampled_theta_phi = sample();
-
-  return {sampled_theta_phi.second[0], sampled_theta_phi.second[1]};
-}
-
-array<double, 2>
-SphereRejectionSampler::operator()(const array<double, 3> euler_angles) {
-  return euler_angle_rotation.rotate(operator()(), euler_angles);
 }
 
 double SphereRejectionSampler::estimate_efficiency(const unsigned int n_tries) {

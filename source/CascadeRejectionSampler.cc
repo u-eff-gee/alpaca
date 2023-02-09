@@ -17,7 +17,12 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
+#include <memory>
+
+using std::make_unique;
+
 #include "CascadeRejectionSampler.hh"
+#include "DirectionSampler.hh"
 
 CascadeRejectionSampler::CascadeRejectionSampler(
     vector<AngularCorrelation> &cascade, const int seed,
@@ -31,7 +36,7 @@ CascadeRejectionSampler::CascadeRejectionSampler(
       euler_angle_rotation(EulerAngleRotation()) {
   for (size_t i = 0; i < cascade.size(); ++i) {
     angular_correlation_samplers.push_back(
-        AngCorrRejectionSampler(cascade[i], seed, max_tri));
+        make_unique<AngCorrRejectionSampler>(cascade[i], seed, max_tri));
   }
 }
 
@@ -48,7 +53,7 @@ CascadeRejectionSampler::CascadeRejectionSampler(
       euler_angle_rotation(EulerAngleRotation()) {
   for (size_t i = 0; i < cascade.size(); ++i) {
     angular_correlation_samplers.push_back(
-        AngCorrRejectionSampler(cascade[i], seed, max_tri));
+        make_unique<AngCorrRejectionSampler>(cascade[i], seed, max_tri));
   }
 }
 
@@ -71,7 +76,8 @@ vector<array<double, 2>> CascadeRejectionSampler::operator()() {
 
   array<double, 2> theta_phi_random;
   for (size_t i = 0; i < angular_correlation_samplers.size(); ++i) {
-    theta_phi_random = angular_correlation_samplers[i](reference_frames[i]);
+    theta_phi_random =
+        angular_correlation_samplers[i]->operator()(reference_frames[i]);
     directions.push_back(theta_phi_random);
     reference_frames.push_back(
         {0., theta_phi_random[0], phi_to_Psi(theta_phi_random[1])});
