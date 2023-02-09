@@ -21,14 +21,16 @@
 
 #include "AvCoefficient.hh"
 
-int main(){
-    // As a test case, use the nu=0 coefficient for the mixed 1->2 transition in the direction-direction correlation in Sec. "4 Numerical example" of Ref. \cite Iliadis2021.
-    AvCoefficient av_coef(0, 2, 4, 4, 2);
-    const string str_rep = 
-        FCoefficient(0, 2, 2, 4, 2).string_representation()
-        +"+2"+FCoefficient(0, 2, 4, 4, 2).string_representation() + "\\delta"
-        +"+"+FCoefficient(0, 4, 4, 4, 2).string_representation() + "\\delta^{2}";
-    assert(av_coef.string_representation() == str_rep);
-    assert(av_coef.string_representation(3) == "1+2\\times0\\times\\delta+1\\times\\delta^{2}");
-
+int main() {
+  // As a test case, use the nu=0 coefficient for the mixed 1->2 transition in
+  // the direction-direction correlation in Sec. "4 Numerical example" of Ref.
+  // \cite Iliadis2021.
+  AvCoefficient av_coef(0, 2, 4, 4, 2);
+  const string str_rep =
+      FCoefficient(0, 2, 2, 4, 2).string_representation() + "+2" +
+      FCoefficient(0, 2, 4, 4, 2).string_representation() + "\\delta" + "+" +
+      FCoefficient(0, 4, 4, 4, 2).string_representation() + "\\delta^{2}";
+  assert(av_coef.string_representation() == str_rep);
+  assert(av_coef.string_representation(3) ==
+         "1+2\\times0\\times\\delta+1\\times\\delta^{2}");
 }

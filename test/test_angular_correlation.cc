@@ -29,107 +29,66 @@
 #include "W_pol_dir.hh"
 
 /**
- * Test whether AngularCorrelation maps to the correct correlation functions and whether the 
- * rotation works.
- * 
- * The rotation is tested by comparing correlations with polarized incident gamma rays for
- * different electromagnetic (EM) characters of the first transition.
- * The difference in the EM character leads to a rotation of the distribution by \f$\pi / 2\f$ around the z axis.
+ * Test whether AngularCorrelation maps to the correct correlation functions and
+ * whether the rotation works.
+ *
+ * The rotation is tested by comparing correlations with polarized incident
+ * gamma rays for different electromagnetic (EM) characters of the first
+ * transition. The difference in the EM character leads to a rotation of the
+ * distribution by \f$\pi / 2\f$ around the z axis.
  */
-int main(){
+int main() {
 
-    const double epsilon = 1e-8;
+  const double epsilon = 1e-8;
 
-    // Test unpolarized angular correlation
-    AngularCorrelation ang_corr_0_1_0{
-		State(0, parity_unknown), 
-		{
-			{
-                Transition(em_unknown, 2, em_unknown, 4, 0.),
-                State(2, negative)
-            }, 
-			{
-                Transition(em_unknown, 2, em_unknown, 4, 0.),
-                State(0, parity_unknown)
-            }
-		}
-    };
+  // Test unpolarized angular correlation
+  AngularCorrelation ang_corr_0_1_0{
+      State(0, parity_unknown),
+      {{Transition(em_unknown, 2, em_unknown, 4, 0.), State(2, negative)},
+       {Transition(em_unknown, 2, em_unknown, 4, 0.),
+        State(0, parity_unknown)}}};
 
-    W_dir_dir w_dir_dir_0_1_0{
-		State(0, positive), 
-		{
-			{
-                Transition(electric, 2, magnetic, 4, 0.),
-                State(2, negative)
-            }, 
-			{
-                Transition(electric, 2, magnetic, 4, 0.),
-                State(0, positive)
-            }
-		}
-    };
+  W_dir_dir w_dir_dir_0_1_0{
+      State(0, positive),
+      {{Transition(electric, 2, magnetic, 4, 0.), State(2, negative)},
+       {Transition(electric, 2, magnetic, 4, 0.), State(0, positive)}}};
 
-	for(double theta = 0.; theta < M_PI; theta += 0.5){
-		for(double phi = 0.; phi < M_2_PI; phi += 0.5){
+  for (double theta = 0.; theta < M_PI; theta += 0.5) {
+    for (double phi = 0.; phi < M_2_PI; phi += 0.5) {
 
-			test_numerical_equality<double>(ang_corr_0_1_0(theta, phi), w_dir_dir_0_1_0(theta, phi), epsilon);
+      test_numerical_equality<double>(ang_corr_0_1_0(theta, phi),
+                                      w_dir_dir_0_1_0(theta, phi), epsilon);
+    }
+  }
 
-		}
-	}
+  // Test polarized angular correlation and rotation
+  AngularCorrelation ang_corr_0p_1p_0p{
+      State(0, positive),
+      {{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
+       {Transition(magnetic, 2, electric, 4, 0.), State(0, positive)}}};
 
-    // Test polarized angular correlation and rotation
-    AngularCorrelation ang_corr_0p_1p_0p{
-		State(0, positive), 
-		{
-			{
-                Transition(magnetic, 2, electric, 4, 0.),
-                State(2, positive)
-            }, 
-			{
-                Transition(magnetic, 2, electric, 4, 0.),
-                State(0, positive)
-            }
-		}
-    };
+  W_pol_dir w_pol_dir_0p_1p_0p{
+      State(0, positive),
+      {{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
+       {Transition(magnetic, 2, electric, 4, 0.), State(0, positive)}}};
 
-    W_pol_dir w_pol_dir_0p_1p_0p{
-		State(0, positive), 
-		{
-			{
-                Transition(magnetic, 2, electric, 4, 0.),
-                State(2, positive)
-            }, 
-			{
-                Transition(magnetic, 2, electric, 4, 0.),
-                State(0, positive)
-            }
-		}
-    };
+  W_pol_dir w_pol_dir_0p_1m_0p{
+      State(0, positive),
+      {{Transition(electric, 2, magnetic, 4, 0.), State(2, negative)},
+       {Transition(electric, 2, magnetic, 4, 0.), State(0, positive)}}};
 
-    W_pol_dir w_pol_dir_0p_1m_0p{
-		State(0, positive), 
-		{
-			{
-                Transition(electric, 2, magnetic, 4, 0.),
-                State(2, negative)
-            }, 
-			{
-                Transition(electric, 2, magnetic, 4, 0.),
-                State(0, positive)
-            }
-		}
-    };
+  for (double theta = 0.; theta < M_PI; theta += 0.5) {
+    for (double phi = 0.; phi < M_2_PI; phi += 0.5) {
 
-	for(double theta = 0.; theta < M_PI; theta += 0.5){
-		for(double phi = 0.; phi < M_2_PI; phi += 0.5){
+      test_numerical_equality<double>(ang_corr_0p_1p_0p(theta, phi),
+                                      w_pol_dir_0p_1p_0p(theta, phi), epsilon);
+      test_numerical_equality<double>(
+          ang_corr_0p_1p_0p(theta, phi, {M_PI_2, 0., 0.}),
+          w_pol_dir_0p_1m_0p(theta, phi), epsilon);
+    }
+  }
 
-			test_numerical_equality<double>(ang_corr_0p_1p_0p(theta, phi), w_pol_dir_0p_1p_0p(theta, phi), epsilon);
-			test_numerical_equality<double>(ang_corr_0p_1p_0p(theta, phi, {M_PI_2, 0., 0.}), w_pol_dir_0p_1m_0p(theta, phi), epsilon);
-
-		}
-	}
-
-    // Test the copy constructor
-    AngularCorrelation ang_corr_0_1_0_prime = ang_corr_0_1_0;
-    assert(ang_corr_0_1_0_prime(0.1, 0.2) == ang_corr_0_1_0(0.1, 0.2));
+  // Test the copy constructor
+  AngularCorrelation ang_corr_0_1_0_prime = ang_corr_0_1_0;
+  assert(ang_corr_0_1_0_prime(0.1, 0.2) == ang_corr_0_1_0(0.1, 0.2));
 }

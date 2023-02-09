@@ -27,35 +27,37 @@
 using std::invalid_argument;
 using std::vector;
 
-int main(){
+int main() {
 
-    const unsigned int n = 100;
+  const unsigned int n = 100;
 
-    SpherePointSampler sph_pt_samp;
-    const double c = sph_pt_samp.find_c(n);
+  SpherePointSampler sph_pt_samp;
+  const double c = sph_pt_samp.find_c(n);
 
-	bool error_thrown{false};
-	try{
-		sph_pt_samp.find_Theta_j(0, n, c);
-	} catch(const std::invalid_argument &e){
-		error_thrown = true;
-	}
-	assert(error_thrown);
-    error_thrown = false;
+  bool error_thrown{false};
+  try {
+    sph_pt_samp.find_Theta_j(0, n, c);
+  } catch (const std::invalid_argument &e) {
+    error_thrown = true;
+  }
+  assert(error_thrown);
+  error_thrown = false;
 
-    double Theta_j = 0.;
+  double Theta_j = 0.;
 
-    for(unsigned int j = 1; j <= n; ++j){
-        Theta_j = sph_pt_samp.find_Theta_j(j, n, c, 1e-8);
+  for (unsigned int j = 1; j <= n; ++j) {
+    Theta_j = sph_pt_samp.find_Theta_j(j, n, c, 1e-8);
 
-        // Test using the defining equation {Eq. (11) in Ref. \cite Koay2011} for Theta_j
-        test_numerical_equality<double>(sph_pt_samp.segment_length(Theta_j, c), (2.*j-1)*M_PI/c, 1e-8);
-    }
+    // Test using the defining equation {Eq. (11) in Ref. \cite Koay2011} for
+    // Theta_j
+    test_numerical_equality<double>(sph_pt_samp.segment_length(Theta_j, c),
+                                    (2. * j - 1) * M_PI / c, 1e-8);
+  }
 
-	try{
-		sph_pt_samp.find_Theta_j(n+1, n, c);
-	} catch(const std::invalid_argument &e){
-		error_thrown = true;
-	}
-	assert(error_thrown);    
+  try {
+    sph_pt_samp.find_Theta_j(n + 1, n, c);
+  } catch (const std::invalid_argument &e) {
+    error_thrown = true;
+  }
+  assert(error_thrown);
 }

@@ -22,20 +22,17 @@
 using std::vector;
 
 /**
- * \brief Struct to store \f$\kappa_\nu\f$ coefficient parameters and their values from literature data.
+ * \brief Struct to store \f$\kappa_\nu\f$ coefficient parameters and their
+ * values from literature data.
  */
-struct KappaCoefficientLiteratureValue{
-	/**
-	 * \brief Constructor for KappaCoefficientLiteratureValue
-	 *
-	 */
-	KappaCoefficientLiteratureValue(int t_nu, int t_L, int t_Lp, double val):
-		two_nu(t_nu),
-		two_L(t_L),
-		two_Lp(t_Lp),
-		value(val)
-	{};
+struct KappaCoefficientLiteratureValue {
+  /**
+   * \brief Constructor for KappaCoefficientLiteratureValue
+   *
+   */
+  KappaCoefficientLiteratureValue(int t_nu, int t_L, int t_Lp, double val)
+      : two_nu(t_nu), two_L(t_L), two_Lp(t_Lp), value(val){};
 
-	int two_nu, two_L, two_Lp;
-	double value;
+  int two_nu, two_L, two_Lp;
+  double value;
 };

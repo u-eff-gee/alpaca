@@ -19,33 +19,34 @@
 
 #include "AvCoefficient.hh"
 
-AvCoefficient::AvCoefficient(const int two_nu, const int two_L, const int two_Lp, const int two_jn, const int two_j):
-two_nu(two_nu), two_L(two_L), two_Lp(two_Lp), two_jn(two_jn), two_j(two_j), constant_f_coefficient(two_nu, two_L, two_L, two_jn, two_j), linear_f_coefficient(two_nu, two_L, two_Lp, two_jn, two_j), quadratic_f_coefficient(two_nu, two_Lp, two_Lp, two_jn, two_j)
-{
-    constant_coefficient = constant_f_coefficient.get_value();
-    linear_coefficient = 2.*linear_f_coefficient.get_value();
-    quadratic_coefficient = quadratic_f_coefficient.get_value();
+AvCoefficient::AvCoefficient(const int two_nu, const int two_L,
+                             const int two_Lp, const int two_jn,
+                             const int two_j)
+    : two_nu(two_nu), two_L(two_L), two_Lp(two_Lp), two_jn(two_jn),
+      two_j(two_j), constant_f_coefficient(two_nu, two_L, two_L, two_jn, two_j),
+      linear_f_coefficient(two_nu, two_L, two_Lp, two_jn, two_j),
+      quadratic_f_coefficient(two_nu, two_Lp, two_Lp, two_jn, two_j) {
+  constant_coefficient = constant_f_coefficient.get_value();
+  linear_coefficient = 2. * linear_f_coefficient.get_value();
+  quadratic_coefficient = quadratic_f_coefficient.get_value();
 }
 
 double AvCoefficient::operator()(const double delta) const {
-	
-	return constant_coefficient + delta*linear_coefficient + delta*delta*quadratic_coefficient;
+
+  return constant_coefficient + delta * linear_coefficient +
+         delta * delta * quadratic_coefficient;
 }
 
-string AvCoefficient::string_representation(const unsigned int n_digits, const vector<string> variable_names) const {
+string AvCoefficient::string_representation(
+    const unsigned int n_digits, const vector<string> variable_names) const {
 
-    string multipole_mixing_ratio_variable = variable_names.size() ? variable_names[0] : "\\delta";
+  string multipole_mixing_ratio_variable =
+      variable_names.size() ? variable_names[0] : "\\delta";
 
-    return constant_f_coefficient.string_representation(n_digits, {}) 
-        + "+"
-        + "2" + (n_digits ? "\\times" : "")
-        + linear_f_coefficient.string_representation(n_digits, {}) 
-        + (n_digits ? "\\times" : "")
-        + multipole_mixing_ratio_variable
-        + "+"
-        + quadratic_f_coefficient.string_representation(n_digits, {}) 
-        + (n_digits ? "\\times" : "")
-        + multipole_mixing_ratio_variable
-        + "^{2}";
-
+  return constant_f_coefficient.string_representation(n_digits, {}) + "+" +
+         "2" + (n_digits ? "\\times" : "") +
+         linear_f_coefficient.string_representation(n_digits, {}) +
+         (n_digits ? "\\times" : "") + multipole_mixing_ratio_variable + "+" +
+         quadratic_f_coefficient.string_representation(n_digits, {}) +
+         (n_digits ? "\\times" : "") + multipole_mixing_ratio_variable + "^{2}";
 }

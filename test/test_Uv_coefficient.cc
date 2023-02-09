@@ -23,36 +23,33 @@
 using std::make_unique;
 using std::unique_ptr;
 
-#include "UvCoefficient.hh"
 #include "TestUtilities.hh"
+#include "UvCoefficient.hh"
 
-int main(){
+int main() {
 
-    // Test the calculation of \f$U_\nu\f$ coefficients using the example given in Sec. 1.a.1.iii
-    // [Eqs. (66) - (68)] of Ref. \cite AjzenbergSelove1960, which gives the values of two
-    // coefficients explicitly.
+  // Test the calculation of \f$U_\nu\f$ coefficients using the example given in
+  // Sec. 1.a.1.iii [Eqs. (66) - (68)] of Ref. \cite AjzenbergSelove1960, which
+  // gives the values of two coefficients explicitly.
 
-	unique_ptr<UvCoefficient> uv_coef = make_unique<UvCoefficient>(0, 0, 0, 0);
-	const double epsilon = 1e-4;
+  unique_ptr<UvCoefficient> uv_coef = make_unique<UvCoefficient>(0, 0, 0, 0);
+  const double epsilon = 1e-4;
 
-    // Test the coefficient \f$U_2\f$
-    uv_coef = make_unique<UvCoefficient>(4, 8, 2, 6);
-	test_numerical_equality<double>(
-        uv_coef->get_value(), 
-        0.90469, epsilon);
+  // Test the coefficient \f$U_2\f$
+  uv_coef = make_unique<UvCoefficient>(4, 8, 2, 6);
+  test_numerical_equality<double>(uv_coef->get_value(), 0.90469, epsilon);
 
-    // Test the coefficient \f$U_4\f$
-    uv_coef = make_unique<UvCoefficient>(8, 8, 2, 6);
-	test_numerical_equality<double>(
-        uv_coef->get_value(), 
-        0.68138, epsilon);
+  // Test the coefficient \f$U_4\f$
+  uv_coef = make_unique<UvCoefficient>(8, 8, 2, 6);
+  test_numerical_equality<double>(uv_coef->get_value(), 0.68138, epsilon);
 
-    // Test the string representation for both constructors.
-    assert(uv_coef->string_representation()=="U_{4}\\left(4,1,3\\right)+U_{4}\\left(4,2,3\\right)\\delta^{2}");
-    assert(uv_coef->string_representation(3)=="0.681+0\\times\\delta^{2}");
+  // Test the string representation for both constructors.
+  assert(uv_coef->string_representation() ==
+         "U_{4}\\left(4,1,3\\right)+U_{4}\\left(4,2,3\\right)\\delta^{2}");
+  assert(uv_coef->string_representation(3) == "0.681+0\\times\\delta^{2}");
 
-    uv_coef = make_unique<UvCoefficient>(8, 8, 2, 4, 0., 6);
-    assert(uv_coef->string_representation()=="U_{4}\\left(4,1,3\\right)+U_{4}\\left(4,2,3\\right)\\delta^{2}");
-    assert(uv_coef->string_representation(3)=="0.681+0\\times\\delta^{2}");
-
+  uv_coef = make_unique<UvCoefficient>(8, 8, 2, 4, 0., 6);
+  assert(uv_coef->string_representation() ==
+         "U_{4}\\left(4,1,3\\right)+U_{4}\\left(4,2,3\\right)\\delta^{2}");
+  assert(uv_coef->string_representation(3) == "0.681+0\\times\\delta^{2}");
 }

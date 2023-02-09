@@ -21,17 +21,17 @@
 
 #include "TestUtilities.hh"
 
-int main(){
+int main() {
 
-    bool error_thrown = false;
+  bool error_thrown = false;
 
-    test_numerical_equality<double>(1.000, 1.001, 1e-3);
+  test_numerical_equality<double>(1.000, 1.001, 1e-3);
 
-    try{
-        test_numerical_equality<double>(1.000, 1.001, 1e-4);
-    } catch(const runtime_error &e){
-        error_thrown = true;
-    }
+  try {
+    test_numerical_equality<double>(1.000, 1.001, 1e-4);
+  } catch (const runtime_error &e) {
+    error_thrown = true;
+  }
 
-    assert(error_thrown);
+  assert(error_thrown);
 }

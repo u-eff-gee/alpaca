@@ -21,61 +21,61 @@
 
 #include "Transition.hh"
 
-int main(){
-    // Test IO of the Transition class.
+int main() {
+  // Test IO of the Transition class.
 
-    bool error_thrown = false;
+  bool error_thrown = false;
 
-    // Error: Both multipolarities are the same.
-    // Test for both possible constructors.
-    try{
-        Transition transition(2, 2, 0.);
-    } catch (const invalid_argument &e){
-        error_thrown = true;
-    }
+  // Error: Both multipolarities are the same.
+  // Test for both possible constructors.
+  try {
+    Transition transition(2, 2, 0.);
+  } catch (const invalid_argument &e) {
+    error_thrown = true;
+  }
 
-    assert(error_thrown);
-    error_thrown = false;
+  assert(error_thrown);
+  error_thrown = false;
 
-    try{
-        Transition transition(electric, 2, magnetic, 2, 0.);
-    } catch (const invalid_argument &e){
-        error_thrown = true;
-    }
+  try {
+    Transition transition(electric, 2, magnetic, 2, 0.);
+  } catch (const invalid_argument &e) {
+    error_thrown = true;
+  }
 
-    assert(error_thrown);
-    error_thrown = false;
+  assert(error_thrown);
+  error_thrown = false;
 
-    // Check multipolarity IO
+  // Check multipolarity IO
 
-    // Error: Multipolarity smaller than zero.
-    try{
-        Transition transition(electric, -2, magnetic, 2, 0.);
-    } catch (const invalid_argument &e){
-        error_thrown = true;
-    }
+  // Error: Multipolarity smaller than zero.
+  try {
+    Transition transition(electric, -2, magnetic, 2, 0.);
+  } catch (const invalid_argument &e) {
+    error_thrown = true;
+  }
 
-    assert(error_thrown);
-    error_thrown = false;
+  assert(error_thrown);
+  error_thrown = false;
 
-    // Error: Multipolarity zero.
-    try{
-        Transition transition(electric, 0, magnetic, 2, 0.);
-    } catch (const invalid_argument &e){
-        error_thrown = true;
-    }
+  // Error: Multipolarity zero.
+  try {
+    Transition transition(electric, 0, magnetic, 2, 0.);
+  } catch (const invalid_argument &e) {
+    error_thrown = true;
+  }
 
-    assert(error_thrown);
-    error_thrown = false;
+  assert(error_thrown);
+  error_thrown = false;
 
-    // Check string representation
+  // Check string representation
 
-    Transition transition(2, 4, 0.);
-    try{
-        transition.em_str_rep(em_unknown);
-    } catch(const runtime_error &e){
-        error_thrown = true;
-    }
+  Transition transition(2, 4, 0.);
+  try {
+    transition.em_str_rep(em_unknown);
+  } catch (const runtime_error &e) {
+    error_thrown = true;
+  }
 
-    assert(error_thrown);
+  assert(error_thrown);
 }

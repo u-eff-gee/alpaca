@@ -27,35 +27,40 @@
 using std::vector;
 
 /**
- * Test the calculation of the length of a spiral segment by comparison to a simple (and inefficient)
- * algorithm that determines the same quantity from a piecewise linear interpolation 
- * of the spiral.
+ * Test the calculation of the length of a spiral segment by comparison to a
+ * simple (and inefficient) algorithm that determines the same quantity from a
+ * piecewise linear interpolation of the spiral.
  */
-int main(){
+int main() {
 
-	const double epsilon{1e-4};
+  const double epsilon{1e-4};
 
-    SpherePointSampler sph_pt_samp;
+  SpherePointSampler sph_pt_samp;
 
-    vector<double> c_values{2., 20.};
+  vector<double> c_values{2., 20.};
 
-    const size_t n_Theta = 10;
-    const double Theta_increment = M_PI/((double) n_Theta - 1);
-    vector<double> Theta_values(n_Theta, 0.);
+  const size_t n_Theta = 10;
+  const double Theta_increment = M_PI / ((double)n_Theta - 1);
+  vector<double> Theta_values(n_Theta, 0.);
 
-    const unsigned int n_interpolation_points = 1e4;
+  const unsigned int n_interpolation_points = 1e4;
 
-    for(size_t i = 0; i < n_Theta; ++i){
-        Theta_values[i] = i*Theta_increment;
+  for (size_t i = 0; i < n_Theta; ++i) {
+    Theta_values[i] = i * Theta_increment;
+  }
+
+  double spiral_segment_elliptic_integral{0.},
+      spiral_segment_linear_interpolation{0.};
+  for (auto c : c_values) {
+    for (auto Theta : Theta_values) {
+      spiral_segment_elliptic_integral = sph_pt_samp.segment_length(Theta, c);
+      spiral_segment_linear_interpolation =
+          sph_pt_samp.segment_length_linear_interpolation(
+              Theta, c, n_interpolation_points);
+
+      test_numerical_equality<double>(spiral_segment_elliptic_integral,
+                                      spiral_segment_linear_interpolation,
+                                      epsilon);
     }
-
-    double spiral_segment_elliptic_integral{0.}, spiral_segment_linear_interpolation{0.};
-    for(auto c: c_values){
-        for(auto Theta: Theta_values){
-            spiral_segment_elliptic_integral = sph_pt_samp.segment_length(Theta, c);
-            spiral_segment_linear_interpolation = sph_pt_samp.segment_length_linear_interpolation(Theta, c, n_interpolation_points);
-
-            test_numerical_equality<double>(spiral_segment_elliptic_integral, spiral_segment_linear_interpolation, epsilon);
-        }
-    }
+  }
 }

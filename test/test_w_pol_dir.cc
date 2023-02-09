@@ -30,204 +30,190 @@
 
 /**
  * \brief Test polarization-direction correlation
- * 
- * The first test uses the analytical expressions for the angular distribution of a 
- * \f$0^+ \to 1^\pm \to 0^+\f$ sequence, which is a very common case in nuclear resonance 
- * fluorescence experiments.
+ *
+ * The first test uses the analytical expressions for the angular distribution
+ * of a \f$0^+ \to 1^\pm \to 0^+\f$ sequence, which is a very common case in
+ * nuclear resonance fluorescence experiments.
  *
  * The expression is {Eq. (1) in \cite Pietralla2001}:
- * 
+ *
  * \f[
- * 		W\left( \theta \right) = \frac{3}{4} \left[ 1 + \cos^2 \left( \theta \right) \right].
- * \f]
- * 
- * The second test reproduces a more complicated example by Biedenharn 
+ * 		W\left( \theta \right) = \frac{3}{4} \left[ 1 + \cos^2 \left(
+ * \theta \right) \right]. \f]
+ *
+ * The second test reproduces a more complicated example by Biedenharn
  * {Eqs. (88) - (89c) in Ref. \cite AjzenbergSelove1960}.
- */ 
+ */
 
 // Eq. (1) in Ref. \cite Pietralla2001.
-double w_pol_dir_0_1_0(const double theta, const double phi, const EMCharacter em){
+double w_pol_dir_0_1_0(const double theta, const double phi,
+                       const EMCharacter em) {
 
-	int parity_sign{1};
-	if(em == electric){
-		parity_sign = -1;
-	}
+  int parity_sign{1};
+  if (em == electric) {
+    parity_sign = -1;
+  }
 
-	return 1.+0.5*(
-		gsl_sf_legendre_Pl(2, cos(theta))
-		+0.5*parity_sign*cos(2.*phi)*gsl_sf_legendre_Plm(2, 2, cos(theta))
-	);
+  return 1. + 0.5 * (gsl_sf_legendre_Pl(2, cos(theta)) +
+                     0.5 * parity_sign * cos(2. * phi) *
+                         gsl_sf_legendre_Plm(2, 2, cos(theta)));
 }
 /**
  * Eqs. (88c) and (89c) in Ref. \cite AjzenbergSelove1960.
  * Note that these expression are not normalized to \f$4 \pi\f$.
- * Furthermore, the angle \f$\varphi\f$ is defined in a different way by /Biedenharn compared 
- * to the convention which is used in the present implementation.
- * 
- * Immediately above Eq. (83) in Ref. \cite AjzenbergSelove1960, Biedenharn first defines 
- * 'the polar angle between the photon's direction of motion and its polarization (Poincare) 
- * vector'.
- * After that, it is stated that '\f$\varphi = 0\f$ is taken to mean that the Poincare vector lies 
- * in the plane of the directions of motion.'.
- * 
- * In Fig. 1 of Ref. \cite FaggHanna1959, on the other hand, it can be seen that \f$\varphi = 0\f$ 
- * is the axis perpendicular to the direction of the emitted radiation.
- * For this reason, the functions will be evaluated at \f$90^\circ - \varphi\f$ below.
+ * Furthermore, the angle \f$\varphi\f$ is defined in a different way by
+ * /Biedenharn compared to the convention which is used in the present
+ * implementation.
+ *
+ * Immediately above Eq. (83) in Ref. \cite AjzenbergSelove1960, Biedenharn
+ * first defines 'the polar angle between the photon's direction of motion and
+ * its polarization (Poincare) vector'. After that, it is stated that
+ * '\f$\varphi = 0\f$ is taken to mean that the Poincare vector lies in the
+ * plane of the directions of motion.'.
+ *
+ * In Fig. 1 of Ref. \cite FaggHanna1959, on the other hand, it can be seen that
+ * \f$\varphi = 0\f$ is the axis perpendicular to the direction of the emitted
+ * radiation. For this reason, the functions will be evaluated at \f$90^\circ -
+ * \varphi\f$ below.
  */
-double Wa(const double theta, const double phi, const double delta){
+double Wa(const double theta, const double phi, const double delta) {
 
-	const double cosine_theta = cos(theta);
+  const double cosine_theta = cos(theta);
 
-	return (1. + delta*delta)
-	+(0.05714+delta*0.22132)
-	*(gsl_sf_legendre_Pl(2, cosine_theta)-0.5*gsl_sf_legendre_Plm(2, 2, cosine_theta)*cos(2.*phi));
+  return (1. + delta * delta) +
+         (0.05714 + delta * 0.22132) *
+             (gsl_sf_legendre_Pl(2, cosine_theta) -
+              0.5 * gsl_sf_legendre_Plm(2, 2, cosine_theta) * cos(2. * phi));
 }
 
-double Wb(const double theta, const double phi, const double delta){
+double Wb(const double theta, const double phi, const double delta) {
 
-	const double cosine_theta = cos(theta);
+  const double cosine_theta = cos(theta);
 
-	return (1. + delta*delta)
-	+(0.05714+delta*0.22132)
-	*gsl_sf_legendre_Pl(2, cosine_theta)
-	+(-0.02857 + 0.03689*delta)
-	*gsl_sf_legendre_Plm(2, 2, cosine_theta)*cos(2.*phi);
+  return (1. + delta * delta) +
+         (0.05714 + delta * 0.22132) * gsl_sf_legendre_Pl(2, cosine_theta) +
+         (-0.02857 + 0.03689 * delta) *
+             gsl_sf_legendre_Plm(2, 2, cosine_theta) * cos(2. * phi);
 }
 
-int main(){
+int main() {
 
-	double epsilon{1e-7};
+  double epsilon{1e-7};
 
-	double w_num{0.}, w_ana{0.};
+  double w_num{0.}, w_ana{0.};
 
-	W_pol_dir w_pol_dir_e1(
-		State(0, positive), 
-		{
-			{Transition(electric, 2, magnetic, 4, 0.), State(2, negative)}, 
-			{Transition(electric, 2, magnetic, 4, 0.),
-			State(0, positive)}
-		}
-	);
+  W_pol_dir w_pol_dir_e1(
+      State(0, positive),
+      {{Transition(electric, 2, magnetic, 4, 0.), State(2, negative)},
+       {Transition(electric, 2, magnetic, 4, 0.), State(0, positive)}});
 
-	W_pol_dir w_pol_dir_m1(
-		State(0, positive), 
-		{
-			{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)}, 
-			{Transition(magnetic, 2, electric, 4, 0.),
-			State(0, positive)}
-		}
-	);
+  W_pol_dir w_pol_dir_m1(
+      State(0, positive),
+      {{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
+       {Transition(magnetic, 2, electric, 4, 0.), State(0, positive)}});
 
-	for(double theta = 0.; theta < M_PI; theta += 0.5){
-		for(double phi = 0.; phi < M_2_PI; phi += 0.5){
+  for (double theta = 0.; theta < M_PI; theta += 0.5) {
+    for (double phi = 0.; phi < M_2_PI; phi += 0.5) {
 
-			w_num = w_pol_dir_e1(theta, phi);
-			w_ana = w_pol_dir_0_1_0(theta, phi, electric);
+      w_num = w_pol_dir_e1(theta, phi);
+      w_ana = w_pol_dir_0_1_0(theta, phi, electric);
 
-			test_numerical_equality<double>(w_num, w_ana, epsilon);
+      test_numerical_equality<double>(w_num, w_ana, epsilon);
 
-			w_num = w_pol_dir_m1(theta, phi);
-			w_ana = w_pol_dir_0_1_0(theta, phi, magnetic);
+      w_num = w_pol_dir_m1(theta, phi);
+      w_ana = w_pol_dir_0_1_0(theta, phi, magnetic);
 
-			test_numerical_equality<double>(w_num, w_ana, epsilon);
-		}
-	}
+      test_numerical_equality<double>(w_num, w_ana, epsilon);
+    }
+  }
 
-	// The criterion for correctness needs to be adapted here, since the analytical solution is given with rounded numerical factors.
-	epsilon = 1e-3;
+  // The criterion for correctness needs to be adapted here, since the
+  // analytical solution is given with rounded numerical factors.
+  epsilon = 1e-3;
 
-	for(double delta = -3.; delta <= 3.; delta += 0.5){
-		W_pol_dir Wa_num(
-			State(7, positive), 
-			{
-				{Transition(electric, 4, magnetic, 6, 0.), State(3, positive)}, 
-				{Transition(magnetic, 2, electric, 4, delta), State(3, positive)}
-			}
-		);
+  for (double delta = -3.; delta <= 3.; delta += 0.5) {
+    W_pol_dir Wa_num(
+        State(7, positive),
+        {{Transition(electric, 4, magnetic, 6, 0.), State(3, positive)},
+         {Transition(magnetic, 2, electric, 4, delta), State(3, positive)}});
 
-		W_pol_dir Wb_num(
-			State(3, positive), 
-			{
-				{Transition(magnetic, 2, electric, 4, delta), State(3, positive)}, 
-				{Transition(electric, 4, magnetic, 6, 0.), State(7, positive)}
-			}
-		);
+    W_pol_dir Wb_num(
+        State(3, positive),
+        {{Transition(magnetic, 2, electric, 4, delta), State(3, positive)},
+         {Transition(electric, 4, magnetic, 6, 0.), State(7, positive)}});
 
-		for(double theta = 0.; theta < M_PI; theta += 0.5){
-			for(double phi = 0.; phi < M_2_PI; phi += 0.5){
+    for (double theta = 0.; theta < M_PI; theta += 0.5) {
+      for (double phi = 0.; phi < M_2_PI; phi += 0.5) {
 
-				// Note the different definition of phi and the additional normalization 
-				// coefficient for the literature data.
-				w_num = Wa_num(theta, phi);
-				w_ana = Wa(theta, M_PI_2 - phi, delta)/(1.+delta*delta);
+        // Note the different definition of phi and the additional normalization
+        // coefficient for the literature data.
+        w_num = Wa_num(theta, phi);
+        w_ana = Wa(theta, M_PI_2 - phi, delta) / (1. + delta * delta);
 
-				test_numerical_equality<double>(w_num, w_ana, epsilon);
+        test_numerical_equality<double>(w_num, w_ana, epsilon);
 
-				w_num = Wb_num(theta, phi);
-				w_ana = Wb(theta, M_PI_2 - phi, delta)/(1.+delta*delta);
+        w_num = Wb_num(theta, phi);
+        w_ana = Wb(theta, M_PI_2 - phi, delta) / (1. + delta * delta);
 
-				test_numerical_equality<double>(w_num, w_ana, epsilon);
-			}
-		}
-	}
+        test_numerical_equality<double>(w_num, w_ana, epsilon);
+      }
+    }
+  }
 
-	// Test string representation.
-    // As a test case, use the 0->1->2 direction-direction correlation in 
-	// Sec. "4 Numerical example" of Ref. \cite Iliadis2021.
-	
-	// Implement the corresponding direction-direction correlation as well for easy access to that
-	// one's string representation.
-	W_dir_dir w_0_1_2(
-		State(0),
-		{
-			{Transition(2, 4, 0.), State(2)},
-			{Transition(2, 4, 0.), State(4)},
-		}
-	);
-	W_pol_dir w_0p_1p_2p(
-		State(0, positive),
-		{
-			{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-			{Transition(magnetic, 2, electric, 4, 0.), State(4, positive)},
-		}
-	);
+  // Test string representation.
+  // As a test case, use the 0->1->2 direction-direction correlation in
+  // Sec. "4 Numerical example" of Ref. \cite Iliadis2021.
 
-	const string str_rep = 
-		w_0_1_2.string_representation() + "\\\\"
-		+ "-\\cos\\left(2\\varphi\\right)\\left\\{\\right.\\\\"
-		+ "\\left[" + AlphavCoefficient(4, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]\\\\"
-		+ "\\times\\left[" + AvCoefficient(4, 2, 4, 4, 2).string_representation(0, {"\\delta_2"}) + "\\right]\\\\"
-		+ "\\times P_{2}^{\\left|2\\right|}\\left[\\cos\\left(\\theta\\right)\\right]"
-		+ "\\left.\\right\\}"
-		;
-	assert(w_0p_1p_2p.string_representation() == str_rep);
+  // Implement the corresponding direction-direction correlation as well for
+  // easy access to that one's string representation.
+  W_dir_dir w_0_1_2(State(0), {
+                                  {Transition(2, 4, 0.), State(2)},
+                                  {Transition(2, 4, 0.), State(4)},
+                              });
+  W_pol_dir w_0p_1p_2p(
+      State(0, positive),
+      {
+          {Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
+          {Transition(magnetic, 2, electric, 4, 0.), State(4, positive)},
+      });
 
-	// Test string representation for cascade with intermediate step.
-	W_dir_dir w_0_1_1_2(
-		State(0),
-		{
-			{Transition(2, 4, 0.), State(2)},
-			{Transition(2, 4, 0.), State(2)},
-			{Transition(2, 4, 0.), State(4)},
-		}
-	);
-	W_pol_dir w_0p_1p_1p_2p(
-		State(0, positive),
-		{
-			{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-			{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-			{Transition(magnetic, 2, electric, 4, 0.), State(4, positive)},
-		}
-	);
+  const string str_rep =
+      w_0_1_2.string_representation() + "\\\\" +
+      "-\\cos\\left(2\\varphi\\right)\\left\\{\\right.\\\\" + "\\left[" +
+      AlphavCoefficient(4, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) +
+      "\\right]\\\\" + "\\times\\left[" +
+      AvCoefficient(4, 2, 4, 4, 2).string_representation(0, {"\\delta_2"}) +
+      "\\right]\\\\" +
+      "\\times "
+      "P_{2}^{\\left|2\\right|}\\left[\\cos\\left(\\theta\\right)\\right]" +
+      "\\left.\\right\\}";
+  assert(w_0p_1p_2p.string_representation() == str_rep);
 
-	const string str_rep_2 = 
-		w_0_1_1_2.string_representation() + "\\\\"
-		+ "-\\cos\\left(2\\varphi\\right)\\left\\{\\right.\\\\"
-		+ "\\left[" + AlphavCoefficient(4, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) + "\\right]\\\\"
-		+ "\\times\\left[" + UvCoefficient(4, 2, 2, 4, 0., 2).string_representation(0, {"\\delta_2"}) + "\\right]\\\\"
-		+ "\\times\\left[" + AvCoefficient(4, 2, 4, 4, 2).string_representation(0, {"\\delta_3"}) + "\\right]\\\\"
-		+ "\\times P_{2}^{\\left|2\\right|}\\left[\\cos\\left(\\theta\\right)\\right]"
-		+ "\\left.\\right\\}"
-		;
-	assert(w_0p_1p_1p_2p.string_representation() == str_rep_2);
+  // Test string representation for cascade with intermediate step.
+  W_dir_dir w_0_1_1_2(State(0), {
+                                    {Transition(2, 4, 0.), State(2)},
+                                    {Transition(2, 4, 0.), State(2)},
+                                    {Transition(2, 4, 0.), State(4)},
+                                });
+  W_pol_dir w_0p_1p_1p_2p(
+      State(0, positive),
+      {
+          {Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
+          {Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
+          {Transition(magnetic, 2, electric, 4, 0.), State(4, positive)},
+      });
+
+  const string str_rep_2 =
+      w_0_1_1_2.string_representation() + "\\\\" +
+      "-\\cos\\left(2\\varphi\\right)\\left\\{\\right.\\\\" + "\\left[" +
+      AlphavCoefficient(4, 2, 4, 0, 2).string_representation(0, {"\\delta_1"}) +
+      "\\right]\\\\" + "\\times\\left[" +
+      UvCoefficient(4, 2, 2, 4, 0., 2).string_representation(0, {"\\delta_2"}) +
+      "\\right]\\\\" + "\\times\\left[" +
+      AvCoefficient(4, 2, 4, 4, 2).string_representation(0, {"\\delta_3"}) +
+      "\\right]\\\\" +
+      "\\times "
+      "P_{2}^{\\left|2\\right|}\\left[\\cos\\left(\\theta\\right)\\right]" +
+      "\\left.\\right\\}";
+  assert(w_0p_1p_1p_2p.string_representation() == str_rep_2);
 }
