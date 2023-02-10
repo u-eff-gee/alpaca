@@ -101,6 +101,10 @@ target_link_libraries(sphereRejectionSampler directionSampler)
 target_include_directories(sphereRejectionSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 set_target_properties(sphereRejectionSampler PROPERTIES PUBLIC_HEADER include/SphereRejectionSampler.hh)
 
+add_library(spotlightSampler SpotlightSampler.cc)
+target_link_libraries(spotlightSampler directionSampler euler_angle_rotation)
+target_include_directories(sphereRejectionSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
 add_library(angcorrRejectionSampler AngCorrRejectionSampler.cc)
 target_link_libraries(angcorrRejectionSampler sphereRejectionSampler angular_correlation)
 target_include_directories(angcorrRejectionSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
