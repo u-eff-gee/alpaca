@@ -93,9 +93,9 @@ int main() {
   // This vector must be rotated into the reference frame given by the first
   // emission.
   const EulerAngleRotation eul_ang_rot;
-  array<double, 2> theta_phi_single_2_rotated =
-      eul_ang_rot.rotate(theta_phi_single_2, {0., theta_phi_single_1[0],
-                                              -theta_phi_single_1[1] + M_PI_2});
+  array<double, 2> theta_phi_single_2_rotated = eul_ang_rot.rotate(
+      theta_phi_single_2, array<double, 3>{0., theta_phi_single_1[0],
+                                           -theta_phi_single_1[1] + M_PI_2});
   test_numerical_equality<double>(theta_phi_single_2_rotated[0],
                                   theta_phi_z_axis[2][0], epsilon);
   test_numerical_equality<double>(theta_phi_single_2_rotated[1],
@@ -111,8 +111,8 @@ int main() {
   const vector<array<double, 2>> theta_phi_random = cas_rej_sam_random();
   //      First step of the cascade
   const array<double, 2> theta_phi_single_1_rotated = eul_ang_rot.rotate(
-      theta_phi_single_1,
-      {0., sphere_random_vector[0], -sphere_random_vector[1] + M_PI_2});
+      theta_phi_single_1, array<double, 3>{0., sphere_random_vector[0],
+                                           -sphere_random_vector[1] + M_PI_2});
 
   test_numerical_equality<double>(theta_phi_single_1_rotated[0],
                                   theta_phi_random[1][0], epsilon);
@@ -121,8 +121,9 @@ int main() {
 
   //      Second step of the cascade
   theta_phi_single_2_rotated = eul_ang_rot.rotate(
-      theta_phi_single_2, {0., theta_phi_single_1_rotated[0],
-                           -theta_phi_single_1_rotated[1] + M_PI_2});
+      theta_phi_single_2,
+      array<double, 3>{0., theta_phi_single_1_rotated[0],
+                       -theta_phi_single_1_rotated[1] + M_PI_2});
 
   test_numerical_equality<double>(theta_phi_single_2_rotated[0],
                                   theta_phi_random[2][0], epsilon);

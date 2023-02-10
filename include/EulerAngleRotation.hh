@@ -130,6 +130,9 @@ public:
   /**
    * \brief Rotate a 3D vector.
    *
+   * Vector to rotate is given in Cartesian coordinates (and does not have to be
+   * normalized), rotation is represented as set of Euler angles.
+   *
    * \param x_y_z \f$v\f$, 3D vector
    * \param phi_theta_psi Euler angles in radians
    *
@@ -140,6 +143,39 @@ public:
 
   /**
    * \brief Rotate a 3D vector.
+   *
+   * Vector to rotate is given in spherical coordinates, rotation is represented
+   * as set of Euler angles.
+   *
+   * \param theta_phi \f$v\f$, spherical coordinates \f$\theta\f$ and
+   * \f$\varphi\f$ in radians.
+   * \param A \f$A\$, 3 x 3 rotation matrix.
+   *
+   * \return \f$v^\prime\f$, spherical coordinates \f$\theta\f$ and
+   * \f$\varphi\f$ in radians.
+   */
+  array<double, 2> rotate(const array<double, 2> theta_phi,
+                          const array<array<double, 3>, 3> A) const;
+
+  /**
+   * \brief Rotate a 3D vector.
+   *
+   * Vector to rotate is given in Cartesian coordinates (and does not have to be
+   * normalized), rotation is represented as a rotation matrix.
+   *
+   * \param x_y_z \f$v\f$, 3D vector
+   * \param A \f$A\$, 3 x 3 rotation matrix.
+   *
+   * \return \f$v^\prime\f$, 3D vector
+   */
+  array<double, 3> rotate(const array<double, 3> x_y_z,
+                          const array<array<double, 3>, 3> A) const;
+
+  /**
+   * \brief Rotate a 3D vector.
+   *
+   * Vector to rotate is given in spherical coordinates, rotation is represented
+   * as a rotation matrix..
    *
    * \param theta_phi \f$v\f$, spherical coordinates \f$\theta\f$ and
    * \f$\varphi\f$ in radians. \param Phi_Theta_Psi Euler angles in radians
@@ -194,7 +230,6 @@ public:
    */
   array<double, 2> get_theta_phi(const array<double, 3> x_y_z_norm) const;
 
-protected:
   /**
    * \brief Convert spherical to Cartesian coordinates.
    *
@@ -218,6 +253,7 @@ protected:
   array<array<double, 3>, 3>
   rotation_matrix(const array<double, 3> Phi_Theta_Psi) const;
 
+protected:
   /**
    * \brief Check if all three Euler angles are zero.
    *
