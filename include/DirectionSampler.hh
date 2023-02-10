@@ -23,6 +23,10 @@
 
 using std::array;
 
+#include <utility>
+
+using std::pair;
+
 #include "EulerAngleRotation.hh"
 
 /**
