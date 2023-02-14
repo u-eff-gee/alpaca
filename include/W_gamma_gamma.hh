@@ -36,10 +36,11 @@ using std::pair;
  *
  * Base class for angular correlations of two photons, which defines the general
  * API. A gamma-gamma angular correlation \f$W \left( \theta, \varphi
- * \right)\f$is defined by an oriented initial state and a set of cascade steps,
- * which are pairs of a transition and a state to which this transition leads.
- * The angular correlation is a function of two variables, the polar angle
- * \f$\theta\f$ and the azimuthal angle \f$\varphi\f$ in spherical coordinates.
+ * \right)\f$ is defined by an oriented initial state and a set of cascade
+ * steps, which are pairs of a transition and a state to which this transition
+ * leads. The angular correlation is a function of two variables, the polar
+ * angle \f$\theta\f$ and the azimuthal angle \f$\varphi\f$ in spherical
+ * coordinates.
  */
 class W_gamma_gamma : public StringRepresentable {
 
@@ -125,6 +126,139 @@ public:
     return cascade_steps;
   }
 
+  /**
+   * @brief Calculate the normalization factor for the angular correlation.
+   *
+   * In this library, all angular correlations are supposed to be normalized to
+   * \f$4\pi\f$ with respect to an integration over the entire surface of a
+   * sphere, i.e.:
+   *
+   * \f[
+   *  \int_0^{2 \pi} \mathrm{d} \varphi \int_0^\pi W \left( \theta, \varphi
+   * \right) \sin \left( \theta \right) \mathrm{d} \theta = 4\pi.
+   * \f]
+   *
+   * Considering that the integral over the entire range of \f$\theta\f$ is zero
+   * except for the zero-order Legendre polynomial
+   *
+   * \f[
+   *  \int_0^\pi P_n \left[ \cos \left( \theta \right) \right] \mathrm{d} \theta
+   * = \begin{cases} 1,~~~n=0 \\ 0,~~~\mathrm{else} \end{cases}, \f]
+   *
+   * and that the integral over the entire range of \f$\varphi\f$ is zero for
+   * the angular dependence of the polarization-dependent term of the pol-dir
+   * correlation
+   *
+   * \f[
+   *  \int_0^{2\pi} \cos \left( 2 \varphi \right) = 0,
+   * \f]
+   *
+   * it is clear that only the zero-order terms of the dir-dir correlation need
+   * to be considered to determine the normalization factor (the value of \f$4
+   * \pi\f$ comes from the integration over the azimuthal angle when the
+   * integration over the polar angle does not vanish).
+   *
+   * For the most general angular correlation with unobserved intermediate
+   * \f$\gamma\f$ rays, the integral over the unnormalized distribution {i.e.
+   * using the canonical \f$A_\nu\f$, \f$\alpha_\nu\f$, \f$E_\nu\f$, and
+   * \f$U_\nu\f$ coefficients as in Refs. \cite FaggHanna1959 [Eqs. I-1, I-2,
+   * I-7, I-8, and I-9] or \cite Iliadis2021 [Eqs. (3-7) and (21-24)]} results
+   * in [for explicit examples, see Sec. 4 in Ref. \cite Iliadis2021 or Ref.
+   * \cite AjzenbergSelove1960]:
+   *
+   * \f[
+   *  \int_0^{2 \pi} \mathrm{d} \varphi \int_0^\pi W_\mathrm{unnormalized}
+   * \left( \theta, \varphi \right) \sin \left( \theta \right) \mathrm{d} \theta
+   * = \f]
+   *
+   * \f[
+   * \left[ F_0 \left(
+   *  L_1, L_1, j_1, J \right) + F_0 \left( L_1, L_1^\prime, j_1, J \right)
+   *  \delta_1 + F_0 \left( L_1^\prime, L_1^\prime, j_1, J \right) \delta_1^2
+   *  \right]
+   * \f]
+   *
+   * \f[
+   *  \times \left[ 1 + \delta_2^2
+   *  \right] \times ... \times \left[ 1 + \delta_{n-2}^2
+   *  \right]
+   * \f]
+   *
+   * \f[
+   *  \times \left[ F_0 \left(
+   *  L_{n-1}, L_{n-1}, j_n, J \right) + F_0 \left( L_{n-1}, L_{n-1}^\prime,
+   * j_n, J \right) \delta_{n-1} + F_0 \left( L_{n-1}^\prime, L_{n-1}^\prime,
+   * j_n, J \right) \delta_{n-1}^2 \right]
+   * \f].
+   *
+   * Please note that the unobserved \f$\gamma\f$-ray transitions mix
+   * incoherently with the others, so the mixing ratios of those can be taken
+   * into account in a more straightforward way than for correlated \f$\gamma\f$
+   * rays [see, e.g., Eq. (21) in Ref. \cite Iliadis2021].
+   *
+   * The expression above is often simplified by using special properties of
+   * zero-order F coefficients. Firstly, the constant and quadratic terms in the
+   * mixing ratio all evaluate to 1 [see, e.g., Eq. (9) in Ref. \cite
+   * FerentzRosenzweig1955]:
+   *
+   * \f[
+   *  F_0 \left( L, L, j, J \right) = 1
+   * \f]
+   *
+   * if they describe a valid transition (see also below).
+   * Secondly, all linear terms vanish [See, e.g., Eq. (10) in Ref. \cite
+   * Iliadis2021. The first part of the inequality cannot be fulfilled if \f$L
+   * \neq L^\prime\f$ and \f$n=0\f$ in the notation of that article.]
+   *
+   * \f[
+   *  F_0 \left( L, L^\prime, j, J \right) = 0~~\forall~~L \neq L^\prime.
+   * \f]
+   *
+   * Therefore, the expression above becomes:
+   *
+   * \f[
+   *  \int_0^{2 \pi} \mathrm{d} \varphi \int_0^\pi W_\mathrm{unnormalized}
+   * \left( \theta, \varphi \right) \sin \left( \theta \right) \mathrm{d} \theta
+   * = \f]
+   *
+   * \f[
+   * \left( 1 + \delta_1^2 \right) \left( 1 + \delta_2^2 \right) \times ...
+   * \times \left( 1 + \delta_{n-2}^2 \right) \left( 1 +
+   * \delta_{n-1}^2 \right). \f]
+   *
+   * Simplified expressions like the one above can be found in recent articles,
+   * for example Refs. \cite Iliadis2021 and \cite Zilges2022.
+   * However, the alpaca library uses the original expression with the F
+   * coefficients for the following reason: Imagine a cascade that includes a
+   * transition where only a single multipolarity is possible (for example a
+   * transition involving a spin-zero state). In this case, the quadratic
+   * zero-order F coefficients would evaluate to zero as well since it violates
+   * the triangle inequality. Therefore, the normalization factor would be
+   * independent of the mixing ratio for that transition. Knowing this, Eq. (12)
+   * in \cite Iliadis2021 could be misleading in the sense that it implies that
+   * the numerical result of the canonical angular-correlation expression always
+   * need to be divided by the mixing ratios. If a user forgets that a
+   * transition only admits a single multipolarity and sets the mixing ratio to
+   * a nonzero value, this would break the normalization.
+   * I chose to mention this in detail here, since alpaca versions before
+   * version 1.0.5 implemented the normalization factor in a way that the
+   * normalization could fail.
+   *
+   * @return Normalization factor.
+   */
+  // virtual double calculate_normalization_factor() const = 0;
+
+  /**
+   * @brief Return string representation of gamma-gamma angular correlation.
+   *
+   * \param n_digits Determines whether the expression
+   * should be evaluated numerically, (n_digits > 0). If yes, indicates how many
+   * digits should be displayed (default: 0).
+   * \param variable_names Names for the variables of a function (default: {}
+   * i.e. use default names).
+   *
+   * \return String representation.
+   */
   virtual string string_representation(
       const unsigned int n_digits = 0,
       const vector<string> variable_names = {}) const override = 0;
