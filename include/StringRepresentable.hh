@@ -48,10 +48,11 @@ public:
    * should be displayed as variables or evaluated numerically. The numerical
    * expressions will be formatted using std::setprecision(n_digits).
    *
-   * \param variable_names Names for the variables of a function (default: {}
-   * i.e. use default names). \param n_digits Determines whether the expression
+   * \param n_digits Determines whether the expression
    * should be evaluated numerically, (n_digits > 0). If yes, indicates how many
    * digits should be displayed (default: 0).
+   * \param variable_names Names for the variables of a function (default: {}
+   * i.e. use default names).
    *
    * \return String representation.
    */

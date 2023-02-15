@@ -204,6 +204,9 @@ public:
    */
   int get_two_nu_max() const { return two_nu_max; };
 
+  /**
+   * \brief Return mixing-ratio dependent normalization factor.
+   */
   double get_normalization_factor() const { return normalization_factor; };
 
   /**

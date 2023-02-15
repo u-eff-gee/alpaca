@@ -118,7 +118,7 @@ using std::vector;
  * \f$W_{\gamma \gamma}\f$ in terms of Legendre polynomials are separable into
  * contributions by the different transitions. Therefore, a 'first' and 'last'
  * transition of the cascade actually need not be identified. In other words, it
- * does not matter whether the photon observed in z direction with an
+ * does not matter whether the photon observed in z direction with a
  * polarization in x direction is the first or the last one of the cascade.
  * However, the unobserved transitions must take place in between the two,
  * otherwise they would not have to be considered anyway.

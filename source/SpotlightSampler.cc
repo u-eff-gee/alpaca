@@ -24,7 +24,6 @@
 #include "SpotlightSampler.hh"
 
 SpotlightSampler::SpotlightSampler(const array<double, 2> theta_phi,
-                                   const double distance, const double radius,
                                    const int seed)
     : SpotlightSampler(theta_phi, 0., seed) {}
 
