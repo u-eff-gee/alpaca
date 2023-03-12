@@ -35,7 +35,7 @@ using std::vector;
 
 #include "AngCorrRejectionSampler.hh"
 #include "AngularCorrelation.hh"
-#include "DirectionSampler.hh"
+#include "ReferenceFrameSampler.hh"
 
 /**
  * \brief Sample directions of emission from an arbitrarily long cascade of
@@ -151,71 +151,7 @@ using std::vector;
 class CascadeSampler {
 
 public:
-  /**
-   * \brief Constructor for a cascade in which the first state is unoriented.
-   *
-   * This constructor assumes that the cascade starts with the first transition
-   * from an unoriented first state (for example the spontaneous radioactive
-   * decay of a free nucleus). When initialized like this, the output of
-   * CascadeSampler will automatically include the direction of the
-   * first gamma ray.
-   *
-   * \param cascade List of angular correlations (AngularCorrelation objects)
-   * involved in the cascade. The first angular correlation is assumed to
-   * describe the first two transitions, the second angular correlation
-   * describes the second and the third transition, and so on. \param seed
-   * Random number seed. Will be used for all internal random number samplers.
-   * \param max_tri Maximum number of sampled points before an algorithm
-   * terminates without success and returns its default value (default: 1000).
-   * Will be used for all internal random-number samplers.
-   */
-  CascadeSampler(vector<AngularCorrelation> &cascade, const int seed,
-                 const unsigned int max_tri = 1000);
-
-  /**
-   * \brief Constructor for a cascade in which the second second state is
-   * oriented.
-   *
-   * This constructor assumes that the cascade starts with the second transition
-   * from an oriented second state. The first transition is assumed to model
-   * some reaction mechanism that produces the orientation of the second state
-   * (for example the capture of a beam photon in nuclear resonance
-   * fluorescence). When initialized like this, the output of
-   * CascadeSampler will not automatically include the direction of the
-   * first gamma ray, except if the return_first_direction option is scattered.
-   * This is helpful, for example, when simulating only the emitted radiation
-   * after the capture of a particle that produces an oriented excited state.
-   *
-   * By default (all Euler angles set to zero), the reaction produces an
-   * orientation along the \f$z\f$ axis, with the polarization along the \f$x\f$
-   * axis (if a polarized angular correlation is given as the first element of
-   * the cascade), because this is the default orientation of angular
-   * correlations in the alpaca code. By providing a set of Euler angles, the
-   * orientation can be rotated into an arbitrary reference frame. For example,
-   * by using the first Euler angle \f$\Phi\f$, which denotes a rotation around
-   * the z axis, the polarization plane can be rotated.
-   *
-   * \param cascade List of angular correlations (AngularCorrelation objects)
-   * involved in the cascade. The first angular correlation is assumed to
-   * describe the first two transitions, the second angular correlation
-   * describes the second and the third transition, and so on. \param seed
-   * Random number seed. Will be used for all internal random number samplers.
-   * \param PhiThetaPsi Euler angles to control the orientation of the first
-   * gamma ray. Use {0, 0, 0} for the default orientation along the \f$z\f$
-   * axis. \param return_first_direction Determines whether the first gamma ray
-   * emitted in the transition from \f$j_1\f$ to \f$j_2\f$ should be included in
-   * the output (default: false, i.e. do not include the first gamma ray).
-   * \param max_tri Maximum number of sampled points before an algorithm
-   * terminates without success and returns its default value (default: 1000).
-   * Will be used for all internal random-number samplers.
-   */
-  CascadeSampler(vector<AngularCorrelation> &cascade, const int seed,
-                 const array<double, 3> PhiThetaPsi,
-                 const unsigned int max_tri = 1000);
-
-  CascadeSampler(vector<shared_ptr<DirectionSampler>> cascade, const int seed,
-                 const array<double, 3> PhiThetaPsi,
-                 const unsigned int max_tri = 1000);
+  CascadeSampler(vector<shared_ptr<ReferenceFrameSampler>> cascade);
 
   /**
    * \brief Sample random gamma-ray directions from the cascade.
@@ -225,33 +161,11 @@ public:
    * of the first (depends on the setting of return_first_direction) gamma ray
    * in the cascade, the second pair describes the second gamma ray, and so on.
    */
-  vector<array<double, 2>> operator()();
+  vector<array<double, 3>> operator()();
 
 protected:
-  double phi_to_Psi(const double phi) const {
-    return M_PI_2 - phi;
-  } /**< Conversion from the azimuthal angle \f$\varphi\f$ in spherical
-       coordinates to the first Euler angle \f$\Psi\f$ in the x convention. See
-       also the EulerAngleRotation class.*/
-  double Psi_to_phi(const double Psi) const {
-    return M_PI_2 - Psi;
-  } /**< Conversion from the first Euler angle \f$\Psi\f$ in the x convention to
-       the azimuthal angle \f$\varphi\f$ in spherical coordinates. See also the
-       EulerAngleRotation class.*/
-
-  const bool
-      initial_direction_random; /**< Indicates whether the direction of the
-                                   first gamma ray was given by the user (false)
-                                   or should be sampled (true).*/
-  array<double, 3> PhiThetaPsi; /**< Euler angles to control the orientation of
-                                   the first gamma ray. */
-
-  vector<shared_ptr<DirectionSampler>>
+  vector<shared_ptr<ReferenceFrameSampler>>
       angular_correlation_samplers; /**< List of AngCorrRejectionSamplers which
                                        are initialized on construction with
                                        AngularCorrelation objects. */
-  SphereRejectionSampler
-      uniform_direction_sampler; /**< Instance of SphereRejectionSampler with an
-                                    uniform distribution to sample the direction
-                                    of the first gamma ray. */
 };

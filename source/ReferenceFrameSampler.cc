@@ -17,21 +17,35 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
+#include <numeric>
+
+using std::accumulate;
+
 #include <utility>
 
 using std::pair;
 
-#include "DirectionSampler.hh"
+#include <vector>
+
+using std::vector;
+
+#include "ReferenceFrameSampler.hh"
 
 #include "EulerAngleRotation.hh"
 
-array<double, 2> DirectionSampler::operator()() {
-  pair<unsigned int, array<double, 2>> sampled_theta_phi = sample();
+array<double, 3> ReferenceFrameSampler::operator()() {
+  pair<unsigned int, array<double, 3>> sampled_theta_phi = sample();
 
   return {sampled_theta_phi.second[0], sampled_theta_phi.second[1]};
 }
 
-array<double, 2>
-DirectionSampler::operator()(const array<double, 3> euler_angles) {
-  return euler_angle_transform::rotate(operator()(), euler_angles);
+double ReferenceFrameSampler::estimate_efficiency(const unsigned int n_tries) {
+  vector<unsigned int> required_tries(n_tries);
+
+  for (unsigned int i = 0; i < n_tries; ++i) {
+    required_tries[i] = sample().first;
+  }
+
+  return (double)n_tries /
+         (double)accumulate(required_tries.begin(), required_tries.end(), 0);
 }

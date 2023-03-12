@@ -23,14 +23,10 @@ using std::array;
 
 #include <numeric>
 #include <utility>
-#include <vector>
-
-using std::accumulate;
-using std::get;
-using std::vector;
 
 #include <gsl/gsl_math.h>
 
+#include "EulerAngleRotation.hh"
 #include "SphereRejectionSampler.hh"
 
 SphereRejectionSampler::SphereRejectionSampler(
@@ -40,7 +36,7 @@ SphereRejectionSampler::SphereRejectionSampler(
   random_engine = mt19937(seed);
 }
 
-pair<unsigned int, array<double, 2>> SphereRejectionSampler::sample() {
+pair<unsigned int, array<double, 3>> SphereRejectionSampler::sample() {
 
   array<double, 2> theta_phi;
   double dis_val;
@@ -51,25 +47,11 @@ pair<unsigned int, array<double, 2>> SphereRejectionSampler::sample() {
     dis_val = uniform_random(random_engine) * distribution_maximum;
 
     if (dis_val <= distribution(theta_phi[0], theta_phi[1])) {
-      return {i + 1, {theta_phi[0], theta_phi[1]}};
+      return {i + 1, euler_angle_transform::from_spherical(theta_phi, 0.)};
     }
   }
 
-  return {max_tries, {0., 0.}};
-}
-
-double SphereRejectionSampler::estimate_efficiency(const unsigned int n_tries) {
-  vector<unsigned int> required_tries(n_tries);
-
-  pair<unsigned int, array<double, 2>> sampled_theta_phi;
-
-  for (unsigned int i = 0; i < n_tries; ++i) {
-    sampled_theta_phi = sample();
-    required_tries[i] = sampled_theta_phi.first;
-  }
-
-  return (double)n_tries /
-         (double)accumulate(required_tries.begin(), required_tries.end(), 0);
+  return {max_tries, {0., 0., 0.}};
 }
 
 double SphereRejectionSampler::sample_theta() {

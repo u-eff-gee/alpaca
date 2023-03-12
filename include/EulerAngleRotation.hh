@@ -221,7 +221,7 @@ inline array<double, 2> get_theta_phi(const array<double, 3> x_y_z_norm) {
  * \return \f$v^\prime\f$, 3D vector
  */
 inline array<double, 3> rotate(const array<double, 3> x_y_z,
-                        const array<array<double, 3>, 3> A) {
+                               const array<array<double, 3>, 3> A) {
   return array<double, 3>{
       A[0][0] * x_y_z[0] + A[0][1] * x_y_z[1] + A[0][2] * x_y_z[2],
       A[1][0] * x_y_z[0] + A[1][1] * x_y_z[1] + A[1][2] * x_y_z[2],
@@ -242,7 +242,7 @@ inline array<double, 3> rotate(const array<double, 3> x_y_z,
  * \f$\varphi\f$ in radians.
  */
 inline array<double, 2> rotate(const array<double, 2> theta_phi,
-                        const array<array<double, 3>, 3> A) {
+                               const array<array<double, 3>, 3> A) {
   return get_theta_phi(rotate(get_x_y_z_norm(theta_phi), A));
 };
 
@@ -258,7 +258,7 @@ inline array<double, 2> rotate(const array<double, 2> theta_phi,
  * \return \f$v^\prime\f$, 3D vector
  */
 inline array<double, 3> rotate(const array<double, 3> x_y_z,
-                        const array<double, 3> Phi_Theta_Psi) {
+                               const array<double, 3> Phi_Theta_Psi) {
 
   if (euler_angle_transform::no_rotation_required(Phi_Theta_Psi)) {
     return x_y_z;
@@ -282,7 +282,7 @@ inline array<double, 3> rotate(const array<double, 3> x_y_z,
  * \f$\varphi\f$ in radians.
  */
 inline array<double, 2> rotate(const array<double, 2> theta_phi,
-                        const array<double, 3> Phi_Theta_Psi) {
+                               const array<double, 3> Phi_Theta_Psi) {
   if (euler_angle_transform::no_rotation_required(Phi_Theta_Psi)) {
     return theta_phi;
   }
@@ -303,7 +303,7 @@ inline array<double, 2> rotate(const array<double, 2> theta_phi,
  * \return \f$v\f$, 3D vector
  */
 inline array<double, 3> rotate_back(const array<double, 3> xp_yp_zp,
-                             const array<double, 3> Phi_Theta_Psi) {
+                                    const array<double, 3> Phi_Theta_Psi) {
   if (euler_angle_transform::no_rotation_required(Phi_Theta_Psi)) {
     return xp_yp_zp;
   }
@@ -324,11 +324,46 @@ inline array<double, 3> rotate_back(const array<double, 3> xp_yp_zp,
  * radians.
  */
 inline array<double, 2> rotate_back(const array<double, 2> thetap_phip,
-                             const array<double, 3> Phi_Theta_Psi) {
+                                    const array<double, 3> Phi_Theta_Psi) {
   if (euler_angle_transform::no_rotation_required(Phi_Theta_Psi)) {
     return thetap_phip;
   }
 
   return get_theta_phi(rotate_back(get_x_y_z_norm(thetap_phip), Phi_Theta_Psi));
 };
+
+/**
+ * @brief Euler angles for rotating the z axis into an arbitrary vector in
+ * spherical coordinates.
+ *
+ * Given a polar angle \f$\theta\f$ and and azimuthal angle \f$\varphi\f$ in
+ * spherical coordinates, this function returns three Euler angles for a
+ * rotation which turns the z axis (\f$\theta = 0\f$) into the given vector.
+ * Since there are three Euler angles, but only two are needed for the
+ * transformation, the third angle can be set by the user. That third angle is
+ * supposed to be the one associated with the first rotation about the z axis,
+ * \f$\Phi\f$, since it has no effect on the z axis.
+ *
+ * @param theta_phi Polar- and azimuthal angle in spherical coordinates in
+ * radians.
+ * @param Phi Euler angle for the first rotation around the z axis in radians.
+ * @return array<double, 3> One possible set of Euler angles to rotate the z
+ * axis into the given vector in spherical coordinates.
+ */
+inline array<double, 3> from_spherical(const array<double, 2> theta_phi,
+                                       const double Phi = 0.) {
+  return {Phi, theta_phi[0], M_PI_2 - theta_phi[1]};
+}
+
+/**
+ * @brief z-axis in spherical coordinates after Euler-angle rotation.
+ *
+ * @param PhiThetaPsi Euler angles in radians.
+ * radians.
+ * @return array<double, 2> Polar and azimuthal angle of the z axis after
+ * rotation by three Euler angles in radians.
+ */
+inline array<double, 2> to_spherical(const array<double, 3> PhiThetaPsi) {
+  return {PhiThetaPsi[1], M_PI_2 - PhiThetaPsi[2]};
+}
 }; // namespace euler_angle_transform

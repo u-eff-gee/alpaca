@@ -24,20 +24,19 @@
 using std::mt19937;
 using std::uniform_real_distribution;
 
-#include "DirectionSampler.hh"
 #include "EulerAngleRotation.hh"
+#include "ReferenceFrameSampler.hh"
 
-class SpotlightSampler : public DirectionSampler {
+class SpotlightSampler : public ReferenceFrameSampler {
 public:
   SpotlightSampler(const array<double, 2> theta_phi, const int seed);
   SpotlightSampler(const array<double, 2> theta_phi, const double opening_angle,
                    const int seed);
   SpotlightSampler(const array<double, 2> theta_phi, const double distance,
                    const double radius, const int seed);
-  pair<unsigned int, array<double, 2>> sample();
+  pair<unsigned int, array<double, 3>> sample();
 
 protected:
-  array<array<double, 3>, 3> rotation_matrix;
   const array<double, 2> theta_phi;
   const double opening_angle;
   double u_min{0.5};

@@ -64,7 +64,7 @@ public:
    * of trials \f$N_\mathrm{max}\f$ is reached by the algorithm and no random
    * vector was accepted.
    */
-  pair<unsigned int, array<double, 2>> sample() override final;
+  pair<unsigned int, array<double, 3>> sample() override final;
 
 protected:
   AngularCorrelation

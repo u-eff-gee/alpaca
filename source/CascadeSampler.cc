@@ -27,69 +27,23 @@ using std::endl;
 using std::make_shared;
 
 #include "CascadeSampler.hh"
-#include "DirectionSampler.hh"
+#include "EulerAngleRotation.hh"
+#include "ReferenceFrameSampler.hh"
 
-CascadeSampler::CascadeSampler(vector<AngularCorrelation> &cascade,
-                               const int seed, const unsigned int max_tri)
-    : initial_direction_random(true), PhiThetaPsi({0., 0., 0.}),
-      uniform_direction_sampler(
-          []([[maybe_unused]] const double theta,
-             [[maybe_unused]] const double phi) { return 1.; },
-          1., seed, max_tri) {
-  for (size_t i = 0; i < cascade.size(); ++i) {
-    angular_correlation_samplers.push_back(
-        make_shared<AngCorrRejectionSampler>(cascade[i], seed, max_tri));
-  }
-}
+CascadeSampler::CascadeSampler(
+    vector<shared_ptr<ReferenceFrameSampler>> cascade)
+    : angular_correlation_samplers(cascade) {}
 
-CascadeSampler::CascadeSampler(vector<AngularCorrelation> &cascade,
-                               const int seed,
-                               const array<double, 3> PhiThetaPsi,
-                               const unsigned int max_tri)
-    : initial_direction_random(false), PhiThetaPsi(PhiThetaPsi),
-      uniform_direction_sampler(
-          []([[maybe_unused]] const double theta,
-             [[maybe_unused]] const double phi) { return 1.; },
-          1., seed, max_tri){
-  for (size_t i = 0; i < cascade.size(); ++i) {
-    angular_correlation_samplers.push_back(
-        make_shared<AngCorrRejectionSampler>(cascade[i], seed, max_tri));
-  }
-}
+vector<array<double, 3>> CascadeSampler::operator()() {
+  vector<array<double, 3>> reference_frames(
+      angular_correlation_samplers.size());
 
-CascadeSampler::CascadeSampler(vector<shared_ptr<DirectionSampler>> cascade,
-                               const int seed,
-                               const array<double, 3> PhiThetaPsi,
-                               const unsigned int max_tri)
-    : initial_direction_random(false), PhiThetaPsi(PhiThetaPsi),
-      angular_correlation_samplers(cascade),
-      uniform_direction_sampler(
-          []([[maybe_unused]] const double theta,
-             [[maybe_unused]] const double phi) { return 1.; },
-          1., seed, max_tri){}
+  reference_frames[0] = angular_correlation_samplers[0]->operator()();
 
-vector<array<double, 2>> CascadeSampler::operator()() {
-  vector<array<double, 2>> directions;
-  vector<array<double, 3>> reference_frames;
-
-  if (initial_direction_random) {
-    const array<double, 2> initial_theta_phi = uniform_direction_sampler();
-    reference_frames.push_back(
-        {0., initial_theta_phi[0], phi_to_Psi(initial_theta_phi[1])});
-  } else {
-    reference_frames.push_back(PhiThetaPsi);
+  for (size_t i = 1; i < angular_correlation_samplers.size(); ++i) {
+    reference_frames[i] = euler_angle_transform::rotate(
+        angular_correlation_samplers[i]->operator()(), reference_frames[i - 1]);
   }
 
-  directions.push_back(
-      {reference_frames[0][1], Psi_to_phi(reference_frames[0][2])});
-
-  array<double, 2> theta_phi_random;
-  for (size_t i = 0; i < angular_correlation_samplers.size(); ++i) {
-    theta_phi_random =
-        angular_correlation_samplers[i]->operator()(reference_frames[i]);
-    directions.push_back(theta_phi_random);
-    reference_frames.push_back({0., theta_phi_random[0], 0.});
-  }
-
-  return directions;
+  return reference_frames;
 }

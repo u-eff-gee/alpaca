@@ -33,7 +33,7 @@ using std::uniform_real_distribution;
 using std::pair;
 using std::tuple;
 
-#include "DirectionSampler.hh"
+#include "ReferenceFrameSampler.hh"
 
 /**
  * \brief Sample from a probability distribution in spherical coordinates using
@@ -107,7 +107,7 @@ using std::tuple;
  * which is the inverse of the average number of trial vectors \f$\langle N
  * \rangle\f$ that have to be sampled before a vector is accepted.
  */
-class SphereRejectionSampler : public DirectionSampler {
+class SphereRejectionSampler : public ReferenceFrameSampler {
 
 public:
   /**
@@ -136,21 +136,7 @@ public:
    * of trials \f$N_\mathrm{max}\f$ is reached by the algorithm and no random
    * vector was accepted.
    */
-  virtual pair<unsigned int, array<double, 2>> sample() override;
-
-  /**
-   * \brief Estimate the efficiency of rejection sampling for the given
-   * distribution.
-   *
-   * The efficiency \f$\epsilon\f$ is estimated by sampling \f$n\f$ vectors from
-   * the distribution and calculating the average number of trials \f$\langle N
-   * \rangle\f$ for this set.
-   *
-   * \param n_tries \f$n\f$, number of sampled vectors.
-   *
-   * \return Estimate for \f$\epsilon\f$ from the \f$n\f$ samples.
-   */
-  double estimate_efficiency(const unsigned int n_tries);
+  virtual pair<unsigned int, array<double, 3>> sample() override;
 
 protected:
   /**

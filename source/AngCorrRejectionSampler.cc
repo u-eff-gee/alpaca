@@ -22,6 +22,7 @@
 using std::array;
 
 #include "AngCorrRejectionSampler.hh"
+#include "EulerAngleRotation.hh"
 
 AngCorrRejectionSampler::AngCorrRejectionSampler(AngularCorrelation &w,
                                                  const int seed,
@@ -29,7 +30,7 @@ AngCorrRejectionSampler::AngCorrRejectionSampler(AngularCorrelation &w,
     : SphereRejectionSampler(nullptr, w.get_upper_limit(), seed, max_tri),
       angular_correlation(w.get_initial_state(), w.get_cascade_steps()) {}
 
-pair<unsigned int, array<double, 2>> AngCorrRejectionSampler::sample() {
+pair<unsigned int, array<double, 3>> AngCorrRejectionSampler::sample() {
 
   array<double, 2> theta_phi;
   double dis_val;
@@ -40,9 +41,10 @@ pair<unsigned int, array<double, 2>> AngCorrRejectionSampler::sample() {
     dis_val = uniform_random(random_engine) * distribution_maximum;
 
     if (dis_val <= angular_correlation(theta_phi[0], theta_phi[1])) {
-      return {i + 1, {theta_phi[0], theta_phi[1]}};
+      return {i + 1, euler_angle_transform::from_spherical(
+                         theta_phi, uniform_random(random_engine) * 2. * M_PI)};
     }
   }
 
-  return {max_tries, {0., 0.}};
+  return {max_tries, {0., 0., 0.}};
 }
