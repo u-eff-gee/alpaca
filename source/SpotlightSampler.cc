@@ -35,7 +35,7 @@ SpotlightSampler::SpotlightSampler(const array<double, 2> theta_phi,
 SpotlightSampler::SpotlightSampler(const array<double, 2> theta_phi,
                                    const double opening_angle, const int seed)
     : theta_phi(theta_phi), opening_angle(opening_angle), seed(seed) {
-  rotation_matrix = euler_angle_rotation.rotation_matrix(
+  rotation_matrix = euler_angle_transform::rotation_matrix(
       {0.0, theta_phi[0], -theta_phi[1] + M_PI_2});
   u_min = 0.5 * (1. + cos(opening_angle));
   random_engine = mt19937(seed);
@@ -50,6 +50,6 @@ pair<unsigned int, array<double, 2>> SpotlightSampler::sample() {
       acos(2.0 * (u_min + (1.0 - u_min) * uniform_random(random_engine)) - 1.0);
   double phi = 2.0 * M_PI * uniform_random(random_engine);
 
-  return {1, euler_angle_rotation.rotate(array<double, 2>{theta, phi},
+  return {1, euler_angle_transform::rotate(array<double, 2>{theta, phi},
                                          rotation_matrix)};
 }

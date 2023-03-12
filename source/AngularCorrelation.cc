@@ -26,13 +26,14 @@ using std::invalid_argument;
 using std::to_string;
 
 #include "AngularCorrelation.hh"
+#include "EulerAngleRotation.hh"
 #include "TestUtilities.hh"
 #include "W_dir_dir.hh"
 #include "W_pol_dir.hh"
 
 AngularCorrelation::AngularCorrelation(
     const State ini_sta, const vector<pair<Transition, State>> cas_ste)
-    : euler_angle_rotation(EulerAngleRotation()), w_gamma_gamma(nullptr) {
+    : w_gamma_gamma(nullptr) {
   check_cascade(ini_sta, cas_ste);
 
   if (cas_ste[0].first.em_char == em_unknown) {
@@ -44,7 +45,7 @@ AngularCorrelation::AngularCorrelation(
 
 AngularCorrelation::AngularCorrelation(const State ini_sta,
                                        const vector<State> cas_sta)
-    : euler_angle_rotation(EulerAngleRotation()), w_gamma_gamma(nullptr) {
+    : w_gamma_gamma(nullptr) {
 
   if (cas_sta.size() < 2) {
     throw invalid_argument(
@@ -115,7 +116,7 @@ double AngularCorrelation::operator()(const double theta,
 double
 AngularCorrelation::operator()(const double theta, const double phi,
                                const array<double, 3> euler_angles) const {
-  array<double, 2> thetap_phip = euler_angle_rotation.rotate_back(
+  array<double, 2> thetap_phip = euler_angle_transform::rotate_back(
       array<double, 2>{theta, phi}, euler_angles);
 
   return (*this)(thetap_phip[0], thetap_phip[1]);

@@ -92,9 +92,8 @@ int main() {
   const array<double, 3> euler_angles = {0.1, 0.2, 0.3};
   array<double, 2> theta_phi_rotated = sph_rej_sam_uni_2(euler_angles);
 
-  const EulerAngleRotation euler_angle_rotation;
   array<double, 2> theta_phi_rotated_manually =
-      euler_angle_rotation.rotate(theta_phi, euler_angles);
+      euler_angle_transform::rotate(theta_phi, euler_angles);
 
   // Test that the rotation has an effect.
   assert(theta_phi[0] != theta_phi_rotated[0]);

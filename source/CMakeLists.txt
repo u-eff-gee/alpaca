@@ -73,13 +73,9 @@ target_include_directories(w_pol_dir PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_D
 set_target_properties(w_pol_dir PROPERTIES PUBLIC_HEADER include/W_pol_dir.hh)
 
 add_library(angular_correlation SHARED AngularCorrelation.cc)
-target_link_libraries(angular_correlation PUBLIC euler_angle_rotation state transition w_dir_dir w_pol_dir)
+target_link_libraries(angular_correlation PUBLIC state transition w_dir_dir w_pol_dir)
 target_include_directories(angular_correlation PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 set_target_properties(angular_correlation PROPERTIES PUBLIC_HEADER include/AngularCorrelation.hh)
-
-add_library(euler_angle_rotation EulerAngleRotation.cc)
-target_include_directories(euler_angle_rotation PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(euler_angle_rotation PROPERTIES PUBLIC_HEADER include/EulerAngleRotation.hh)
 
 add_library(spherePointSampler SpherePointSampler.cc)
 target_link_libraries(spherePointSampler ${GSL_LIBRARIES})
@@ -92,7 +88,7 @@ target_include_directories(sphereIntegrator PUBLIC $<BUILD_INTERFACE:${PROJECT_S
 set_target_properties(sphereIntegrator PROPERTIES PUBLIC_HEADER include/SphereIntegrator.hh)
 
 add_library(directionSampler DirectionSampler.cc)
-target_link_libraries(directionSampler euler_angle_rotation)
+target_link_libraries(directionSampler)
 target_include_directories(directionSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 set_target_properties(directionSampler PROPERTIES PUBLIC_HEADER include/DirectionSampler.hh)
 
@@ -102,7 +98,7 @@ target_include_directories(sphereRejectionSampler PUBLIC $<BUILD_INTERFACE:${PRO
 set_target_properties(sphereRejectionSampler PROPERTIES PUBLIC_HEADER include/SphereRejectionSampler.hh)
 
 add_library(spotlightSampler SpotlightSampler.cc)
-target_link_libraries(spotlightSampler directionSampler euler_angle_rotation)
+target_link_libraries(spotlightSampler directionSampler)
 target_include_directories(sphereRejectionSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 add_library(angcorrRejectionSampler AngCorrRejectionSampler.cc)

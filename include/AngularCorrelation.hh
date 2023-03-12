@@ -24,7 +24,6 @@
 #include <utility>
 #include <vector>
 
-#include "EulerAngleRotation.hh"
 #include "State.hh"
 #include "Transition.hh"
 #include "W_gamma_gamma.hh"
@@ -453,9 +452,6 @@ protected:
    * transition is possible.
    */
   Transition infer_transition(const pair<State, State> states) const;
-
-  const EulerAngleRotation
-      euler_angle_rotation; /**< Instance of the EulerAngleRotation class */
 
   /**
    * \brief Pointer to an object of the W_gamma_gamma class.

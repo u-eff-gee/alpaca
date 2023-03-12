@@ -170,7 +170,7 @@ public:
    * Will be used for all internal random-number samplers.
    */
   CascadeSampler(vector<AngularCorrelation> &cascade, const int seed,
-                          const unsigned int max_tri = 1000);
+                 const unsigned int max_tri = 1000);
 
   /**
    * \brief Constructor for a cascade in which the second second state is
@@ -210,12 +210,12 @@ public:
    * Will be used for all internal random-number samplers.
    */
   CascadeSampler(vector<AngularCorrelation> &cascade, const int seed,
-                          const array<double, 3> PhiThetaPsi,
-                          const unsigned int max_tri = 1000);
+                 const array<double, 3> PhiThetaPsi,
+                 const unsigned int max_tri = 1000);
 
   CascadeSampler(vector<shared_ptr<DirectionSampler>> cascade, const int seed,
-                          const array<double, 3> PhiThetaPsi,
-                          const unsigned int max_tri = 1000);
+                 const array<double, 3> PhiThetaPsi,
+                 const unsigned int max_tri = 1000);
 
   /**
    * \brief Sample random gamma-ray directions from the cascade.
@@ -254,6 +254,4 @@ protected:
       uniform_direction_sampler; /**< Instance of SphereRejectionSampler with an
                                     uniform distribution to sample the direction
                                     of the first gamma ray. */
-  const EulerAngleRotation
-      euler_angle_rotation; /**< Instance of EulerAngleRotation. */
 };

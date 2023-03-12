@@ -23,8 +23,11 @@
 
 using std::array;
 
+#include <cmath>
+
 /**
- * \brief Class to perform arbitrary rotations of 3D vectors using Euler angles.
+ * \brief Functions to perform arbitrary rotations of 3D vectors using Euler
+ * angles.
  *
  * Any rotation in three-dimensional space can be expressed in terms of three
  * Euler angles, which are denoted as \f$\Phi\f$, \f$\Theta\f$, and \f$\Psi\f$
@@ -124,145 +127,208 @@ using std::array;
  * container class.
  *
  */
-class EulerAngleRotation {
+namespace euler_angle_transform {
 
-public:
-  /**
-   * \brief Rotate a 3D vector.
-   *
-   * Vector to rotate is given in Cartesian coordinates (and does not have to be
-   * normalized), rotation is represented as set of Euler angles.
-   *
-   * \param x_y_z \f$v\f$, 3D vector
-   * \param phi_theta_psi Euler angles in radians
-   *
-   * \return \f$v^\prime\f$, 3D vector
-   */
-  array<double, 3> rotate(const array<double, 3> x_y_z,
-                          const array<double, 3> Phi_Theta_Psi) const;
-
-  /**
-   * \brief Rotate a 3D vector.
-   *
-   * Vector to rotate is given in spherical coordinates, rotation is represented
-   * as set of Euler angles.
-   *
-   * \param theta_phi \f$v\f$, spherical coordinates \f$\theta\f$ and
-   * \f$\varphi\f$ in radians.
-   * \param A \f$A\$, 3 x 3 rotation matrix.
-   *
-   * \return \f$v^\prime\f$, spherical coordinates \f$\theta\f$ and
-   * \f$\varphi\f$ in radians.
-   */
-  array<double, 2> rotate(const array<double, 2> theta_phi,
-                          const array<array<double, 3>, 3> A) const;
-
-  /**
-   * \brief Rotate a 3D vector.
-   *
-   * Vector to rotate is given in Cartesian coordinates (and does not have to be
-   * normalized), rotation is represented as a rotation matrix.
-   *
-   * \param x_y_z \f$v\f$, 3D vector
-   * \param A \f$A\$, 3 x 3 rotation matrix.
-   *
-   * \return \f$v^\prime\f$, 3D vector
-   */
-  array<double, 3> rotate(const array<double, 3> x_y_z,
-                          const array<array<double, 3>, 3> A) const;
-
-  /**
-   * \brief Rotate a 3D vector.
-   *
-   * Vector to rotate is given in spherical coordinates, rotation is represented
-   * as a rotation matrix..
-   *
-   * \param theta_phi \f$v\f$, spherical coordinates \f$\theta\f$ and
-   * \f$\varphi\f$ in radians. \param Phi_Theta_Psi Euler angles in radians
-   *
-   * \return \f$v^\prime\f$, spherical coordinates \f$\theta\f$ and
-   * \f$\varphi\f$ in radians.
-   */
-  array<double, 2> rotate(const array<double, 2> theta_phi,
-                          const array<double, 3> Phi_Theta_Psi) const;
-
-  /**
-   * \brief Rotate a 3D vector back.
-   *
-   * Performs the same action on a 3D vector which would be performed by
-   * EulerAngleRotation::rotate() if the angles \f$\Phi\f$ and \f$\Psi\f$ are
-   * switched, and the negative value of each angle is used.
-   *
-   * \param x_y_z \f$v^\prime\f$, 3D vector
-   * \param Phi_Theta_Psi Euler angles in radians
-   *
-   * \return \f$v\f$, 3D vector
-   */
-  array<double, 3> rotate_back(const array<double, 3> xp_yp_zp,
-                               const array<double, 3> Phi_Theta_Psi) const;
-
-  /**
-   * \brief Rotate a 3D vector back.
-   *
-   * See also the implementation of rotate_back for Cartesian vectors.
-   *
-   * \param theta_phi \f$v^\prime\f$, spherical coordinates \f$\theta\f$ and
-   * \f$\varphi\f$ in radians. \param Phi_Theta_Psi Euler angles in radians
-   *
-   * \return \f$v\f$, spherical coordinates \f$\theta\f$ and \f$\varphi\f$ in
-   * radians.
-   */
-  array<double, 2> rotate_back(const array<double, 2> thetap_phip,
-                               const array<double, 3> Phi_Theta_Psi) const;
-
-  /**
-   * \brief Convert Cartesian to spherical coordinates.
-   *
-   * Given a normalized Cartesian vector with three coordinates \f$x\f$,
-   * \f$y\f$, and \f$z\f$, this function calculates the corresponding angles
-   * \f$\theta\f$ and \f$\varphi\f$ in spherical coordinates.
-   *
-   * At the moment, the input vector is not tested for normalization.
-   *
-   * \param x_y_z_norm Normalized Cartesian vector.
-   *
-   * \return Spherical coordinates \f$\theta\f$ and \f$\varphi\f$ in radians.
-   */
-  array<double, 2> get_theta_phi(const array<double, 3> x_y_z_norm) const;
-
-  /**
-   * \brief Convert spherical to Cartesian coordinates.
-   *
-   * Given spherical coordinates \f$\theta\f$ and \f$\varphi\f$, this function
-   * calculates the corresponding normalized Cartesian three-component vector.
-   *
-   * \param theta_phi Spherical coordinates \f$\theta\f$ and \f$\varphi\f$ in
-   * radians.
-   *
-   * \return Normalized Cartesian vector.
-   */
-  array<double, 3> get_x_y_z_norm(const array<double, 2> theta_phi) const;
-
-  /**
-   * \brief Calculate rotation matrix for the three Euler angles.
-   *
-   * \param Phi_Theta_Psi Euler angles in radians
-   *
-   * \return \f$3 \times 3\f$ matrix \f$A\f$
-   */
-  array<array<double, 3>, 3>
-  rotation_matrix(const array<double, 3> Phi_Theta_Psi) const;
-
-protected:
-  /**
-   * \brief Check if all three Euler angles are zero.
-   *
-   * This function is used in the code to decide whether a calculation needs to
-   * be performed or whether the input value can simply be returned.
-   *
-   * \param Phi_Theta_Psi Euler angles in radians
-   *
-   * \return true, if all Euler angles are zero, else false.
-   */
-  bool no_rotation_required(const array<double, 3> Phi_Theta_Psi) const;
+/**
+ * \brief Check if all three Euler angles are zero.
+ *
+ * This function is used in the code to decide whether a calculation needs to
+ * be performed or whether the input value can simply be returned.
+ *
+ * \param Phi_Theta_Psi Euler angles in radians
+ *
+ * \return true, if all Euler angles are zero, else false.
+ */
+inline bool no_rotation_required(const array<double, 3> Phi_Theta_Psi) {
+  if (Phi_Theta_Psi[0] == 0. && Phi_Theta_Psi[1] == 0. &&
+      Phi_Theta_Psi[2] == 0.) {
+    return true;
+  }
+  return false;
 };
+
+/**
+ * \brief Calculate rotation matrix for the three Euler angles.
+ *
+ * \param Phi_Theta_Psi Euler angles in radians
+ *
+ * \return \f$3 \times 3\f$ matrix \f$A\f$
+ */
+inline array<array<double, 3>, 3>
+rotation_matrix(const array<double, 3> Phi_Theta_Psi) {
+
+  const double cos_phi{cos(Phi_Theta_Psi[0])}, sin_phi{sin(Phi_Theta_Psi[0])},
+      cos_the{cos(Phi_Theta_Psi[1])}, sin_the{sin(Phi_Theta_Psi[1])},
+      cos_psi{cos(Phi_Theta_Psi[2])}, sin_psi{sin(Phi_Theta_Psi[2])};
+
+  return array<array<double, 3>, 3>{
+      array<double, 3>{cos_psi * cos_phi - cos_the * sin_phi * sin_psi,
+                       cos_psi * sin_phi + cos_the * cos_phi * sin_psi,
+                       sin_psi * sin_the},
+      array<double, 3>{-sin_psi * cos_phi - cos_the * sin_phi * cos_psi,
+                       -sin_psi * sin_phi + cos_the * cos_phi * cos_psi,
+                       cos_psi * sin_the},
+      array<double, 3>{sin_the * sin_phi, -sin_the * cos_phi, cos_the}};
+};
+
+/**
+ * \brief Convert spherical to Cartesian coordinates.
+ *
+ * Given spherical coordinates \f$\theta\f$ and \f$\varphi\f$, this function
+ * calculates the corresponding normalized Cartesian three-component vector.
+ *
+ * \param theta_phi Spherical coordinates \f$\theta\f$ and \f$\varphi\f$ in
+ * radians.
+ *
+ * \return Normalized Cartesian vector.
+ */
+inline array<double, 3> get_x_y_z_norm(const array<double, 2> theta_phi) {
+
+  double cos_the{cos(theta_phi[0])}, sin_the{sin(theta_phi[0])},
+      cos_phi{cos(theta_phi[1])}, sin_phi{sin(theta_phi[1])};
+
+  return array<double, 3>{sin_the * cos_phi, sin_the * sin_phi, cos_the};
+};
+
+/**
+ * \brief Convert Cartesian to spherical coordinates.
+ *
+ * Given a normalized Cartesian vector with three coordinates \f$x\f$,
+ * \f$y\f$, and \f$z\f$, this function calculates the corresponding angles
+ * \f$\theta\f$ and \f$\varphi\f$ in spherical coordinates.
+ *
+ * At the moment, the input vector is not tested for normalization.
+ *
+ * \param x_y_z_norm Normalized Cartesian vector.
+ *
+ * \return Spherical coordinates \f$\theta\f$ and \f$\varphi\f$ in radians.
+ */
+inline array<double, 2> get_theta_phi(const array<double, 3> x_y_z_norm) {
+
+  return {acos(x_y_z_norm[2]),
+          fmod(atan2(x_y_z_norm[1], x_y_z_norm[0]) + 2. * M_PI, 2. * M_PI)};
+};
+
+/**
+ * \brief Rotate a 3D vector.
+ *
+ * Vector to rotate is given in Cartesian coordinates (and does not have to be
+ * normalized), rotation is represented as a rotation matrix.
+ *
+ * \param x_y_z \f$v\f$, 3D vector
+ * \param A \f$A\$, 3 x 3 rotation matrix.
+ *
+ * \return \f$v^\prime\f$, 3D vector
+ */
+inline array<double, 3> rotate(const array<double, 3> x_y_z,
+                        const array<array<double, 3>, 3> A) {
+  return array<double, 3>{
+      A[0][0] * x_y_z[0] + A[0][1] * x_y_z[1] + A[0][2] * x_y_z[2],
+      A[1][0] * x_y_z[0] + A[1][1] * x_y_z[1] + A[1][2] * x_y_z[2],
+      A[2][0] * x_y_z[0] + A[2][1] * x_y_z[1] + A[2][2] * x_y_z[2]};
+};
+
+/**
+ * \brief Rotate a 3D vector.
+ *
+ * Vector to rotate is given in spherical coordinates, rotation is represented
+ * as set of Euler angles.
+ *
+ * \param theta_phi \f$v\f$, spherical coordinates \f$\theta\f$ and
+ * \f$\varphi\f$ in radians.
+ * \param A \f$A\$, 3 x 3 rotation matrix.
+ *
+ * \return \f$v^\prime\f$, spherical coordinates \f$\theta\f$ and
+ * \f$\varphi\f$ in radians.
+ */
+inline array<double, 2> rotate(const array<double, 2> theta_phi,
+                        const array<array<double, 3>, 3> A) {
+  return get_theta_phi(rotate(get_x_y_z_norm(theta_phi), A));
+};
+
+/**
+ * \brief Rotate a 3D vector.
+ *
+ * Vector to rotate is given in Cartesian coordinates (and does not have to be
+ * normalized), rotation is represented as set of Euler angles.
+ *
+ * \param x_y_z \f$v\f$, 3D vector
+ * \param phi_theta_psi Euler angles in radians
+ *
+ * \return \f$v^\prime\f$, 3D vector
+ */
+inline array<double, 3> rotate(const array<double, 3> x_y_z,
+                        const array<double, 3> Phi_Theta_Psi) {
+
+  if (euler_angle_transform::no_rotation_required(Phi_Theta_Psi)) {
+    return x_y_z;
+  }
+
+  const array<array<double, 3>, 3> A = rotation_matrix(Phi_Theta_Psi);
+
+  return rotate(x_y_z, A);
+};
+
+/**
+ * \brief Rotate a 3D vector.
+ *
+ * Vector to rotate is given in spherical coordinates, rotation is represented
+ * as a rotation matrix..
+ *
+ * \param theta_phi \f$v\f$, spherical coordinates \f$\theta\f$ and
+ * \f$\varphi\f$ in radians. \param Phi_Theta_Psi Euler angles in radians
+ *
+ * \return \f$v^\prime\f$, spherical coordinates \f$\theta\f$ and
+ * \f$\varphi\f$ in radians.
+ */
+inline array<double, 2> rotate(const array<double, 2> theta_phi,
+                        const array<double, 3> Phi_Theta_Psi) {
+  if (euler_angle_transform::no_rotation_required(Phi_Theta_Psi)) {
+    return theta_phi;
+  }
+
+  return get_theta_phi(rotate(get_x_y_z_norm(theta_phi), Phi_Theta_Psi));
+};
+
+/**
+ * \brief Rotate a 3D vector back.
+ *
+ * Performs the same action on a 3D vector which would be performed by
+ * EulerAngleRotation::rotate() if the angles \f$\Phi\f$ and \f$\Psi\f$ are
+ * switched, and the negative value of each angle is used.
+ *
+ * \param x_y_z \f$v^\prime\f$, 3D vector
+ * \param Phi_Theta_Psi Euler angles in radians
+ *
+ * \return \f$v\f$, 3D vector
+ */
+inline array<double, 3> rotate_back(const array<double, 3> xp_yp_zp,
+                             const array<double, 3> Phi_Theta_Psi) {
+  if (euler_angle_transform::no_rotation_required(Phi_Theta_Psi)) {
+    return xp_yp_zp;
+  }
+
+  return rotate(xp_yp_zp, array<double, 3>{-Phi_Theta_Psi[2], -Phi_Theta_Psi[1],
+                                           -Phi_Theta_Psi[0]});
+};
+
+/**
+ * \brief Rotate a 3D vector back.
+ *
+ * See also the implementation of rotate_back for Cartesian vectors.
+ *
+ * \param theta_phi \f$v^\prime\f$, spherical coordinates \f$\theta\f$ and
+ * \f$\varphi\f$ in radians. \param Phi_Theta_Psi Euler angles in radians
+ *
+ * \return \f$v\f$, spherical coordinates \f$\theta\f$ and \f$\varphi\f$ in
+ * radians.
+ */
+inline array<double, 2> rotate_back(const array<double, 2> thetap_phip,
+                             const array<double, 3> Phi_Theta_Psi) {
+  if (euler_angle_transform::no_rotation_required(Phi_Theta_Psi)) {
+    return thetap_phip;
+  }
+
+  return get_theta_phi(rotate_back(get_x_y_z_norm(thetap_phip), Phi_Theta_Psi));
+};
+}; // namespace euler_angle_transform

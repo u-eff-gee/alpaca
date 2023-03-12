@@ -60,7 +60,7 @@ if(BUILD_TESTS)
     add_test(test_unobserved test_unobserved)
 
     add_executable(test_euler_angle_rotation test_euler_angle_rotation.cc)
-    target_link_libraries(test_euler_angle_rotation euler_angle_rotation w_dir_dir w_pol_dir ${GSL_LIBRARIES})
+    target_link_libraries(test_euler_angle_rotation w_dir_dir w_pol_dir ${GSL_LIBRARIES})
     add_test(test_euler_angle_rotation test_euler_angle_rotation)
 
     add_executable(test_angcorr_rejection_sampler test_angcorr_rejection_sampler.cc)
@@ -68,7 +68,7 @@ if(BUILD_TESTS)
     add_test(test_angcorr_rejection_sampler test_angcorr_rejection_sampler)
 
     add_executable(test_angular_correlation test_angular_correlation.cc)
-    target_link_libraries(test_angular_correlation angular_correlation euler_angle_rotation transition w_dir_dir w_pol_dir ${GSL_LIBRARIES})
+    target_link_libraries(test_angular_correlation angular_correlation transition w_dir_dir w_pol_dir ${GSL_LIBRARIES})
     add_test(test_angular_correlation test_angular_correlation)
 
     add_executable(test_angular_correlation_io test_angular_correlation_io.cc)
@@ -108,7 +108,7 @@ if(BUILD_TESTS)
     add_test(test_sphere_point_sampler test_sphere_point_sampler)
 
     add_executable(test_sphere_rejection_sampler test_sphere_rejection_sampler.cc)
-    target_link_libraries(test_sphere_rejection_sampler sphereRejectionSampler euler_angle_rotation)
+    target_link_libraries(test_sphere_rejection_sampler sphereRejectionSampler)
     add_test(test_sphere_rejection_sampler test_sphere_rejection_sampler)
 
     add_executable(test_state test_state.cc)

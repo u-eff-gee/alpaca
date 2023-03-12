@@ -27,8 +27,6 @@ using std::array;
 
 using std::pair;
 
-#include "EulerAngleRotation.hh"
-
 /**
  * @brief Abstract class for sampling a direction vector in spherical
  * coordinates.
@@ -46,7 +44,6 @@ using std::pair;
  */
 class DirectionSampler {
 public:
-  DirectionSampler() : euler_angle_rotation(EulerAngleRotation()) {}
 
   /**
    * \brief Sample a random vector and record the
@@ -94,8 +91,4 @@ public:
    * and no random vector was accepted.
    */
   array<double, 2> operator()(const array<double, 3> euler_angles);
-
-protected:
-  const EulerAngleRotation
-      euler_angle_rotation; /**< Instance of the EulerAngleRotation class */
 };

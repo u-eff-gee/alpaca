@@ -23,6 +23,8 @@ using std::pair;
 
 #include "DirectionSampler.hh"
 
+#include "EulerAngleRotation.hh"
+
 array<double, 2> DirectionSampler::operator()() {
   pair<unsigned int, array<double, 2>> sampled_theta_phi = sample();
 
@@ -31,5 +33,5 @@ array<double, 2> DirectionSampler::operator()() {
 
 array<double, 2>
 DirectionSampler::operator()(const array<double, 3> euler_angles) {
-  return euler_angle_rotation.rotate(operator()(), euler_angles);
+  return euler_angle_transform::rotate(operator()(), euler_angles);
 }

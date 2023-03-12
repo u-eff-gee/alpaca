@@ -35,8 +35,7 @@ CascadeSampler::CascadeSampler(vector<AngularCorrelation> &cascade,
       uniform_direction_sampler(
           []([[maybe_unused]] const double theta,
              [[maybe_unused]] const double phi) { return 1.; },
-          1., seed, max_tri),
-      euler_angle_rotation(EulerAngleRotation()) {
+          1., seed, max_tri) {
   for (size_t i = 0; i < cascade.size(); ++i) {
     angular_correlation_samplers.push_back(
         make_shared<AngCorrRejectionSampler>(cascade[i], seed, max_tri));
@@ -51,8 +50,7 @@ CascadeSampler::CascadeSampler(vector<AngularCorrelation> &cascade,
       uniform_direction_sampler(
           []([[maybe_unused]] const double theta,
              [[maybe_unused]] const double phi) { return 1.; },
-          1., seed, max_tri),
-      euler_angle_rotation(EulerAngleRotation()) {
+          1., seed, max_tri){
   for (size_t i = 0; i < cascade.size(); ++i) {
     angular_correlation_samplers.push_back(
         make_shared<AngCorrRejectionSampler>(cascade[i], seed, max_tri));
@@ -68,8 +66,7 @@ CascadeSampler::CascadeSampler(vector<shared_ptr<DirectionSampler>> cascade,
       uniform_direction_sampler(
           []([[maybe_unused]] const double theta,
              [[maybe_unused]] const double phi) { return 1.; },
-          1., seed, max_tri),
-      euler_angle_rotation(EulerAngleRotation()) {}
+          1., seed, max_tri){}
 
 vector<array<double, 2>> CascadeSampler::operator()() {
   vector<array<double, 2>> directions;

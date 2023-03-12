@@ -33,8 +33,6 @@ int main() {
 
   const double epsilon = 1e-8;
 
-  EulerAngleRotation eul_ang_rot;
-
   array<double, 3> x_axis{1., 0., 0.};
   array<double, 2> x_axis_sph{M_PI_2, 0.};
   array<double, 3> y_axis{0., 1., 0.};
@@ -58,17 +56,17 @@ int main() {
   // Psi   = 0
   euler_angles = {-M_PI_2, 0., 0.};
 
-  xp_yp_zp = eul_ang_rot.rotate(x_axis, euler_angles);
+  xp_yp_zp = euler_angle_transform::rotate(x_axis, euler_angles);
   test_numerical_equality<double>(3, xp_yp_zp.data(), y_axis.data(), epsilon);
   test_numerical_equality<double>(
-      3, eul_ang_rot.rotate_back(xp_yp_zp, euler_angles).data(), x_axis.data(),
+      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(), x_axis.data(),
       epsilon);
 
-  thetap_phip = eul_ang_rot.rotate(x_axis_sph, euler_angles);
+  thetap_phip = euler_angle_transform::rotate(x_axis_sph, euler_angles);
   test_numerical_equality<double>(2, thetap_phip.data(), y_axis_sph.data(),
                                   epsilon);
   test_numerical_equality<double>(
-      2, eul_ang_rot.rotate_back(thetap_phip, euler_angles).data(),
+      2, euler_angle_transform::rotate_back(thetap_phip, euler_angles).data(),
       x_axis_sph.data(), epsilon);
 
   // Rotate x axis into z axis
@@ -77,17 +75,17 @@ int main() {
   // Psi   = 0
   euler_angles = {M_PI_2, M_PI_2, 0.};
 
-  xp_yp_zp = eul_ang_rot.rotate(x_axis, euler_angles);
+  xp_yp_zp = euler_angle_transform::rotate(x_axis, euler_angles);
   test_numerical_equality<double>(3, xp_yp_zp.data(), z_axis.data(), epsilon);
   test_numerical_equality<double>(
-      3, eul_ang_rot.rotate_back(xp_yp_zp, euler_angles).data(), x_axis.data(),
+      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(), x_axis.data(),
       epsilon);
 
-  thetap_phip = eul_ang_rot.rotate(x_axis_sph, euler_angles);
+  thetap_phip = euler_angle_transform::rotate(x_axis_sph, euler_angles);
   test_numerical_equality<double>(2, thetap_phip.data(), z_axis_sph.data(),
                                   epsilon);
   test_numerical_equality<double>(
-      2, eul_ang_rot.rotate_back(thetap_phip, euler_angles).data(),
+      2, euler_angle_transform::rotate_back(thetap_phip, euler_angles).data(),
       x_axis_sph.data(), epsilon);
 
   // Rotate y axis into x axis
@@ -96,17 +94,17 @@ int main() {
   // Psi   = 0
   euler_angles = {M_PI_2, 0., 0.};
 
-  xp_yp_zp = eul_ang_rot.rotate(y_axis, euler_angles);
+  xp_yp_zp = euler_angle_transform::rotate(y_axis, euler_angles);
   test_numerical_equality<double>(3, xp_yp_zp.data(), x_axis.data(), epsilon);
   test_numerical_equality<double>(
-      3, eul_ang_rot.rotate_back(xp_yp_zp, euler_angles).data(), y_axis.data(),
+      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(), y_axis.data(),
       epsilon);
 
-  thetap_phip = eul_ang_rot.rotate(y_axis_sph, euler_angles);
+  thetap_phip = euler_angle_transform::rotate(y_axis_sph, euler_angles);
   test_numerical_equality<double>(2, thetap_phip.data(), x_axis_sph.data(),
                                   epsilon);
   test_numerical_equality<double>(
-      2, eul_ang_rot.rotate_back(thetap_phip, euler_angles).data(),
+      2, euler_angle_transform::rotate_back(thetap_phip, euler_angles).data(),
       y_axis_sph.data(), epsilon);
 
   // Rotate y axis into z axis
@@ -115,17 +113,17 @@ int main() {
   // Psi   = 0
   euler_angles = {0., -M_PI_2, 0.};
 
-  xp_yp_zp = eul_ang_rot.rotate(y_axis, euler_angles);
+  xp_yp_zp = euler_angle_transform::rotate(y_axis, euler_angles);
   test_numerical_equality<double>(3, xp_yp_zp.data(), z_axis.data(), epsilon);
   test_numerical_equality<double>(
-      3, eul_ang_rot.rotate_back(xp_yp_zp, euler_angles).data(), y_axis.data(),
+      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(), y_axis.data(),
       epsilon);
 
-  thetap_phip = eul_ang_rot.rotate(y_axis_sph, euler_angles);
+  thetap_phip = euler_angle_transform::rotate(y_axis_sph, euler_angles);
   test_numerical_equality<double>(2, thetap_phip.data(), z_axis_sph.data(),
                                   epsilon);
   test_numerical_equality<double>(
-      2, eul_ang_rot.rotate_back(thetap_phip, euler_angles).data(),
+      2, euler_angle_transform::rotate_back(thetap_phip, euler_angles).data(),
       y_axis_sph.data(), epsilon);
 
   // From here on, note the special role of the z axis in spherical coordinates
@@ -137,17 +135,17 @@ int main() {
   // Psi   = pi/2
   euler_angles = {0., M_PI_2, M_PI_2};
 
-  xp_yp_zp = eul_ang_rot.rotate(z_axis, euler_angles);
+  xp_yp_zp = euler_angle_transform::rotate(z_axis, euler_angles);
   test_numerical_equality<double>(3, xp_yp_zp.data(), x_axis.data(), epsilon);
   test_numerical_equality<double>(
-      3, eul_ang_rot.rotate_back(xp_yp_zp, euler_angles).data(), z_axis.data(),
+      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(), z_axis.data(),
       epsilon);
 
-  thetap_phip = eul_ang_rot.rotate(z_axis_sph, euler_angles);
+  thetap_phip = euler_angle_transform::rotate(z_axis_sph, euler_angles);
   test_numerical_equality<double>(2, thetap_phip.data(), x_axis_sph.data(),
                                   epsilon);
   test_numerical_equality<double>(
-      eul_ang_rot.rotate_back(thetap_phip, euler_angles)[0], z_axis_sph[0],
+      euler_angle_transform::rotate_back(thetap_phip, euler_angles)[0], z_axis_sph[0],
       epsilon);
 
   // Rotate z axis into y axis
@@ -156,17 +154,17 @@ int main() {
   // Psi   = 0
   euler_angles = {0., M_PI_2, 0.};
 
-  xp_yp_zp = eul_ang_rot.rotate(z_axis, euler_angles);
+  xp_yp_zp = euler_angle_transform::rotate(z_axis, euler_angles);
   test_numerical_equality<double>(3, xp_yp_zp.data(), y_axis.data(), epsilon);
   test_numerical_equality<double>(
-      3, eul_ang_rot.rotate_back(xp_yp_zp, euler_angles).data(), z_axis.data(),
+      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(), z_axis.data(),
       epsilon);
 
-  thetap_phip = eul_ang_rot.rotate(z_axis_sph, euler_angles);
+  thetap_phip = euler_angle_transform::rotate(z_axis_sph, euler_angles);
   test_numerical_equality<double>(2, thetap_phip.data(), y_axis_sph.data(),
                                   epsilon);
   test_numerical_equality<double>(
-      eul_ang_rot.rotate_back(thetap_phip, euler_angles)[0], z_axis_sph[0],
+      euler_angle_transform::rotate_back(thetap_phip, euler_angles)[0], z_axis_sph[0],
       epsilon);
 
   // Rotate z axis into z axis (trivial)
@@ -175,16 +173,16 @@ int main() {
   // Psi   = 0
   euler_angles = {0., 0., 0.};
 
-  xp_yp_zp = eul_ang_rot.rotate(z_axis, euler_angles);
+  xp_yp_zp = euler_angle_transform::rotate(z_axis, euler_angles);
   test_numerical_equality<double>(3, xp_yp_zp.data(), z_axis.data(), epsilon);
   test_numerical_equality<double>(
-      3, eul_ang_rot.rotate_back(xp_yp_zp, euler_angles).data(), z_axis.data(),
+      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(), z_axis.data(),
       epsilon);
 
-  thetap_phip = eul_ang_rot.rotate(z_axis_sph, euler_angles);
+  thetap_phip = euler_angle_transform::rotate(z_axis_sph, euler_angles);
   test_numerical_equality<double>(thetap_phip[0], z_axis_sph[0], epsilon);
   test_numerical_equality<double>(
-      eul_ang_rot.rotate_back(thetap_phip, euler_angles)[0], z_axis_sph[0],
+      euler_angle_transform::rotate_back(thetap_phip, euler_angles)[0], z_axis_sph[0],
       epsilon);
 
   // Test the get_theta_phi method which calculates the corresponding spherical
@@ -192,45 +190,45 @@ int main() {
   array<double, 2> theta_phi;
 
   // Test the x, y, z, -x, -y, and -z axis.
-  theta_phi = eul_ang_rot.get_theta_phi({1., 0., 0.});
+  theta_phi = euler_angle_transform::get_theta_phi({1., 0., 0.});
   test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
   test_numerical_equality<double>(theta_phi[1], 0., epsilon);
 
-  theta_phi = eul_ang_rot.get_theta_phi({-1., 0., 0.});
+  theta_phi = euler_angle_transform::get_theta_phi({-1., 0., 0.});
   test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
   test_numerical_equality<double>(theta_phi[1], M_PI, epsilon);
 
-  theta_phi = eul_ang_rot.get_theta_phi({0., 1., 0.});
+  theta_phi = euler_angle_transform::get_theta_phi({0., 1., 0.});
   test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
   test_numerical_equality<double>(theta_phi[1], M_PI_2, epsilon);
 
-  theta_phi = eul_ang_rot.get_theta_phi({0., -1., 0.});
+  theta_phi = euler_angle_transform::get_theta_phi({0., -1., 0.});
   test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
   test_numerical_equality<double>(theta_phi[1], 3. * M_PI_2, epsilon);
 
-  theta_phi = eul_ang_rot.get_theta_phi({0., 0., 1.});
+  theta_phi = euler_angle_transform::get_theta_phi({0., 0., 1.});
   test_numerical_equality<double>(theta_phi[0], 0., epsilon);
   test_numerical_equality<double>(theta_phi[1], 0., epsilon);
 
-  theta_phi = eul_ang_rot.get_theta_phi({0., 0., -1.});
+  theta_phi = euler_angle_transform::get_theta_phi({0., 0., -1.});
   test_numerical_equality<double>(theta_phi[0], M_PI, epsilon);
   test_numerical_equality<double>(theta_phi[1], 0., epsilon);
 
   // Test more vectors in the xy plane to see whether phi is set in the correct
   // quadrant.
-  theta_phi = eul_ang_rot.get_theta_phi({1., 1., 0.});
+  theta_phi = euler_angle_transform::get_theta_phi({1., 1., 0.});
   test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
   test_numerical_equality<double>(theta_phi[1], M_PI_4, epsilon);
 
-  theta_phi = eul_ang_rot.get_theta_phi({-1., 1., 0.});
+  theta_phi = euler_angle_transform::get_theta_phi({-1., 1., 0.});
   test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
   test_numerical_equality<double>(theta_phi[1], 3. * M_PI_4, epsilon);
 
-  theta_phi = eul_ang_rot.get_theta_phi({-1., -1., 0.});
+  theta_phi = euler_angle_transform::get_theta_phi({-1., -1., 0.});
   test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
   test_numerical_equality<double>(theta_phi[1], 5. * M_PI_4, epsilon);
 
-  theta_phi = eul_ang_rot.get_theta_phi({1., -1., 0.});
+  theta_phi = euler_angle_transform::get_theta_phi({1., -1., 0.});
   test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
   test_numerical_equality<double>(theta_phi[1], 7. * M_PI_4, epsilon);
 }
