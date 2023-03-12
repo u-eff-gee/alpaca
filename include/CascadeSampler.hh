@@ -25,7 +25,7 @@ using std::array;
 
 #include <memory>
 
-using std::unique_ptr;
+using std::shared_ptr;
 
 #include <vector>
 
@@ -74,7 +74,7 @@ using std::vector;
  * \right) j_n, \f]
  *
  * a std::vector of \f$n-2\f$ AngularCorrelation objects is passed to the
- * constructor of CascadeRejectionSampler, with the first element denoting the
+ * constructor of CascadeSampler, with the first element denoting the
  * first two transitions,
  *
  * \f[
@@ -127,7 +127,7 @@ using std::vector;
  * Since only the orientation of the polarization plane of the first transition
  * can be controlled by the user (only in case 2, where the second state is
  * oriented) by passing a set of Euler angles to the constructor of
- * CascadeRejectionSampler, all other transitions can be treated as if they were
+ * CascadeSampler, all other transitions can be treated as if they were
  * rotationally symmetric around the \f$z\f$ axis. This means that if the single
  * polarized transition that may show up in the cascade is not the second
  * transition, the polarization plane can simply be sampled from a uniform
@@ -143,12 +143,12 @@ using std::vector;
  * gamma ray can be achieved using the Euler angles \f$\Theta\f$ and \f$\Psi\f$
  * only.
  *
- * The CascadeRejectionSampler class uses a single random-number seed and a
+ * The CascadeSampler class uses a single random-number seed and a
  * single maximum number of iterations for all of its random-number sampling
  * members (\f$n-2\f$ instances of AngCorrRejectionSampler, and a single
  * instance of SphereRejectionSampler).
  */
-class CascadeRejectionSampler {
+class CascadeSampler {
 
 public:
   /**
@@ -157,7 +157,7 @@ public:
    * This constructor assumes that the cascade starts with the first transition
    * from an unoriented first state (for example the spontaneous radioactive
    * decay of a free nucleus). When initialized like this, the output of
-   * CascadeRejectionSampler will automatically include the direction of the
+   * CascadeSampler will automatically include the direction of the
    * first gamma ray.
    *
    * \param cascade List of angular correlations (AngularCorrelation objects)
@@ -169,7 +169,7 @@ public:
    * terminates without success and returns its default value (default: 1000).
    * Will be used for all internal random-number samplers.
    */
-  CascadeRejectionSampler(vector<AngularCorrelation> &cascade, const int seed,
+  CascadeSampler(vector<AngularCorrelation> &cascade, const int seed,
                           const unsigned int max_tri = 1000);
 
   /**
@@ -181,7 +181,7 @@ public:
    * some reaction mechanism that produces the orientation of the second state
    * (for example the capture of a beam photon in nuclear resonance
    * fluorescence). When initialized like this, the output of
-   * CascadeRejectionSampler will not automatically include the direction of the
+   * CascadeSampler will not automatically include the direction of the
    * first gamma ray, except if the return_first_direction option is scattered.
    * This is helpful, for example, when simulating only the emitted radiation
    * after the capture of a particle that produces an oriented excited state.
@@ -209,9 +209,12 @@ public:
    * terminates without success and returns its default value (default: 1000).
    * Will be used for all internal random-number samplers.
    */
-  CascadeRejectionSampler(vector<AngularCorrelation> &cascade, const int seed,
+  CascadeSampler(vector<AngularCorrelation> &cascade, const int seed,
                           const array<double, 3> PhiThetaPsi,
-                          const bool return_first_direction = false,
+                          const unsigned int max_tri = 1000);
+
+  CascadeSampler(vector<shared_ptr<DirectionSampler>> cascade, const int seed,
+                          const array<double, 3> PhiThetaPsi,
                           const unsigned int max_tri = 1000);
 
   /**
@@ -242,10 +245,8 @@ protected:
                                    or should be sampled (true).*/
   array<double, 3> PhiThetaPsi; /**< Euler angles to control the orientation of
                                    the first gamma ray. */
-  const bool
-      return_first_direction; /**< Indicates whether the direction of the first
-                                 gamma ray should be returned or not */
-  vector<unique_ptr<DirectionSampler>>
+
+  vector<shared_ptr<DirectionSampler>>
       angular_correlation_samplers; /**< List of AngCorrRejectionSamplers which
                                        are initialized on construction with
                                        AngularCorrelation objects. */

@@ -110,7 +110,7 @@ target_link_libraries(angcorrRejectionSampler sphereRejectionSampler angular_cor
 target_include_directories(angcorrRejectionSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 set_target_properties(angcorrRejectionSampler PROPERTIES PUBLIC_HEADER include/AngCorrRejectionSampler.hh)
 
-add_library(cascadeRejectionSampler CascadeRejectionSampler.cc)
-target_link_libraries(cascadeRejectionSampler angular_correlation angcorrRejectionSampler)
-target_include_directories(cascadeRejectionSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(cascadeRejectionSampler PROPERTIES PUBLIC_HEADER include/CascadeRejectionSampler.hh)
+add_library(cascadeSampler CascadeSampler.cc)
+target_link_libraries(cascadeSampler angular_correlation angcorrRejectionSampler)
+target_include_directories(cascadeSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+set_target_properties(cascadeSampler PROPERTIES PUBLIC_HEADER include/CascadeSampler.hh)
