@@ -33,11 +33,7 @@ using std::vector;
 
 #include "EulerAngleRotation.hh"
 
-array<double, 3> ReferenceFrameSampler::operator()() {
-  pair<unsigned int, array<double, 3>> sampled_theta_phi = sample();
-
-  return {sampled_theta_phi.second[0], sampled_theta_phi.second[1]};
-}
+array<double, 3> ReferenceFrameSampler::operator()() { return sample().second; }
 
 double ReferenceFrameSampler::estimate_efficiency(const unsigned int n_tries) {
   vector<unsigned int> required_tries(n_tries);
