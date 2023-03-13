@@ -47,7 +47,8 @@ pair<unsigned int, array<double, 3>> SphereRejectionSampler::sample() {
     dis_val = uniform_random(random_engine) * distribution_maximum;
 
     if (dis_val <= distribution(theta_phi[0], theta_phi[1])) {
-      return {i + 1, euler_angle_transform::from_spherical(theta_phi, 0.)};
+      return {i + 1, euler_angle_transform::from_spherical(
+                         theta_phi, 2. * uniform_random(random_engine) * M_PI)};
     }
   }
 

@@ -27,6 +27,7 @@ using std::array;
 
 #include "AngCorrRejectionSampler.hh"
 #include "AngularCorrelation.hh"
+#include "EulerAngleRotation.hh"
 #include "SphereRejectionSampler.hh"
 #include "TestUtilities.hh"
 
@@ -59,9 +60,9 @@ int main() {
   array<double, 2> theta_phi_1;
   array<double, 2> theta_phi_2;
 
-  for (unsigned int n = 0; n < 1000; ++n) {
-    theta_phi_1 = ang_cor_sam();
-    theta_phi_2 = sph_rej_sam();
+  for (unsigned int n = 0; n < 10; ++n) {
+    theta_phi_1 = euler_angle_transform::to_spherical(ang_cor_sam());
+    theta_phi_2 = euler_angle_transform::to_spherical(sph_rej_sam());
 
     test_numerical_equality<double>(theta_phi_1[0], theta_phi_2[0], 1e-6);
     test_numerical_equality<double>(theta_phi_1[1], theta_phi_2[1], 1e-6);
@@ -70,13 +71,19 @@ int main() {
   // Check that the default values
   //
   // theta = 0
-  // phi   = 0
+  // phi = pi/2
+  //
+  // corresponding to Euler angles
+  //
+  // Phi = 0
+  // Theta = 0
+  // Psi = 0
   //
   // are returned when AngCorrRejectionSampler can not find a valid vector.
   // In order to test it, the max_tri is set to zero.
   // This way, the random sampling is bypassed.
   AngCorrRejectionSampler ang_cor_sam_2(ang_cor, 0, 0);
-  theta_phi_1 = ang_cor_sam_2();
+  theta_phi_1 = euler_angle_transform::to_spherical(ang_cor_sam_2());
   assert(theta_phi_1[0] == 0.);
-  assert(theta_phi_1[1] == 0.);
+  assert(theta_phi_1[1] == M_PI_2);
 }

@@ -49,8 +49,19 @@ using std::tuple;
  * element \f$\mathrm{d}\Omega\f$ (expressed as \f$\sin \left( \theta \right)
  * \mathrm{d} \theta \mathrm{d} \varphi\f$ in spherical coordinates, with the
  * polar angle \f$\theta\f$ and the aximuthal angle \f$\varphi\f$) this class
- * samples random pairs \f$\left( \theta, \varphi \right)\f$ distributed
- * according to \f$W\f$.
+ * samples random Euler angles \f$\left( \Phi, \Theta, \Psi \right)\f$
+ * distributed according to \f$W\f$.
+ * The action of Euler-angle rotations by the aforementioned set of three angles
+ * on the canonical z axis \f$\left( 0, 0, 1\right)\f$ will give vectors that
+ * are distributed according to \f$W\f$.
+ * When sampling spherical coordinates like this, it is clear that the value of
+ * the first Euler angle \f$Phi\f$ is irrelevant. It describes a rotation around
+ * the original z axis, which has no effect on the z axis. Therefore,
+ * SphereRejectionSampler initializes \f$Phi\f$ with an random value in the
+ * range \f$\left[ \right. 0, 2 \pi \left \right.\f$.
+ * In the language of polarization-direction correlations, this means that only
+ * the direction of a particle is measured, but not the polarization, resulting
+ * in a cylindrical symmetry around the z axis.
  *
  * The sampling algorithm used here is 'rejection sampling' (see, e.g. Sec. 2.3
  * in Ref. \cite RobertCasella1999). It requires an upper limit
@@ -94,18 +105,9 @@ using std::tuple;
  *
  * In principle, rejection sampling proceeds in an infinite loop until a valid
  * vector has been found. Here, the loop is limited to a maximum number of trial
- * vectors \f$N_\mathrm{max}\f$. If this maximum number is reached, the point
- * \f$\left( 0, 0 \right)\f$ is returned.
- *
- * As a measure of the efficiency of the algorithm for a given distribution,
- * define the efficiency
- *
- * \f[
- *      \epsilon = \frac{1}{\langle N \rangle},
- * \f]
- *
- * which is the inverse of the average number of trial vectors \f$\langle N
- * \rangle\f$ that have to be sampled before a vector is accepted.
+ * vectors \f$N_\mathrm{max}\f$. If this maximum number is reached, the Euler
+ * angles \f$\left( 0, 0, 0 \right)\f$ are returned, which correspond to
+ * spherical coordinates \f$\theta = 0\f$ and \f$\varphi = \pi/2\f$.
  */
 class SphereRejectionSampler : public ReferenceFrameSampler {
 
