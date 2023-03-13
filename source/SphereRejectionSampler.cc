@@ -48,7 +48,12 @@ pair<unsigned int, array<double, 3>> SphereRejectionSampler::sample() {
 
     if (dis_val <= distribution(theta_phi[0], theta_phi[1])) {
       return {i + 1, euler_angle_transform::from_spherical(
-                         theta_phi, 2. * uniform_random(random_engine) * M_PI)};
+                         // 1) Random point on unit sphere surface
+                         theta_phi,
+                         // 2) Random rotation by first Euler angle
+                         // corresponding to a lack of knowledge about the
+                         // orientation of the third coordinate-system axis.
+                         2. * uniform_random(random_engine) * M_PI)};
     }
   }
 

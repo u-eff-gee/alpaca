@@ -55,13 +55,21 @@ using std::tuple;
  * on the canonical z axis \f$\left( 0, 0, 1\right)\f$ will give vectors that
  * are distributed according to \f$W\f$.
  * When sampling spherical coordinates like this, it is clear that the value of
- * the first Euler angle \f$Phi\f$ is irrelevant. It describes a rotation around
- * the original z axis, which has no effect on the z axis. Therefore,
- * SphereRejectionSampler initializes \f$Phi\f$ with an random value in the
- * range \f$\left[ \right. 0, 2 \pi \left \right.\f$.
+ * the first Euler angle \f$\Phi\f$ is irrelevant. It describes a rotation
+ * around the original z axis, which has no effect on the z axis. Therefore,
+ * SphereRejectionSampler initializes \f$\Phi\f$ with an random value in the
+ * range \f$\left[ \right. 0, 2 \pi \left. \right)\f$.
  * In the language of polarization-direction correlations, this means that only
  * the direction of a particle is measured, but not the polarization, resulting
  * in a cylindrical symmetry around the z axis.
+ *
+ * The procedure above is equivalent to sampling a random rotation in 3D, which
+ * is described, for example, in \cite Arvo1991 (which is the base for the more
+ * easily accessible Ref. \cite Becker2012):
+ *
+ * "To generate uniformly distributed random rotations of a unit sphere, first
+ * perform a random rotation about the vertical axis, then rotate the north pole
+ * to a random position."
  *
  * The sampling algorithm used here is 'rejection sampling' (see, e.g. Sec. 2.3
  * in Ref. \cite RobertCasella1999). It requires an upper limit
