@@ -19,6 +19,10 @@
 
 #pragma once
 
+#include <array>
+
+using std::array;
+
 #include <cmath>
 #include <sstream>
 #include <stdexcept>
@@ -42,6 +46,16 @@ template <typename T>
 void test_numerical_equality(const size_t n, T *a, T *b, const T epsilon) {
   for (size_t i = 0; i < n; ++i) {
     test_numerical_equality<T>(a[i], b[i], epsilon);
+  }
+}
+
+template <typename T, size_t n>
+void test_numerical_equality(array<array<T, n>, n> a, array<array<T, n>, n> b,
+                             const T epsilon) {
+  for (size_t i = 0; i < n; ++i) {
+    for (size_t j = 0; j < n; ++j) {
+      test_numerical_equality<T>(a[i][j], b[i][j], epsilon);
+    }
   }
 }
 
