@@ -37,6 +37,6 @@ def test_angular_correlation():
     assert ang_cor(0.1, 0.1) == angular_correlation(
         0.1, 0.1, initial_state, cascade_steps
     )
-    assert ang_cor(0.1, 0.1, PhiThetaPsi=(0.1, 0.1, 0.1)) == angular_correlation(
-        0.1, 0.1, initial_state, cascade_steps, PhiThetaPsi=(0.1, 0.1, 0.1)
+    assert ang_cor(0.1, 0.1, Phi_Theta_Psi=(0.1, 0.1, 0.1)) == angular_correlation(
+        0.1, 0.1, initial_state, cascade_steps, Phi_Theta_Psi=(0.1, 0.1, 0.1)
     )

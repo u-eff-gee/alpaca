@@ -25,7 +25,7 @@ class AngularCorrelationPlotter:
         self.angular_correlation = angular_correlation
 
     def plot(
-        self, axis, PhiThetaPsi=None, n_points_per_dimension=100, max_abs_value=2.0
+        self, axis, Phi_Theta_Psi=None, n_points_per_dimension=100, max_abs_value=2.0
     ):
 
         theta, phi = np.meshgrid(
@@ -33,7 +33,7 @@ class AngularCorrelationPlotter:
             np.linspace(0.0, 2.0 * np.pi, n_points_per_dimension),
         )
 
-        ang_cor = self.angular_correlation(theta, phi, PhiThetaPsi=PhiThetaPsi)
+        ang_cor = self.angular_correlation(theta, phi, Phi_Theta_Psi=Phi_Theta_Psi)
 
         sine_theta = np.sin(theta)
         x = ang_cor * sine_theta * np.cos(phi)

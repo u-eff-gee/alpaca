@@ -1,5 +1,5 @@
 /*
-    This file is part of alpaca.
+    This file is part of alpaca
 
     alpaca is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -12,17 +12,26 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with alpaca.  If not, see <https://www.gnu.org/licenses/>.
+    along with alpaca  If not, see <https://www.gnu.org/licenses/>.
 
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
 #include <array>
 
+#include <gsl/gsl_blas.h>
 #include <gsl/gsl_math.h>
 
 #include "EulerAngleRotation.hh"
 #include "TestUtilities.hh"
+
+void test_numerical_equality(const size_t n, gsl_vector *a, gsl_vector *b,
+                             const double epsilon) {
+  for (size_t i = 0; i < n; ++i) {
+    test_numerical_equality<double>(gsl_vector_get(a, i), gsl_vector_get(b, i),
+                                    epsilon);
+  }
+}
 
 /**
  * \brief Test rotations of 3D vectors using Euler angles.
@@ -33,171 +42,96 @@ int main() {
 
   const double epsilon = 1e-8;
 
-  array<double, 3> x_axis{1., 0., 0.};
-  array<double, 3> y_axis{0., 1., 0.};
-  array<double, 3> z_axis{0., 0., 1.};
-
-  array<double, 3> euler_angles{0., 0., 0.};
-  array<double, 3> xp_yp_zp{0., 0., 0.};
+  gsl_vector *x_axis = gsl_vector_alloc(3);
+  gsl_vector_set_basis(x_axis, 0);
+  gsl_vector *y_axis = gsl_vector_alloc(3);
+  gsl_vector_set_basis(y_axis, 1);
+  gsl_vector *z_axis = gsl_vector_alloc(3);
+  gsl_vector_set_basis(z_axis, 2);
 
   // Rotate x axis into y axis
-  // Phi   = -pi/2
-  // Theta = 0
-  // Psi   = 0
-  euler_angles = {-M_PI_2, 0., 0.};
+  gsl_vector *Phi_Theta_Psi_x_to_y = gsl_vector_alloc(3);
+  gsl_vector_set_zero(Phi_Theta_Psi_x_to_y);
+  gsl_vector_set(Phi_Theta_Psi_x_to_y, 0, -M_PI_2);
 
-  xp_yp_zp = euler_angle_transform::rotate(x_axis, euler_angles);
-  test_numerical_equality<double>(3, xp_yp_zp.data(), y_axis.data(), epsilon);
-  test_numerical_equality<double>(
-      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(),
-      x_axis.data(), epsilon);
+  gsl_vector *x_rotated_to_y = gsl_vector_alloc(3);
+  euler_angle_transform::rotate(x_rotated_to_y, Phi_Theta_Psi_x_to_y, x_axis);
+  test_numerical_equality(3, x_rotated_to_y, y_axis, epsilon);
+
+  gsl_vector *x_rotated_to_y_reversed = gsl_vector_alloc(3);
+  euler_angle_transform::rotate_back(x_rotated_to_y_reversed,
+                                     Phi_Theta_Psi_x_to_y, x_rotated_to_y);
+  test_numerical_equality(3, x_rotated_to_y_reversed, x_axis, epsilon);
 
   // Rotate x axis into z axis
-  // Phi   = pi/2
-  // Theta = pi/2
-  // Psi   = 0
-  euler_angles = {M_PI_2, M_PI_2, 0.};
+  gsl_vector *Phi_Theta_Psi_x_to_z = gsl_vector_alloc(3);
+  gsl_vector_set_zero(Phi_Theta_Psi_x_to_z);
+  gsl_vector_set(Phi_Theta_Psi_x_to_z, 0, M_PI_2);
+  gsl_vector_set(Phi_Theta_Psi_x_to_z, 1, M_PI_2);
 
-  xp_yp_zp = euler_angle_transform::rotate(x_axis, euler_angles);
-  test_numerical_equality<double>(3, xp_yp_zp.data(), z_axis.data(), epsilon);
-  test_numerical_equality<double>(
-      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(),
-      x_axis.data(), epsilon);
+  gsl_vector *x_rotated_to_z = gsl_vector_alloc(3);
+  euler_angle_transform::rotate(x_rotated_to_z, Phi_Theta_Psi_x_to_z, x_axis);
+  test_numerical_equality(3, x_rotated_to_z, z_axis, epsilon);
+
+  gsl_vector *x_rotated_to_z_reversed = gsl_vector_alloc(3);
+  euler_angle_transform::rotate_back(x_rotated_to_z_reversed,
+                                     Phi_Theta_Psi_x_to_z, x_rotated_to_z);
+  test_numerical_equality(3, x_rotated_to_z_reversed, x_axis, epsilon);
 
   // Rotate y axis into x axis
-  // Phi   = pi/2
-  // Theta = 0
-  // Psi   = 0
-  euler_angles = {M_PI_2, 0., 0.};
+  gsl_vector *Phi_Theta_Psi_y_to_x = gsl_vector_alloc(3);
+  gsl_vector_set_zero(Phi_Theta_Psi_y_to_x);
+  gsl_vector_set(Phi_Theta_Psi_y_to_x, 0, M_PI_2);
 
-  xp_yp_zp = euler_angle_transform::rotate(y_axis, euler_angles);
-  test_numerical_equality<double>(3, xp_yp_zp.data(), x_axis.data(), epsilon);
-  test_numerical_equality<double>(
-      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(),
-      y_axis.data(), epsilon);
+  gsl_vector *y_rotated_to_x = gsl_vector_alloc(3);
+  euler_angle_transform::rotate(y_rotated_to_x, Phi_Theta_Psi_y_to_x, y_axis);
+  test_numerical_equality(3, y_rotated_to_x, x_axis, epsilon);
+
+  gsl_vector *y_rotated_to_x_reversed = gsl_vector_alloc(3);
+  euler_angle_transform::rotate_back(y_rotated_to_x_reversed,
+                                     Phi_Theta_Psi_y_to_x, y_rotated_to_x);
+  test_numerical_equality(3, y_rotated_to_x_reversed, y_axis, epsilon);
 
   // Rotate y axis into z axis
-  // Phi   = 0
-  // Theta = -pi/2
-  // Psi   = 0
-  euler_angles = {0., -M_PI_2, 0.};
+  gsl_vector *Phi_Theta_Psi_y_to_z = gsl_vector_alloc(3);
+  gsl_vector_set_zero(Phi_Theta_Psi_y_to_z);
+  gsl_vector_set(Phi_Theta_Psi_y_to_z, 1, -M_PI_2);
 
-  xp_yp_zp = euler_angle_transform::rotate(y_axis, euler_angles);
-  test_numerical_equality<double>(3, xp_yp_zp.data(), z_axis.data(), epsilon);
-  test_numerical_equality<double>(
-      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(),
-      y_axis.data(), epsilon);
+  gsl_vector *y_rotated_to_z = gsl_vector_alloc(3);
+  euler_angle_transform::rotate(y_rotated_to_z, Phi_Theta_Psi_y_to_z, y_axis);
+  test_numerical_equality(3, y_rotated_to_z, z_axis, epsilon);
 
-  // From here on, note the special role of the z axis in spherical coordinates
-  // which leads to arbitrary values for phi.
+  gsl_vector *y_rotated_to_z_reversed = gsl_vector_alloc(3);
+  euler_angle_transform::rotate_back(y_rotated_to_z_reversed,
+                                     Phi_Theta_Psi_y_to_z, y_rotated_to_z);
+  test_numerical_equality(3, y_rotated_to_z_reversed, y_axis, epsilon);
 
   // Rotate z axis into x axis
-  // Phi   = 0
-  // Theta = pi/2
-  // Psi   = pi/2
-  euler_angles = {0., M_PI_2, M_PI_2};
+  gsl_vector *Phi_Theta_Psi_z_to_x = gsl_vector_alloc(3);
+  gsl_vector_set_zero(Phi_Theta_Psi_z_to_x);
+  gsl_vector_set(Phi_Theta_Psi_z_to_x, 1, M_PI_2);
+  gsl_vector_set(Phi_Theta_Psi_z_to_x, 2, M_PI_2);
 
-  xp_yp_zp = euler_angle_transform::rotate(z_axis, euler_angles);
-  test_numerical_equality<double>(3, xp_yp_zp.data(), x_axis.data(), epsilon);
-  test_numerical_equality<double>(
-      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(),
-      z_axis.data(), epsilon);
+  gsl_vector *z_rotated_to_x = gsl_vector_alloc(3);
+  euler_angle_transform::rotate(z_rotated_to_x, Phi_Theta_Psi_z_to_x, z_axis);
+  test_numerical_equality(3, z_rotated_to_x, x_axis, epsilon);
+
+  gsl_vector *z_rotated_to_x_reversed = gsl_vector_alloc(3);
+  euler_angle_transform::rotate_back(z_rotated_to_x_reversed,
+                                     Phi_Theta_Psi_z_to_x, z_rotated_to_x);
+  test_numerical_equality(3, z_rotated_to_x_reversed, z_axis, epsilon);
 
   // Rotate z axis into y axis
-  // Phi   = 0
-  // Theta = pi/2
-  // Psi   = 0
-  euler_angles = {0., M_PI_2, 0.};
+  gsl_vector *Phi_Theta_Psi_z_to_y = gsl_vector_alloc(3);
+  gsl_vector_set_zero(Phi_Theta_Psi_z_to_y);
+  gsl_vector_set(Phi_Theta_Psi_z_to_y, 1, M_PI_2);
 
-  xp_yp_zp = euler_angle_transform::rotate(z_axis, euler_angles);
-  test_numerical_equality<double>(3, xp_yp_zp.data(), y_axis.data(), epsilon);
-  test_numerical_equality<double>(
-      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(),
-      z_axis.data(), epsilon);
+  gsl_vector *z_rotated_to_y = gsl_vector_alloc(3);
+  euler_angle_transform::rotate(z_rotated_to_y, Phi_Theta_Psi_z_to_y, z_axis);
+  test_numerical_equality(3, z_rotated_to_y, y_axis, epsilon);
 
-  // Rotate z axis into z axis (trivial)
-  // Phi   = 0
-  // Theta = 0
-  // Psi   = 0
-  euler_angles = {0., 0., 0.};
-
-  xp_yp_zp = euler_angle_transform::rotate(z_axis, euler_angles);
-  test_numerical_equality<double>(3, xp_yp_zp.data(), z_axis.data(), epsilon);
-  test_numerical_equality<double>(
-      3, euler_angle_transform::rotate_back(xp_yp_zp, euler_angles).data(),
-      z_axis.data(), epsilon);
-
-  // Test the get_theta_phi method which calculates the corresponding spherical
-  // coordinates theta and phi for a given normalized Cartesian vector.
-  array<double, 2> theta_phi;
-
-  // Test the x, y, z, -x, -y, and -z axis.
-  theta_phi = euler_angle_transform::get_theta_phi({1., 0., 0.});
-  test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
-  test_numerical_equality<double>(theta_phi[1], 0., epsilon);
-
-  theta_phi = euler_angle_transform::get_theta_phi({-1., 0., 0.});
-  test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
-  test_numerical_equality<double>(theta_phi[1], M_PI, epsilon);
-
-  theta_phi = euler_angle_transform::get_theta_phi({0., 1., 0.});
-  test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
-  test_numerical_equality<double>(theta_phi[1], M_PI_2, epsilon);
-
-  theta_phi = euler_angle_transform::get_theta_phi({0., -1., 0.});
-  test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
-  test_numerical_equality<double>(theta_phi[1], 3. * M_PI_2, epsilon);
-
-  theta_phi = euler_angle_transform::get_theta_phi({0., 0., 1.});
-  test_numerical_equality<double>(theta_phi[0], 0., epsilon);
-  test_numerical_equality<double>(theta_phi[1], 0., epsilon);
-
-  theta_phi = euler_angle_transform::get_theta_phi({0., 0., -1.});
-  test_numerical_equality<double>(theta_phi[0], M_PI, epsilon);
-  test_numerical_equality<double>(theta_phi[1], 0., epsilon);
-
-  // Test more vectors in the xy plane to see whether phi is set in the correct
-  // quadrant.
-  theta_phi = euler_angle_transform::get_theta_phi({1., 1., 0.});
-  test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
-  test_numerical_equality<double>(theta_phi[1], M_PI_4, epsilon);
-
-  theta_phi = euler_angle_transform::get_theta_phi({-1., 1., 0.});
-  test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
-  test_numerical_equality<double>(theta_phi[1], 3. * M_PI_4, epsilon);
-
-  theta_phi = euler_angle_transform::get_theta_phi({-1., -1., 0.});
-  test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
-  test_numerical_equality<double>(theta_phi[1], 5. * M_PI_4, epsilon);
-
-  theta_phi = euler_angle_transform::get_theta_phi({1., -1., 0.});
-  test_numerical_equality<double>(theta_phi[0], M_PI_2, epsilon);
-  test_numerical_equality<double>(theta_phi[1], 7. * M_PI_4, epsilon);
-
-  // Test back-and-forth conversion between Euler angles and coordinate axes.
-  array<array<double, 3>, 3> transformed_axes;
-
-  transformed_axes = euler_angle_transform::axes({M_PI_2, 0, 0});
-  test_numerical_equality<double, 3>(
-      transformed_axes,
-      array<array<double, 3>, 3>{array<double, 3>{0, -1, 0},
-                                 array<double, 3>{1, 0, 0},
-                                 array<double, 3>{0, 0, 1}},
-      epsilon);
-
-  transformed_axes = euler_angle_transform::axes({0, M_PI_2, 0});
-  test_numerical_equality<double, 3>(
-      transformed_axes,
-      array<array<double, 3>, 3>{array<double, 3>{1, 0, 0},
-                                 array<double, 3>{0, 0, -1},
-                                 array<double, 3>{0, 1, 0}},
-      epsilon);
-
-  transformed_axes = euler_angle_transform::axes({0, 0, M_PI_2});
-  test_numerical_equality<double, 3>(
-      transformed_axes,
-      array<array<double, 3>, 3>{array<double, 3>{0, -1, 0},
-                                 array<double, 3>{1, 0, 0},
-                                 array<double, 3>{0, 0, 1}},
-      epsilon);
+  gsl_vector *z_rotated_to_y_reversed = gsl_vector_alloc(3);
+  euler_angle_transform::rotate_back(z_rotated_to_y_reversed,
+                                     Phi_Theta_Psi_z_to_y, z_rotated_to_y);
+  test_numerical_equality(3, z_rotated_to_y_reversed, z_axis, epsilon);
 }

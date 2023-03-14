@@ -24,12 +24,18 @@
 using std::array;
 
 #include <cmath>
-#include <sstream>
-#include <stdexcept>
 
 using std::fabs;
-using std::runtime_error;
+
+#include <sstream>
+
 using std::stringstream;
+
+#include <stdexcept>
+
+using std::runtime_error;
+
+#include <gsl/gsl_blas.h>
 
 template <typename T>
 void test_numerical_equality(const T a, const T b, const T epsilon) {

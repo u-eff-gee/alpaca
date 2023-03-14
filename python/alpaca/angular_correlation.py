@@ -298,7 +298,7 @@ class AngularCorrelation:
         self.two_Lp = two_Lp
         self.delta = delta
 
-    def __call__(self, theta, phi, PhiThetaPsi=None, *delta):
+    def __call__(self, theta, phi, Phi_Theta_Psi=None, *delta):
         r"""Evaluate the angular correlation
 
         This function accepts more parameters than the two angles in spherical coordinates:
@@ -335,7 +335,7 @@ class AngularCorrelation:
             Polar angle in spherical coordinates in radians (\f$\theta \in \left[ 0, \pi \right]\f$). If ndarray, must have the same shape as phi.
         phi: float or ndarray
             Azimuthal angle in spherical coordinates in radians (\f$\varphi \in \left[ 0, 2 \pi \right]\f$). If ndarray, must have the same shape as theta.
-        PhiThetaPsi: (float, float, float)
+        Phi_Theta_Psi: (float, float, float)
             Euler angles \f$\Phi\f$, \f$\Theta\f$, and \f$\Psi\f$ in radians (default: None, i.e. no rotation).
         *delta: tuple of float
             Multipole mixing ratios in the convention of Biedenharn [default: empty tuple (), i.e. use previously set mixing ratios].
@@ -386,9 +386,9 @@ class AngularCorrelation:
             )
             self.delta = delta_values
 
-        return self.evaluate(theta, phi, PhiThetaPsi)
+        return self.evaluate(theta, phi, Phi_Theta_Psi)
 
-    def evaluate(self, theta, phi, PhiThetaPsi):
+    def evaluate(self, theta, phi, Phi_Theta_Psi):
         r"""Evaluate the angular correlation with scalar or numpy-array input
 
         This function implements a numpy-array compatible call of AngularCorrelation.
@@ -406,7 +406,7 @@ class AngularCorrelation:
             Polar angle in spherical coordinates in radians (\f$\theta \in \left[ 0, \pi \right]\f$). If ndarray, must have the same shape as phi.
         phi: float or ndarray
             Azimuthal angle in spherical coordinates in radians (\f$\varphi \in \left[ 0, 2 \pi \right]\f$). If ndarray, must have the same shape as theta.
-        PhiThetaPsi: (float, float, float)
+        Phi_Theta_Psi: (float, float, float)
             Euler angles \f$\Phi\f$, \f$\Theta\f$, and \f$\Psi\f$ in radians (default: None, i.e. no rotation).
 
         Returns
@@ -454,7 +454,7 @@ class AngularCorrelation:
 
         size = len(theta_reshape)
         result = (c_double * size)()
-        if PhiThetaPsi is None:
+        if Phi_Theta_Psi is None:
             libangular_correlation.evaluate_angular_correlation(
                 self.angular_correlation,
                 size,
@@ -468,7 +468,7 @@ class AngularCorrelation:
                 size,
                 (c_double * size)(*theta_reshape),
                 (c_double * size)(*phi_reshape),
-                (c_double * 3)(*PhiThetaPsi),
+                (c_double * 3)(*Phi_Theta_Psi),
                 result,
             )
         if scalar_output:
@@ -506,7 +506,7 @@ libangular_correlation.angular_correlation.argtypes = [
 ]
 
 
-def angular_correlation(theta, phi, initial_state, cascade_steps, PhiThetaPsi=None):
+def angular_correlation(theta, phi, initial_state, cascade_steps, Phi_Theta_Psi=None):
     n_cas_ste = len(cascade_steps)
 
     two_J = [cas_ste[1].two_J for cas_ste in cascade_steps]
@@ -527,8 +527,8 @@ def angular_correlation(theta, phi, initial_state, cascade_steps, PhiThetaPsi=No
     delta = [cas_ste[0].delta for cas_ste in cascade_steps]
     delta = (c_double * len(delta))(*delta)
 
-    if PhiThetaPsi is None:
-        PhiThetaPsi = (0.0, 0.0, 0.0)
+    if Phi_Theta_Psi is None:
+        Phi_Theta_Psi = (0.0, 0.0, 0.0)
     return libangular_correlation.angular_correlation(
         theta,
         phi,
@@ -540,5 +540,5 @@ def angular_correlation(theta, phi, initial_state, cascade_steps, PhiThetaPsi=No
         em_charp,
         two_Lp,
         delta,
-        (c_double * 3)(*PhiThetaPsi),
+        (c_double * 3)(*Phi_Theta_Psi),
     )
