@@ -64,8 +64,8 @@ int main() {
     theta_phi_1 = euler_angle_transform::to_spherical(ang_cor_sam());
     theta_phi_2 = euler_angle_transform::to_spherical(sph_rej_sam());
 
-    test_numerical_equality<double>(theta_phi_1[0], theta_phi_2[0], 1e-6);
-    test_numerical_equality<double>(theta_phi_1[1], theta_phi_2[1], 1e-6);
+    test_numerical_equality<double>(2, theta_phi_1.data(), theta_phi_2.data(),
+                                    1e-6);
   }
 
   // Check that the default values

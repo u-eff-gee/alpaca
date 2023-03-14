@@ -248,32 +248,6 @@ public:
   double operator()(const double theta, const double phi) const;
 
   /**
-   * \brief Return the angular correlation for an arbitrary coordinate system.
-   *
-   * This function takes an array of three Euler angles as an addition
-   * parameter, to rotate the direction of propagation and the polarization axis
-   * (if defined) of the first photon. The 'zxz' convention or 'x' convention is
-   * used for the order of the rotations \cite Weisstein2020. If all Euler
-   * angles are set to zero, the direction of propagation is in the positive z
-   * direction, and the polarization axis (if defined) is the x axis.
-   * As implied by the notation, the angles \f$\theta\f$ and \f$\varphi\f$ are
-   * still defined in the original coordinate system, i.e. \f$\theta = 0\f$ is
-   * still the z axis.
-   *
-   * \param theta Polar angle in spherical coordinates in radians
-   * (\f$\theta \in \left[ 0, \pi \right]\f$).
-   * \param phi Azimuthal angle in spherical coordinates in radians
-   * (\f$\varphi \in \left[ 0, 2 \pi \right]\f$).
-   * \param euler_angles Euler angles \f$\Phi\f$, \f$\Theta\f$, and \f$\Psi\f$
-   * in radians which define an arbitrary rotation in 3D space in the x
-   * convention.
-   *
-   * \return \f$W_{\gamma \gamma} \left( \theta, \varphi \right)\f$
-   */
-  double operator()(const double theta, const double phi,
-                    const array<double, 3> euler_angles) const;
-
-  /**
    * \brief Return the initial state of the angular correlation.
    *
    * \return Initial state.

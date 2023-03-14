@@ -113,15 +113,6 @@ double AngularCorrelation::operator()(const double theta,
   return w_gamma_gamma->operator()(theta, phi);
 }
 
-double
-AngularCorrelation::operator()(const double theta, const double phi,
-                               const array<double, 3> euler_angles) const {
-  array<double, 2> thetap_phip = euler_angle_transform::rotate_back(
-      array<double, 2>{theta, phi}, euler_angles);
-
-  return (*this)(thetap_phip[0], thetap_phip[1]);
-}
-
 void AngularCorrelation::check_cascade(
     const State ini_sta, const vector<pair<Transition, State>> cas_ste) const {
 
@@ -308,7 +299,7 @@ extern "C" {
 double angular_correlation(const double theta, const double phi,
                            const size_t n_cas_ste, int *two_J, short *par,
                            short *em_char, int *two_L, short *em_charp,
-                           int *two_Lp, double *delta, double *PhiThetaPsi) {
+                           int *two_Lp, double *delta) {
   State initial_state{two_J[0], (Parity)par[0]};
   vector<pair<Transition, State>> cascade_steps;
 
@@ -321,7 +312,7 @@ double angular_correlation(const double theta, const double phi,
 
   return AngularCorrelation(initial_state, cascade_steps)
       .
-      operator()(theta, phi, {PhiThetaPsi[0], PhiThetaPsi[1], PhiThetaPsi[2]});
+      operator()(theta, phi);
 }
 
 void *create_angular_correlation(const size_t n_cas_ste, int *two_J, short *par,
@@ -361,16 +352,6 @@ void evaluate_angular_correlation(AngularCorrelation *angular_correlation,
 
   for (size_t i = 0; i < n_angles; ++i) {
     result[i] = angular_correlation->operator()(theta[i], phi[i]);
-  }
-}
-
-void evaluate_angular_correlation_rotated(
-    AngularCorrelation *angular_correlation, const size_t n_angles,
-    double *theta, double *phi, double *PhiThetaPsi, double *result) {
-
-  for (size_t i = 0; i < n_angles; ++i) {
-    result[i] = angular_correlation->operator()(
-        theta[i], phi[i], {PhiThetaPsi[0], PhiThetaPsi[1], PhiThetaPsi[2]});
   }
 }
 

@@ -69,5 +69,4 @@ int main() {
   assert(theta_phi_default.second[0] == 0.);
   assert(theta_phi_default.second[1] == 0.);
   assert(theta_phi_default.second[2] == 0.);
-
 }

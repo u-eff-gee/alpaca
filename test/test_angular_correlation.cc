@@ -22,6 +22,7 @@
 #include <gsl/gsl_math.h>
 
 #include "AngularCorrelation.hh"
+#include "EulerAngleRotation.hh"
 #include "State.hh"
 #include "TestUtilities.hh"
 #include "Transition.hh"
@@ -82,9 +83,14 @@ int main() {
 
       test_numerical_equality<double>(ang_corr_0p_1p_0p(theta, phi),
                                       w_pol_dir_0p_1p_0p(theta, phi), epsilon);
-      test_numerical_equality<double>(
-          ang_corr_0p_1p_0p(theta, phi, {M_PI_2, 0., 0.}),
-          w_pol_dir_0p_1m_0p(theta, phi), epsilon);
+      // This double-loop test was originally intended to test the capability of 
+      // angular correlations to rotate themselves.
+      // Since explicit rotations are preferred now, this at least tests the symmetry 
+      // of the implemented distributions.
+      // At the moment, rotation is achieved using a trick.
+      test_numerical_equality<double>(ang_corr_0p_1p_0p(theta, phi),
+                                      w_pol_dir_0p_1m_0p(theta, phi - M_PI_2),
+                                      epsilon);
     }
   }
 
