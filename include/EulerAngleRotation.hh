@@ -134,32 +134,41 @@ namespace euler_angle_transform {
 
 inline void rotation_matrix(gsl_matrix *A, gsl_vector *Phi_Theta_Psi) {
 
-  const double cos_phi{cos(Phi_Theta_Psi->data[0])},
-      sin_phi{sin(Phi_Theta_Psi->data[0])},
-      cos_the{cos(Phi_Theta_Psi->data[1])},
-      sin_the{sin(Phi_Theta_Psi->data[1])},
-      cos_psi{cos(Phi_Theta_Psi->data[2])},
-      sin_psi{sin(Phi_Theta_Psi->data[2])};
+  const double cos_phi{cos(gsl_vector_get(Phi_Theta_Psi, 0))},
+      sin_phi{sin(gsl_vector_get(Phi_Theta_Psi, 0))},
+      cos_the{cos(gsl_vector_get(Phi_Theta_Psi, 1))},
+      sin_the{sin(gsl_vector_get(Phi_Theta_Psi, 1))},
+      cos_psi{cos(gsl_vector_get(Phi_Theta_Psi, 2))},
+      sin_psi{sin(gsl_vector_get(Phi_Theta_Psi, 2))};
 
-  gsl_matrix_set(A, 0, 0, cos_psi * cos_phi - cos_the * sin_phi * sin_psi);
-  gsl_matrix_set(A, 0, 1, cos_psi * sin_phi + cos_the * cos_phi * sin_psi);
+  gsl_matrix_set(A, 0, 0, cos_psi * cos_phi - sin_psi * cos_the * sin_phi);
+  gsl_matrix_set(A, 0, 1, -cos_psi * sin_phi - sin_psi * cos_the * cos_phi);
   gsl_matrix_set(A, 0, 2, sin_psi * sin_the);
-  gsl_matrix_set(A, 1, 0, -sin_psi * cos_phi - cos_the * sin_phi * cos_psi);
-  gsl_matrix_set(A, 1, 1, -sin_psi * sin_phi + cos_the * cos_phi * cos_psi);
-  gsl_matrix_set(A, 1, 2, cos_psi * sin_the);
+  gsl_matrix_set(A, 1, 0, sin_psi * cos_phi + cos_psi * cos_the * sin_phi);
+  gsl_matrix_set(A, 1, 1, cos_psi * cos_the * cos_phi - sin_psi * sin_phi);
+  gsl_matrix_set(A, 1, 2, -cos_psi * sin_the);
   gsl_matrix_set(A, 2, 0, sin_the * sin_phi);
-  gsl_matrix_set(A, 2, 1, -sin_the * cos_phi);
+  gsl_matrix_set(A, 2, 1, sin_the * cos_phi);
   gsl_matrix_set(A, 2, 2, cos_the);
 };
 
-inline gsl_vector angles(const gsl_matrix A) {
-  double v[] = {
-      atan2(gsl_matrix_get(&A, 2, 0), gsl_matrix_get(&A, 2, 1)),
-      acos(gsl_matrix_get(&A, 2, 2)),
-      atan2(gsl_matrix_get(&A, 0, 2), -gsl_matrix_get(&A, 1, 2)),
-  };
-
-  return gsl_vector_view_array(v, 3).vector;
+inline void angles(gsl_vector *Phi_Theta_Psi, const gsl_matrix *A) {
+  gsl_vector_set(Phi_Theta_Psi, 1, acos(gsl_matrix_get(A, 2, 2)));
+  if (fabs(gsl_matrix_get(A, 2, 2)) == 1.0) {
+    // If the angle Theta is zero, that means the entire transformation consists
+    // of two rotations around the z axis. In this case, only the difference
+    // between Phi and Psi is fixed, but not their absolute values. Here, set
+    // Psi arbitrarily and obtain Phi from the matrix element (0,1). The matrix
+    // element to obtain Phi from must be one that contains a sine, because
+    // otherwise the sign of the angle cannot be reconstructed.
+    gsl_vector_set(Phi_Theta_Psi, 0, asin(-gsl_matrix_get(A, 0, 1)));
+    gsl_vector_set(Phi_Theta_Psi, 2, 0.);
+  } else {
+    gsl_vector_set(Phi_Theta_Psi, 0,
+                   atan2(gsl_matrix_get(A, 2, 0), gsl_matrix_get(A, 2, 1)));
+    gsl_vector_set(Phi_Theta_Psi, 2,
+                   atan2(gsl_matrix_get(A, 0, 2), -gsl_matrix_get(A, 1, 2)));
+  }
 }
 
 inline void rotate(gsl_vector *xp_yp_zp, gsl_vector *Phi_Theta_Psi,
@@ -169,15 +178,19 @@ inline void rotate(gsl_vector *xp_yp_zp, gsl_vector *Phi_Theta_Psi,
   rotation_matrix(A, Phi_Theta_Psi);
 
   gsl_blas_dgemv(CblasNoTrans, 1., A, x_y_z, 0., xp_yp_zp);
+  gsl_matrix_free(A);
 };
 
 inline void rotate_back(gsl_vector *x_y_z, gsl_vector *Phi_Theta_Psi,
                         const gsl_vector *xp_yp_zp) {
 
-  gsl_vector_reverse(Phi_Theta_Psi);
-  gsl_vector_scale(Phi_Theta_Psi, -1);
+  gsl_vector *Phi_Theta_Psi_reverse = gsl_vector_alloc(3);
+  gsl_vector_set(Phi_Theta_Psi_reverse, 0, -gsl_vector_get(Phi_Theta_Psi, 2));
+  gsl_vector_set(Phi_Theta_Psi_reverse, 1, -gsl_vector_get(Phi_Theta_Psi, 1));
+  gsl_vector_set(Phi_Theta_Psi_reverse, 2, -gsl_vector_get(Phi_Theta_Psi, 0));
 
-  rotate(x_y_z, Phi_Theta_Psi, xp_yp_zp);
+  rotate(x_y_z, Phi_Theta_Psi_reverse, xp_yp_zp);
+  gsl_vector_free(Phi_Theta_Psi_reverse);
 };
 
 /**
