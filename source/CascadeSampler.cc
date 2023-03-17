@@ -17,15 +17,6 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include <iostream>
-
-using std::cout;
-using std::endl;
-
-#include <memory>
-
-using std::make_shared;
-
 #include "CascadeSampler.hh"
 #include "EulerAngleRotation.hh"
 #include "ReferenceFrameSampler.hh"
@@ -42,7 +33,7 @@ vector<array<double, 3>> CascadeSampler::operator()() {
 
   for (size_t i = 1; i < angular_correlation_samplers.size(); ++i) {
     reference_frames[i] = euler_angle_transform::rotate(
-        angular_correlation_samplers[i]->operator()(), reference_frames[i - 1]);
+        reference_frames[i - 1], angular_correlation_samplers[i]->operator()());
   }
 
   return reference_frames;

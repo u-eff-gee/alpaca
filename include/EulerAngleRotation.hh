@@ -181,6 +181,46 @@ inline void rotate(gsl_vector *xp_yp_zp, gsl_vector *Phi_Theta_Psi,
   gsl_matrix_free(A);
 };
 
+inline array<double, 3> rotate(array<double, 3> Phi_Theta_Psi_reference,
+                               array<double, 3> Phi_Theta_Psi) {
+  gsl_vector *Phi_Theta_Psi_reference_gsl = gsl_vector_alloc(3);
+  gsl_vector_set(Phi_Theta_Psi_reference_gsl, 0, Phi_Theta_Psi_reference[0]);
+  gsl_vector_set(Phi_Theta_Psi_reference_gsl, 1, Phi_Theta_Psi_reference[1]);
+  gsl_vector_set(Phi_Theta_Psi_reference_gsl, 2, Phi_Theta_Psi_reference[2]);
+  gsl_matrix *Phi_Theta_Psi_reference_matrix = gsl_matrix_alloc(3, 3);
+  gsl_vector *Phi_Theta_Psi_gsl = gsl_vector_alloc(3);
+  gsl_vector_set(Phi_Theta_Psi_gsl, 0, Phi_Theta_Psi[0]);
+  gsl_vector_set(Phi_Theta_Psi_gsl, 1, Phi_Theta_Psi[1]);
+  gsl_vector_set(Phi_Theta_Psi_gsl, 2, Phi_Theta_Psi[2]);
+  gsl_matrix *Phi_Theta_Psi_matrix = gsl_matrix_alloc(3, 3);
+  gsl_matrix *cumulative_rotation_matrix = gsl_matrix_alloc(3, 3);
+  gsl_vector *Phi_Theta_Psi_cumulative = gsl_vector_alloc(3);
+
+  rotation_matrix(Phi_Theta_Psi_reference_matrix, Phi_Theta_Psi_reference_gsl);
+  rotation_matrix(Phi_Theta_Psi_matrix, Phi_Theta_Psi_gsl);
+
+  gsl_blas_dgemm(CblasNoTrans, CblasNoTrans, 1.0,
+                 Phi_Theta_Psi_reference_matrix, Phi_Theta_Psi_matrix, 0.,
+                 cumulative_rotation_matrix);
+
+  angles(Phi_Theta_Psi_cumulative, cumulative_rotation_matrix);
+
+  array<double, 3> result{
+      gsl_vector_get(Phi_Theta_Psi_cumulative, 0),
+      gsl_vector_get(Phi_Theta_Psi_cumulative, 1),
+      gsl_vector_get(Phi_Theta_Psi_cumulative, 2),
+  };
+
+  gsl_vector_free(Phi_Theta_Psi_reference_gsl);
+  gsl_matrix_free(Phi_Theta_Psi_reference_matrix);
+  gsl_vector_free(Phi_Theta_Psi_gsl);
+  gsl_matrix_free(Phi_Theta_Psi_matrix);
+  gsl_matrix_free(cumulative_rotation_matrix);
+  gsl_vector_free(Phi_Theta_Psi_cumulative);
+
+  return result;
+}
+
 inline void rotate_back(gsl_vector *x_y_z, gsl_vector *Phi_Theta_Psi,
                         const gsl_vector *xp_yp_zp) {
 
