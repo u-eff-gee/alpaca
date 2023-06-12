@@ -24,7 +24,11 @@ using std::array;
 #include "alpaca/AngCorrRejectionSampler.hh"
 #include "alpaca/EulerAngleRotation.hh"
 
+namespace alpaca {
+
 AngCorrRejectionSampler::AngCorrRejectionSampler(AngularCorrelation &w,
                                                  const int seed,
                                                  const unsigned int max_tri)
     : SphereRejectionSampler(w, w.get_upper_limit(), seed, max_tri) {}
+
+} // namespace alpaca

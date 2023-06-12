@@ -21,6 +21,9 @@
 
 #include "alpaca/Transition.hh"
 
+using alpaca::EMCharacter;
+using alpaca::Transition;
+
 int main() {
   // Test IO of the Transition class.
 
@@ -38,7 +41,8 @@ int main() {
   error_thrown = false;
 
   try {
-    Transition transition(electric, 2, magnetic, 2, 0.);
+    Transition transition(EMCharacter::electric, 2, EMCharacter::magnetic, 2,
+                          0.);
   } catch (const invalid_argument &e) {
     error_thrown = true;
   }
@@ -50,7 +54,8 @@ int main() {
 
   // Error: Multipolarity smaller than zero.
   try {
-    Transition transition(electric, -2, magnetic, 2, 0.);
+    Transition transition(EMCharacter::electric, -2, EMCharacter::magnetic, 2,
+                          0.);
   } catch (const invalid_argument &e) {
     error_thrown = true;
   }
@@ -60,7 +65,8 @@ int main() {
 
   // Error: Multipolarity zero.
   try {
-    Transition transition(electric, 0, magnetic, 2, 0.);
+    Transition transition(EMCharacter::electric, 0, EMCharacter::magnetic, 2,
+                          0.);
   } catch (const invalid_argument &e) {
     error_thrown = true;
   }
@@ -72,7 +78,7 @@ int main() {
 
   Transition transition(2, 4, 0.);
   try {
-    transition.em_str_rep(em_unknown);
+    transition.em_str_rep(EMCharacter::unknown);
   } catch (const runtime_error &e) {
     error_thrown = true;
   }

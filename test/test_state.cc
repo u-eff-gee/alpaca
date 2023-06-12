@@ -21,6 +21,9 @@
 
 #include "alpaca/State.hh"
 
+using alpaca::Parity;
+using alpaca::State;
+
 int main() {
   // Test IO of the State class.
 
@@ -30,7 +33,7 @@ int main() {
   // Error: Unknown parities cannot be converted to string.
   // Usually, a user should never have to call this function.
   try {
-    state.parity_str_rep(parity_unknown);
+    state.parity_str_rep(Parity::unknown);
   } catch (const std::runtime_error &e) {
     error_thrown = true;
   }

@@ -18,7 +18,6 @@
 */
 
 #include <cassert>
-
 #include <gsl/gsl_math.h>
 
 #include "alpaca/AngularCorrelation.hh"
@@ -28,6 +27,15 @@
 #include "alpaca/Transition.hh"
 #include "alpaca/W_dir_dir.hh"
 #include "alpaca/W_pol_dir.hh"
+
+using alpaca::AngularCorrelation;
+using alpaca::EMCharacter;
+using alpaca::Parity;
+using alpaca::State;
+using alpaca::test_numerical_equality;
+using alpaca::Transition;
+using alpaca::W_dir_dir;
+using alpaca::W_pol_dir;
 
 /**
  * Test whether AngularCorrelation maps to the correct correlation functions and
@@ -44,15 +52,18 @@ int main() {
 
   // Test unpolarized angular correlation
   AngularCorrelation ang_corr_0_1_0{
-      State(0, parity_unknown),
-      {{Transition(em_unknown, 2, em_unknown, 4, 0.), State(2, negative)},
-       {Transition(em_unknown, 2, em_unknown, 4, 0.),
-        State(0, parity_unknown)}}};
+      State(0, Parity::unknown),
+      {{Transition(EMCharacter::unknown, 2, EMCharacter::unknown, 4, 0.),
+        State(2, Parity::negative)},
+       {Transition(EMCharacter::unknown, 2, EMCharacter::unknown, 4, 0.),
+        State(0, Parity::unknown)}}};
 
   W_dir_dir w_dir_dir_0_1_0{
-      State(0, positive),
-      {{Transition(electric, 2, magnetic, 4, 0.), State(2, negative)},
-       {Transition(electric, 2, magnetic, 4, 0.), State(0, positive)}}};
+      State(0, Parity::positive),
+      {{Transition(EMCharacter::electric, 2, EMCharacter::magnetic, 4, 0.),
+        State(2, Parity::negative)},
+       {Transition(EMCharacter::electric, 2, EMCharacter::magnetic, 4, 0.),
+        State(0, Parity::positive)}}};
 
   for (double theta = 0.; theta < M_PI; theta += 0.5) {
     for (double phi = 0.; phi < M_2_PI; phi += 0.5) {
@@ -64,19 +75,25 @@ int main() {
 
   // Test polarized angular correlation and rotation
   AngularCorrelation ang_corr_0p_1p_0p{
-      State(0, positive),
-      {{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-       {Transition(magnetic, 2, electric, 4, 0.), State(0, positive)}}};
+      State(0, Parity::positive),
+      {{Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+        State(2, Parity::positive)},
+       {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+        State(0, Parity::positive)}}};
 
   W_pol_dir w_pol_dir_0p_1p_0p{
-      State(0, positive),
-      {{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-       {Transition(magnetic, 2, electric, 4, 0.), State(0, positive)}}};
+      State(0, Parity::positive),
+      {{Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+        State(2, Parity::positive)},
+       {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+        State(0, Parity::positive)}}};
 
   W_pol_dir w_pol_dir_0p_1m_0p{
-      State(0, positive),
-      {{Transition(electric, 2, magnetic, 4, 0.), State(2, negative)},
-       {Transition(electric, 2, magnetic, 4, 0.), State(0, positive)}}};
+      State(0, Parity::positive),
+      {{Transition(EMCharacter::electric, 2, EMCharacter::magnetic, 4, 0.),
+        State(2, Parity::negative)},
+       {Transition(EMCharacter::electric, 2, EMCharacter::magnetic, 4, 0.),
+        State(0, Parity::positive)}}};
 
   for (double theta = 0.; theta < M_PI; theta += 0.5) {
     for (double phi = 0.; phi < M_2_PI; phi += 0.5) {

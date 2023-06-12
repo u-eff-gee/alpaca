@@ -22,6 +22,8 @@
 #include "alpaca/AngularCorrelation.hh"
 #include "alpaca/SphereRejectionSampler.hh"
 
+namespace alpaca {
+
 /**
  * \brief Sample directions in spherical coordinates from an angular
  * correlation.
@@ -51,3 +53,5 @@ public:
   AngCorrRejectionSampler(AngularCorrelation &w, const int seed,
                           const unsigned int max_tri = 1000);
 };
+
+} // namespace alpaca

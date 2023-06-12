@@ -19,6 +19,8 @@
 
 #pragma once
 
+namespace alpaca {
+
 /**
  * \brief Class for sampling the initial four-momenta of photons emitted in a
  * gamma-ray cascade.
@@ -453,3 +455,5 @@
  * absorption and emission are symmetric.
  */
 class FourMomentumSampler {};
+
+} // namespace alpaca

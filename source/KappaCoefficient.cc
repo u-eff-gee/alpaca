@@ -32,6 +32,8 @@ using std::to_string;
 #include "alpaca/KappaCoefficient.hh"
 #include "alpaca/TestUtilities.hh"
 
+namespace alpaca {
+
 KappaCoefficient::KappaCoefficient(const int two_nu, const int two_L,
                                    const int two_Lp)
     : two_nu(two_nu), two_L(two_L), two_Lp(two_Lp), value(0.) {
@@ -68,12 +70,14 @@ KappaCoefficient::KappaCoefficient(const int two_nu, const int two_L,
   }
 }
 
-string KappaCoefficient::string_representation(
+std::string KappaCoefficient::string_representation(
     const unsigned int n_digits,
-    [[maybe_unused]] vector<string> variable_names) const {
+    [[maybe_unused]] vector<std::string> variable_names) const {
   if (n_digits) {
     return float_string_representation(n_digits, value);
   }
   return "\\kappa_{" + to_string(two_nu / 2) + "}" + "\\left(" +
          to_string(two_L / 2) + "," + to_string(two_Lp / 2) + "\\right)";
 }
+
+} // namespace alpaca

@@ -29,6 +29,9 @@
 
 using std::vector;
 
+using alpaca::SpherePointSampler;
+using alpaca::test_numerical_equality;
+
 /**
  * \brief Literature values for complete elliptic integrals
  *

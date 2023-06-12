@@ -18,32 +18,26 @@
 */
 
 #include <array>
-
 #include <iostream>
-
-using std::exception;
-
-#include <stdexcept>
-
-using std::runtime_error;
-
 #include <sstream>
-
-using std::stringstream;
-
+#include <stdexcept>
 #include <string>
-
-using std::string;
-
 #include <vector>
-
-using std::vector;
 
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_math.h>
 
 #include "alpaca/EulerAngleRotation.hh"
 #include "alpaca/TestUtilities.hh"
+
+using std::exception;
+using std::runtime_error;
+using std::string;
+using std::stringstream;
+using std::vector;
+
+using alpaca::test_numerical_equality;
+namespace euler_angle_transform = alpaca::euler_angle_transform;
 
 void test_numerical_equality(gsl_vector *a, gsl_vector *b,
                              const double epsilon) {

@@ -23,6 +23,8 @@
 #include "alpaca/UvCoefficient.hh"
 #include "alpaca/W_gamma_gamma.hh"
 
+namespace alpaca {
+
 /**
  * \brief Class for a direction-direction (dir-dir) correlation
  *
@@ -387,3 +389,5 @@ protected:
   vector<double>
       expansion_coefficients; /**< Vector to store expansion coefficients */
 };
+
+} // namespace alpaca

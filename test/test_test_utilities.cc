@@ -21,6 +21,8 @@
 
 #include "alpaca/TestUtilities.hh"
 
+using alpaca::test_numerical_equality;
+
 int main() {
 
   bool error_thrown = false;

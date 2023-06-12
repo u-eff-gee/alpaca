@@ -18,7 +18,6 @@
 */
 
 #include <cmath>
-
 #include <string>
 
 using std::to_string;
@@ -27,6 +26,8 @@ using std::to_string;
 
 #include "alpaca/FCoefficient.hh"
 #include "alpaca/TestUtilities.hh"
+
+namespace alpaca {
 
 FCoefficient::FCoefficient(const int two_nu, const int two_L, const int two_Lp,
                            const int two_j1, const int two_j)
@@ -102,14 +103,15 @@ bool FCoefficient::racah_is_nonzero(const int two_j1, const int two_j2,
   return true;
 }
 
-string FCoefficient::string_representation(
+std::string FCoefficient::string_representation(
     const unsigned int n_digits,
-    [[maybe_unused]] vector<string> variable_names) const {
+    [[maybe_unused]] vector<std::string> variable_names) const {
   if (n_digits) {
     return float_string_representation(n_digits, value);
   }
-  string str_rep = "F_{" + to_string(two_nu / 2) + "}\\left(" +
-                   to_string(two_L / 2) + "," + to_string(two_Lp / 2) + ",";
+  std::string str_rep = "F_{" + to_string(two_nu / 2) + "}\\left(" +
+                        to_string(two_L / 2) + "," + to_string(two_Lp / 2) +
+                        ",";
   if (two_j1 % 2) {
     str_rep += to_string(two_j1) + "/2," + to_string(two_j) + "/2";
   } else {
@@ -119,3 +121,5 @@ string FCoefficient::string_representation(
 
   return str_rep;
 }
+
+} // namespace alpaca

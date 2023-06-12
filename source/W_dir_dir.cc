@@ -30,6 +30,8 @@
 using std::max;
 using std::min;
 
+namespace alpaca {
+
 W_dir_dir::W_dir_dir(const State &ini_sta,
                      const vector<pair<Transition, State>> cas_ste)
     : W_gamma_gamma(ini_sta, cas_ste) {
@@ -216,3 +218,5 @@ string W_dir_dir::string_representation(const unsigned int n_digits,
 
   return str_rep;
 }
+
+} // namespace alpaca

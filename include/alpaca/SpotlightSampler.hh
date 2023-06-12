@@ -27,6 +27,8 @@ using std::uniform_real_distribution;
 #include "alpaca/EulerAngleRotation.hh"
 #include "alpaca/ReferenceFrameSampler.hh"
 
+namespace alpaca {
+
 class SpotlightSampler : public ReferenceFrameSampler {
 public:
   SpotlightSampler(const array<double, 2> theta_phi, const int seed);
@@ -47,3 +49,5 @@ protected:
       uniform_random; /**< Uniform distribution from which all random numbers
                          are derived here. */
 };
+
+} // namespace alpaca

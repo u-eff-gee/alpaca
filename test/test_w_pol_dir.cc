@@ -23,10 +23,25 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf.h>
 
+#include "alpaca/AlphavCoefficient.hh"
+#include "alpaca/AvCoefficient.hh"
 #include "alpaca/State.hh"
 #include "alpaca/TestUtilities.hh"
 #include "alpaca/Transition.hh"
+#include "alpaca/UvCoefficient.hh"
+#include "alpaca/W_dir_dir.hh"
 #include "alpaca/W_pol_dir.hh"
+
+using alpaca::AlphavCoefficient;
+using alpaca::AvCoefficient;
+using alpaca::EMCharacter;
+using alpaca::Parity;
+using alpaca::State;
+using alpaca::test_numerical_equality;
+using alpaca::Transition;
+using alpaca::UvCoefficient;
+using alpaca::W_dir_dir;
+using alpaca::W_pol_dir;
 
 /**
  * \brief Test polarization-direction correlation
@@ -50,7 +65,7 @@ double w_pol_dir_0_1_0(const double theta, const double phi,
                        const EMCharacter em) {
 
   int parity_sign{1};
-  if (em == electric) {
+  if (em == EMCharacter::electric) {
     parity_sign = -1;
   }
 
@@ -103,25 +118,29 @@ int main() {
   double w_num{0.}, w_ana{0.};
 
   W_pol_dir w_pol_dir_e1(
-      State(0, positive),
-      {{Transition(electric, 2, magnetic, 4, 0.), State(2, negative)},
-       {Transition(electric, 2, magnetic, 4, 0.), State(0, positive)}});
+      State(0, Parity::positive),
+      {{Transition(EMCharacter::electric, 2, EMCharacter::magnetic, 4, 0.),
+        State(2, Parity::negative)},
+       {Transition(EMCharacter::electric, 2, EMCharacter::magnetic, 4, 0.),
+        State(0, Parity::positive)}});
 
   W_pol_dir w_pol_dir_m1(
-      State(0, positive),
-      {{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-       {Transition(magnetic, 2, electric, 4, 0.), State(0, positive)}});
+      State(0, Parity::positive),
+      {{Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+        State(2, Parity::positive)},
+       {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+        State(0, Parity::positive)}});
 
   for (double theta = 0.; theta < M_PI; theta += 0.5) {
     for (double phi = 0.; phi < M_2_PI; phi += 0.5) {
 
       w_num = w_pol_dir_e1(theta, phi);
-      w_ana = w_pol_dir_0_1_0(theta, phi, electric);
+      w_ana = w_pol_dir_0_1_0(theta, phi, EMCharacter::electric);
 
       test_numerical_equality<double>(w_num, w_ana, epsilon);
 
       w_num = w_pol_dir_m1(theta, phi);
-      w_ana = w_pol_dir_0_1_0(theta, phi, magnetic);
+      w_ana = w_pol_dir_0_1_0(theta, phi, EMCharacter::magnetic);
 
       test_numerical_equality<double>(w_num, w_ana, epsilon);
     }
@@ -133,14 +152,18 @@ int main() {
 
   for (double delta = -3.; delta <= 3.; delta += 0.5) {
     W_pol_dir Wa_num(
-        State(7, positive),
-        {{Transition(electric, 4, magnetic, 6, 0.), State(3, positive)},
-         {Transition(magnetic, 2, electric, 4, delta), State(3, positive)}});
+        State(7, Parity::positive),
+        {{Transition(EMCharacter::electric, 4, EMCharacter::magnetic, 6, 0.),
+          State(3, Parity::positive)},
+         {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, delta),
+          State(3, Parity::positive)}});
 
     W_pol_dir Wb_num(
-        State(3, positive),
-        {{Transition(magnetic, 2, electric, 4, delta), State(3, positive)},
-         {Transition(electric, 4, magnetic, 6, 0.), State(7, positive)}});
+        State(3, Parity::positive),
+        {{Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, delta),
+          State(3, Parity::positive)},
+         {Transition(EMCharacter::electric, 4, EMCharacter::magnetic, 6, 0.),
+          State(7, Parity::positive)}});
 
     for (double theta = 0.; theta < M_PI; theta += 0.5) {
       for (double phi = 0.; phi < M_2_PI; phi += 0.5) {
@@ -171,10 +194,12 @@ int main() {
                                   {Transition(2, 4, 0.), State(4)},
                               });
   W_pol_dir w_0p_1p_2p(
-      State(0, positive),
+      State(0, Parity::positive),
       {
-          {Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-          {Transition(magnetic, 2, electric, 4, 0.), State(4, positive)},
+          {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+           State(2, Parity::positive)},
+          {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+           State(4, Parity::positive)},
       });
 
   const string str_rep =
@@ -196,11 +221,14 @@ int main() {
                                     {Transition(2, 4, 0.), State(4)},
                                 });
   W_pol_dir w_0p_1p_1p_2p(
-      State(0, positive),
+      State(0, Parity::positive),
       {
-          {Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-          {Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-          {Transition(magnetic, 2, electric, 4, 0.), State(4, positive)},
+          {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+           State(2, Parity::positive)},
+          {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+           State(2, Parity::positive)},
+          {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+           State(4, Parity::positive)},
       });
 
   const string str_rep_2 =

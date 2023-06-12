@@ -32,6 +32,8 @@ using std::vector;
 #include "alpaca/EulerAngleRotation.hh"
 #include "alpaca/ReferenceFrameSampler.hh"
 
+namespace alpaca {
+
 array<double, 3> ReferenceFrameSampler::operator()() { return sample().second; }
 
 double ReferenceFrameSampler::estimate_efficiency(const unsigned int n_tries) {
@@ -44,3 +46,5 @@ double ReferenceFrameSampler::estimate_efficiency(const unsigned int n_tries) {
   return (double)n_tries /
          (double)accumulate(required_tries.begin(), required_tries.end(), 0);
 }
+
+} // namespace alpaca

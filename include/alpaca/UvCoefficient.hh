@@ -21,6 +21,8 @@
 
 #include "alpaca/StringRepresentable.hh"
 
+namespace alpaca {
+
 /**
  * \brief Class for a \f$U_\nu\f$ coefficient
  *
@@ -119,7 +121,7 @@
  *
  * When testing the formulation above for transitions with half-integer angular
  * momentum quantum numbers, it was found that the \f$U_\nu\f$ coefficients of
- * Fagg and Hanna could cause the entire angular correlation to become negative.
+ * Fagg and Hanna could cause the entire angular correlation to become Parity::negative.
  * A comparison to other definitions in the literature, for example by
  * Biedenharn (see below) or Krane, Steffen, and Wheeler \cite
  * KraneSteffenWheeler1973 [Eq. (53) therein] indicates that the phase factor is
@@ -259,3 +261,5 @@ protected:
 
   double value, value_L, value_Lp;
 };
+
+} // namespace alpaca

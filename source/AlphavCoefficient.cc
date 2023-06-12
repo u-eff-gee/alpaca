@@ -23,6 +23,8 @@ using std::stringstream;
 
 #include "alpaca/AlphavCoefficient.hh"
 
+namespace alpaca {
+
 AlphavCoefficient::AlphavCoefficient(const int two_nu, const int two_L,
                                      const int two_Lp, const int two_jn,
                                      const int two_j)
@@ -67,3 +69,5 @@ string AlphavCoefficient::string_representation(
          quadratic_f_coefficient.string_representation(n_digits, {}) +
          (n_digits ? "\\times" : "") + multipole_mixing_ratio_variable + "^{2}";
 }
+
+} // namespace alpaca

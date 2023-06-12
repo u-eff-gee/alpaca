@@ -33,30 +33,32 @@ using std::pair;
 using std::unique_ptr;
 using std::vector;
 
+namespace alpaca {
+
 /**
  * \brief Class for a gamma-gamma correlation.
  *
  * Calculates the angular correlation \f$W_{\gamma \gamma} \left( \theta,
  * \varphi \right)\f$ between the first and the last photon in a sequence of
- * \f$n-1\f$ (\f$n > 2\f$) electromagnetic (EM) transitions between \f$n\f$
- * states of a quantized system (a 'cascade' of EM transitions with \f$n-1\f$
- * steps). The angles \f$\theta \in \left[ 0, \pi \right]\f$ and \f$\varphi \in
- * \left[ 0, 2 \pi \right]\f$ are the polar and azimuthal angles in a spherical
- * coordinate system, respectively.
- * States of the system are identified by their total angular momentum quantum
- * numbers \f$J\f$ (\f$2J \in \mathcal{N} \f$, \f$J \geq 0\f$) and their
- * parities \f$\pi \in \lbrace -1, 1 \rbrace \f$. They are labeled by indices
- * \f$0 < i \geq n\f$, where \f$i = 1\f$ denotes the first, and \f$i = n\f$ the
- * last state of a cascade. EM transitions are identified by their multipolarity
- * \f$L\f$ (\f$L \in \mathcal{N} \f$, \f$L \geq 0\f$) and their EM character
- * \f$\lambda \in \lbrace \mathrm{E}, \mathrm{M} \rbrace\f$ which can be either
- * electric (E) or magnetic (M). They are labeled by indices \f$1 \geq i < n\f$,
- * where the \f$i\f$-th transition is assumed to be the transition that connects
- * the states labeled \f$i\f$ and \f$i+1\f$. A transition between two states may
- * be a mixture of up to two multipolarities \f$L_i\f$ and \f$L_i^\prime\f$,
- * whose relative contributions are quantified by the corresponding multipole
- * mixing ratio \f$\delta_i\f$ (see below about the convention for \f$\delta\f$
- * which is used in the present implementation).
+ * \f$n-1\f$ (\f$n > 2\f$) electromagnetic (EM) transitions between
+ * \f$n\f$ states of a quantized system (a 'cascade' of EM transitions with
+ * \f$n-1\f$ steps). The angles \f$\theta \in \left[ 0, \pi \right]\f$ and
+ * \f$\varphi \in \left[ 0, 2 \pi \right]\f$ are the polar and azimuthal angles
+ * in a spherical coordinate system, respectively. States of the system are
+ * identified by their total angular momentum quantum numbers \f$J\f$ (\f$2J \in
+ * \mathcal{N} \f$, \f$J \geq 0\f$) and their parities \f$\pi \in \lbrace -1, 1
+ * \rbrace \f$. They are labeled by indices \f$0 < i \geq n\f$, where \f$i =
+ * 1\f$ denotes the first, and \f$i = n\f$ the last state of a cascade. EM
+ * transitions are identified by their multipolarity \f$L\f$ (\f$L \in
+ * \mathcal{N} \f$, \f$L \geq 0\f$) and their EM character \f$\lambda \in
+ * \lbrace \mathrm{E}, \mathrm{M} \rbrace\f$ which can be either
+ * electric (E) or magnetic (M). They are labeled by
+ * indices \f$1 \geq i < n\f$, where the \f$i\f$-th transition is assumed to be
+ * the transition that connects the states labeled \f$i\f$ and \f$i+1\f$. A
+ * transition between two states may be a mixture of up to two multipolarities
+ * \f$L_i\f$ and \f$L_i^\prime\f$, whose relative contributions are quantified
+ * by the corresponding multipole mixing ratio \f$\delta_i\f$ (see below about
+ * the convention for \f$\delta\f$ which is used in the present implementation).
  *
  * The minimum possible cascade with \f$n = 3\f$ states is denoted symbolically
  * as:
@@ -194,9 +196,9 @@ public:
    * Simplified version of the general constructor which takes a vector of State
    * objects as cascade steps. See the general constructor for more information.
    *
-   * For the multipolarities, electromagnetic characters, and mixing ratios of
-   * the transitions, the most likely values will be inferred according to the
-   * following rules:
+   * For the multipolarities, electromagnetic characters, and
+   * mixing ratios of the transitions, the most likely values will be inferred
+   * according to the following rules:
    *
    * \enum The multipolarities are assumed to be the lowest possible ones
    * permitted by the triangle inequality for each transitions. \enum The EM
@@ -316,8 +318,8 @@ protected:
    * Since photons are particles with a helicity ('spin') of \f$1 \hbar\f$,
    * half-integer momentum transfers in transitions are not possible (see, e.g.,
    * Sec. XXI.IV.26 in \cite Messiah19622 or any textbook on the quantization of
-   * electromagnetic radiation). Therefore, a series of states must have
-   * uniformly half-integer or integer angular momentum quantum numbers.
+   * electromagnetic radiation). Therefore, a series of states must
+   * have uniformly half-integer or integer angular momentum quantum numbers.
    *
    * \param ini_sta Initial state of the cascade.
    * \param cas_ste Cascade steps, given as a list of arbitrary length which
@@ -362,8 +364,8 @@ protected:
    * For each cascade step, first checks whether any of \f$\pi_i\f$,
    * \f$\pi_{i+1}\f$, \f$\lambda_i\f$, \f$\lambda_i^\prime\f$ is given. If yes,
    * checks whether all of them are given. If yes, checks whether the EM
-   * selections rules (see, e.g. Appendix 'Electromagnetic Transitions and
-   * Moments' in Ref. \cite deShalitTalmi2004)
+   * selections rules (see, e.g. Appendix 'Electromagnetic
+   * Transitions and Moments' in Ref. \cite deShalitTalmi2004)
    *
    * \f[
    *      \pi_i \pi_{i+1} = \left( -1 \right)^{L_i} ~~~ \to ~~~ \lambda_i =
@@ -435,3 +437,5 @@ protected:
    */
   unique_ptr<W_gamma_gamma> w_gamma_gamma;
 };
+
+} // namespace alpaca

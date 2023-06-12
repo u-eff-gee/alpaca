@@ -22,6 +22,9 @@
 #include "alpaca/SpherePointSampler.hh"
 #include "alpaca/TestUtilities.hh"
 
+using alpaca::SpherePointSampler;
+using alpaca::test_numerical_equality;
+
 int main() {
   // Test the method that samples points in cartesian coordinates by verifying
   // that they lie on the surface of a sphere.

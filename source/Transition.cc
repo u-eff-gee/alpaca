@@ -19,8 +19,10 @@
 
 #include "alpaca/Transition.hh"
 
+namespace alpaca {
+
 Transition::Transition(const int t_L, const int t_Lp, const double del)
-    : em_char(em_unknown), two_L(check_two_L(t_L)), em_charp(em_unknown),
+    : em_char(EMCharacter::unknown), two_L(check_two_L(t_L)), em_charp(EMCharacter::unknown),
       two_Lp(check_two_L(t_Lp)), delta(del) {
   if (two_L == two_Lp) {
     throw invalid_argument(
@@ -45,7 +47,7 @@ string Transition::str_rep(const State initial_state,
 
   string string_representation = initial_state.str_rep() + " -- ( ";
 
-  if (em_char != em_unknown) {
+  if (em_char != EMCharacter::unknown) {
     string_representation += em_str_rep(em_char) + to_string(two_L / 2);
   } else {
     string_representation += to_string(two_L / 2);
@@ -53,7 +55,7 @@ string Transition::str_rep(const State initial_state,
 
   string_representation += " , ";
 
-  if (em_charp != em_unknown) {
+  if (em_charp != EMCharacter::unknown) {
     string_representation += em_str_rep(em_charp) + to_string(two_Lp / 2);
   } else {
     string_representation += to_string(two_Lp / 2);
@@ -73,3 +75,5 @@ int Transition::check_two_L(const int two_L) const {
 
   return two_L;
 }
+
+} // namespace alpaca

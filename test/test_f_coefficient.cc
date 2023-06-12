@@ -27,6 +27,10 @@ using std::unique_ptr;
 #include "alpaca/FCoefficientLiteratureValue.hh"
 #include "alpaca/TestUtilities.hh"
 
+using alpaca::FCoefficient;
+using alpaca::FCoefficientLiteratureValue;
+using alpaca::test_numerical_equality;
+
 vector<FCoefficientLiteratureValue> f_coefficient_values{
     FCoefficientLiteratureValue(2, 0, 2, 2, 4, 0.70710680),
     FCoefficientLiteratureValue(2, 2, 0, 4, 4, 0.00000000),

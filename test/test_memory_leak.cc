@@ -21,11 +21,19 @@
 #include "alpaca/State.hh"
 #include "alpaca/Transition.hh"
 
+using alpaca::AngularCorrelation;
+using alpaca::EMCharacter;
+using alpaca::Parity;
+using alpaca::State;
+using alpaca::Transition;
+
 void calculate_angular_correlation() {
   AngularCorrelation ang_corr(
-      State(0, positive),
-      {{Transition(electric, 2, magnetic, 4, 0.), State(2, negative)},
-       {Transition(electric, 2, magnetic, 4, 0.), State(0, positive)}});
+      State(0, Parity::positive),
+      {{Transition(EMCharacter::electric, 2, EMCharacter::magnetic, 4, 0.),
+        State(2, Parity::negative)},
+       {Transition(EMCharacter::electric, 2, EMCharacter::magnetic, 4, 0.),
+        State(0, Parity::positive)}});
 }
 
 /**

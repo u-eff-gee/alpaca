@@ -19,6 +19,8 @@
 
 #include "alpaca/AvCoefficient.hh"
 
+namespace alpaca {
+
 AvCoefficient::AvCoefficient(const int two_nu, const int two_L,
                              const int two_Lp, const int two_jn,
                              const int two_j)
@@ -50,3 +52,5 @@ string AvCoefficient::string_representation(
          quadratic_f_coefficient.string_representation(n_digits, {}) +
          (n_digits ? "\\times" : "") + multipole_mixing_ratio_variable + "^{2}";
 }
+
+} // namespace alpaca

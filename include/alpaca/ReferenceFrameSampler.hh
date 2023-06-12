@@ -27,6 +27,8 @@ using std::array;
 
 using std::pair;
 
+namespace alpaca {
+
 /**
  * @brief Abstract class for sampling an arbitrarily oriented reference frame.
  *
@@ -79,3 +81,5 @@ public:
    */
   double estimate_efficiency(const unsigned int n_tries);
 };
+
+}

@@ -21,6 +21,8 @@
 
 #include "alpaca/StringRepresentable.hh"
 
+namespace alpaca {
+
 /**
  * \brief Class for a polarization coefficient
  *
@@ -77,7 +79,7 @@
  *
  * One will also run into problems for \f$\nu = 0\f$,
  * since two different angular momenta \f$L\f$ and \f$L^\prime\f$ can not be
- *coupled to zero, and the behavior of the factorial for negative numbers is
+ *coupled to zero, and the behavior of the factorial for Parity::negative numbers is
  *undefined (The latter problem persists for \f$\nu = 1\f$. However, this case
  *is not encountered here). Reference \cite FaggHanna1959 and Ref. \cite
  *LLoyd1952, which is cited by the former for \f$\kappa_\nu\f$, only give values
@@ -118,3 +120,5 @@ protected:
 
   double value;
 };
+
+} // namespace alpaca

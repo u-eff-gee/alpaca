@@ -35,6 +35,8 @@ using std::string;
 
 using std::vector;
 
+namespace alpaca {
+
 /**'
  * \brief Abstract class for string-representable expressions
  */
@@ -73,3 +75,5 @@ protected:
     return str_rep.str();
   };
 };
+
+} // namespace alpaca

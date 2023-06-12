@@ -28,6 +28,8 @@ using std::vector;
 #include "alpaca/W_dir_dir.hh"
 #include "alpaca/W_gamma_gamma.hh"
 
+namespace alpaca {
+
 /**
  * \brief Class for a polarization-direction (pol-dir) correlation
  *
@@ -80,15 +82,15 @@ public:
    * Compared to the dir-dir correlation, the expression contains a term whose
    * sign is determined by the electromagnetic charactor of the alternative
    * multipolarity of the first transition. Explicitly, \f$\left( \pm
-   * \right)_{L_1^\prime} = +1\f$ if it has electric character, and \f$\left(
-   * \pm \right)_{L_1^\prime} = -1\f$ if it has magnetic character. The \f$\cos
-   * \left( 2\varphi \right)\f$ term introduces a dependence on the azimuthal
-   * angle \f$\varphi\f$ with respect to the polarization axis of the first
-   * photon. In Ref. \cite Kneissl1996, the symbol \f$\kappa_\nu \left( L_1,
-   * L_1^\prime \right)\f$ is called the 'polarization coefficient'. It is
-   * defined in Eq. (I-7) of Ref. \cite FaggHanna1959. The symbol
-   * \f$P_\nu^{\left( 2 \right)}\f$ denotes an associated Legendre polynomial of
-   * degree \f$\nu\f$ and order 2.
+   * \right)_{L_1^\prime} = +1\f$ if it has electric character, and
+   * \f$\left( \pm \right)_{L_1^\prime} = -1\f$ if it has magnetic
+   * character. The \f$\cos \left( 2\varphi \right)\f$ term introduces a
+   * dependence on the azimuthal angle \f$\varphi\f$ with respect to the
+   * polarization axis of the first photon. In Ref. \cite Kneissl1996, the
+   * symbol \f$\kappa_\nu \left( L_1, L_1^\prime \right)\f$ is called the
+   * 'polarization coefficient'. It is defined in Eq. (I-7) of Ref. \cite
+   * FaggHanna1959. The symbol \f$P_\nu^{\left( 2 \right)}\f$ denotes an
+   * associated Legendre polynomial of degree \f$\nu\f$ and order 2.
    *
    * If unobserved intermediate transitions are present, the equations above can
    * be generalized by inserting the respective \f$U_\nu\f$ coefficients. See
@@ -164,7 +166,7 @@ public:
    * \return \f$\mathrm{max}_{\theta \in \left[ 0, \pi \right], \varphi \in
    * \left[ 0, 2\pi \right]} | W \left( \theta, \varphi \right) | \f$, or an
    * upper limit for this quantity. If no useful upper limit can be given or if
-   * there is no limit, a negative number is returned.
+   * there is no limit, a Parity::negative number is returned.
    */
   double get_upper_limit() const override;
 
@@ -227,3 +229,5 @@ protected:
       expansion_coefficients; /**< Vector to store expansion coefficients */
   W_dir_dir w_dir_dir;        /**< Instance of the W_dir_dir class */
 };
+
+} // namespace alpaca

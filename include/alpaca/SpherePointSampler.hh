@@ -25,6 +25,8 @@
 using std::array;
 using std::vector;
 
+namespace alpaca {
+
 /**
  * \brief Class for sampling points approximately uniformly on the surface of a
  * sphere
@@ -357,3 +359,5 @@ public:
   double elliptic_integral_1st_kind_arbitrary_m(const double phi,
                                                 const double m) const;
 };
+
+} // namespace alpaca

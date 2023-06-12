@@ -27,6 +27,8 @@ using std::array;
 
 #include <gsl/gsl_blas.h>
 
+namespace alpaca {
+
 /**
  * \brief Functions to perform arbitrary rotations of 3D vectors using Euler
  * angles.
@@ -270,3 +272,5 @@ inline array<double, 2> to_spherical(const array<double, 3> Phi_Theta_Psi) {
 }
 
 }; // namespace euler_angle_transform
+
+} // namespace alpaca

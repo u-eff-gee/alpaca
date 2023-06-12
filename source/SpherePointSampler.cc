@@ -30,6 +30,8 @@ using std::invalid_argument;
 using std::runtime_error;
 using std::stringstream;
 
+namespace alpaca {
+
 array<vector<double>, 2>
 SpherePointSampler::sample(const unsigned int n) const {
   array<vector<double>, 2> theta_phi = {vector<double>(n, 0.),
@@ -302,3 +304,5 @@ double SpherePointSampler::elliptic_integral_1st_kind_arbitrary_m(
   return kappa_prime *
          elliptic_integral_1st_kind_arbitrary_m(theta, kappa * kappa);
 }
+
+} // namespace alpaca

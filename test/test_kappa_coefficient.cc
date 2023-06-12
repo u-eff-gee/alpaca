@@ -19,15 +19,18 @@
 
 #include <cassert>
 #include <memory>
+#include <stdexcept>
 
 using std::make_unique;
 using std::unique_ptr;
 
-#include <stdexcept>
-
 #include "alpaca/KappaCoefficient.hh"
 #include "alpaca/KappaCoefficientLiteratureValue.hh"
 #include "alpaca/TestUtilities.hh"
+
+using alpaca::KappaCoefficient;
+using alpaca::KappaCoefficientLiteratureValue;
+using alpaca::test_numerical_equality;
 
 /*
         From Tab. II(b) of Ref. \cite FaggHanna1959

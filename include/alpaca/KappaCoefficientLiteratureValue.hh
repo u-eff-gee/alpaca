@@ -21,6 +21,8 @@
 
 using std::vector;
 
+namespace alpaca {
+
 /**
  * \brief Struct to store \f$\kappa_\nu\f$ coefficient parameters and their
  * values from literature data.
@@ -36,3 +38,5 @@ struct KappaCoefficientLiteratureValue {
   int two_nu, two_L, two_Lp;
   double value;
 };
+
+} // namespace alpaca

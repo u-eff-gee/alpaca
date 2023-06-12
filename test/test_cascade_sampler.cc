@@ -18,23 +18,24 @@
 */
 
 #include <array>
-
-using std::array;
-
 #include <memory>
-
-using std::make_shared;
-using std::shared_ptr;
-
 #include <vector>
-
-using std::vector;
 
 #include <gsl/gsl_math.h>
 
 #include "alpaca/CascadeSampler.hh"
 #include "alpaca/DeterministicReferenceFrameSampler.hh"
 #include "alpaca/TestUtilities.hh"
+
+using std::array;
+using std::make_shared;
+using std::shared_ptr;
+using std::vector;
+
+using alpaca::CascadeSampler;
+using alpaca::DeterministicReferenceFrameSampler;
+using alpaca::ReferenceFrameSampler;
+using alpaca::test_numerical_equality;
 
 int main() {
   const double epsilon = 1e-8;

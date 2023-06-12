@@ -24,6 +24,15 @@
 #include "alpaca/W_dir_dir.hh"
 #include "alpaca/W_pol_dir.hh"
 
+using alpaca::EMCharacter;
+using alpaca::Parity;
+using alpaca::SphereIntegrator;
+using alpaca::State;
+using alpaca::test_numerical_equality;
+using alpaca::Transition;
+using alpaca::W_dir_dir;
+using alpaca::W_pol_dir;
+
 /**
  * \brief Test the normalization of the angular correlation functions.
  *
@@ -49,11 +58,12 @@ int main() {
   // double integral_num = sph_int([](double theta, double phi){
   double integral_num = sph_int(
       [](double theta, [[maybe_unused]] double phi) {
-        W_dir_dir w_dir_dir(State(0, parity_unknown),
-                            {{Transition(em_unknown, 2, em_unknown, 4, 0.),
-                              State(2, parity_unknown)},
-                             {Transition(em_unknown, 2, em_unknown, 4, 0.),
-                              State(4, parity_unknown)}});
+        W_dir_dir w_dir_dir(
+            State(0, Parity::unknown),
+            {{Transition(EMCharacter::unknown, 2, EMCharacter::unknown, 4, 0.),
+              State(2, Parity::unknown)},
+             {Transition(EMCharacter::unknown, 2, EMCharacter::unknown, 4, 0.),
+              State(4, Parity::unknown)}});
         return w_dir_dir(theta);
       },
       n,
@@ -66,11 +76,12 @@ int main() {
   // Test direction-direction correlation with mixed transition
   integral_num = sph_int(
       [](double theta, [[maybe_unused]] double phi) {
-        W_dir_dir w_dir_dir(State(0, parity_unknown),
-                            {{Transition(em_unknown, 2, em_unknown, 4, 0.),
-                              State(2, parity_unknown)},
-                             {Transition(em_unknown, 2, em_unknown, 4, 2.),
-                              State(4, parity_unknown)}});
+        W_dir_dir w_dir_dir(
+            State(0, Parity::unknown),
+            {{Transition(EMCharacter::unknown, 2, EMCharacter::unknown, 4, 0.),
+              State(2, Parity::unknown)},
+             {Transition(EMCharacter::unknown, 2, EMCharacter::unknown, 4, 2.),
+              State(4, Parity::unknown)}});
         return w_dir_dir(theta);
       },
       n,
@@ -83,13 +94,14 @@ int main() {
   // Test direction-direction correlation with mixed unobserved transition
   integral_num = sph_int(
       [](double theta, [[maybe_unused]] double phi) {
-        W_dir_dir w_dir_dir(State(0, parity_unknown),
-                            {{Transition(em_unknown, 2, em_unknown, 4, 0.),
-                              State(2, parity_unknown)},
-                             {Transition(em_unknown, 2, em_unknown, 4, 2.),
-                              State(2, parity_unknown)},
-                             {Transition(em_unknown, 2, em_unknown, 4, 0.),
-                              State(4, parity_unknown)}});
+        W_dir_dir w_dir_dir(
+            State(0, Parity::unknown),
+            {{Transition(EMCharacter::unknown, 2, EMCharacter::unknown, 4, 0.),
+              State(2, Parity::unknown)},
+             {Transition(EMCharacter::unknown, 2, EMCharacter::unknown, 4, 2.),
+              State(2, Parity::unknown)},
+             {Transition(EMCharacter::unknown, 2, EMCharacter::unknown, 4, 0.),
+              State(4, Parity::unknown)}});
         return w_dir_dir(theta);
       },
       n,
@@ -102,10 +114,13 @@ int main() {
   // Test polarization-direction correlation with mixed transition
   integral_num = sph_int(
       [](double theta, double phi) {
-        W_pol_dir w_pol_dir(
-            State(3, positive),
-            {{Transition(magnetic, 6, electric, 8, 2.), State(9, positive)},
-             {Transition(magnetic, 2, electric, 4, -2.), State(7, positive)}});
+        W_pol_dir w_pol_dir(State(3, Parity::positive),
+                            {{Transition(EMCharacter::magnetic, 6,
+                                         EMCharacter::electric, 8, 2.),
+                              State(9, Parity::positive)},
+                             {Transition(EMCharacter::magnetic, 2,
+                                         EMCharacter::electric, 4, -2.),
+                              State(7, Parity::positive)}});
         return w_pol_dir(theta, phi);
       },
       n,
@@ -118,11 +133,16 @@ int main() {
   // Test polarization-direction correlation with mixed unobserved transition
   integral_num = sph_int(
       [](double theta, double phi) {
-        W_pol_dir w_pol_dir(
-            State(3, positive),
-            {{Transition(magnetic, 6, electric, 8, 0.), State(9, positive)},
-             {Transition(magnetic, 2, electric, 4, 2.), State(7, positive)},
-             {Transition(magnetic, 2, electric, 4, 0.), State(7, positive)}});
+        W_pol_dir w_pol_dir(State(3, Parity::positive),
+                            {{Transition(EMCharacter::magnetic, 6,
+                                         EMCharacter::electric, 8, 0.),
+                              State(9, Parity::positive)},
+                             {Transition(EMCharacter::magnetic, 2,
+                                         EMCharacter::electric, 4, 2.),
+                              State(7, Parity::positive)},
+                             {Transition(EMCharacter::magnetic, 2,
+                                         EMCharacter::electric, 4, 0.),
+                              State(7, Parity::positive)}});
 
         return w_pol_dir(theta, phi);
       },

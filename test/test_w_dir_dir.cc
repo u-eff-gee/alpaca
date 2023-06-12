@@ -22,10 +22,19 @@
 
 #include <gsl/gsl_math.h>
 
+#include "alpaca/AvCoefficient.hh"
 #include "alpaca/State.hh"
 #include "alpaca/TestUtilities.hh"
 #include "alpaca/Transition.hh"
+#include "alpaca/UvCoefficient.hh"
 #include "alpaca/W_dir_dir.hh"
+
+using alpaca::AvCoefficient;
+using alpaca::State;
+using alpaca::test_numerical_equality;
+using alpaca::Transition;
+using alpaca::UvCoefficient;
+using alpaca::W_dir_dir;
 
 /**
  * \brief Analytical expression for the angular distribution of a \f$0 \to 2 \to

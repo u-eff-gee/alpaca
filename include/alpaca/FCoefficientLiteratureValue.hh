@@ -21,6 +21,8 @@
 
 using std::vector;
 
+namespace alpaca {
+
 /**
  * \brief Struct to store F-coefficient parameters and their values from
  * literature data.
@@ -40,3 +42,5 @@ struct FCoefficientLiteratureValue {
   int two_j, two_jp, two_L, two_Lp, two_nu;
   double value;
 };
+
+} // namespace alpaca

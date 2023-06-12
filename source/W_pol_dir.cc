@@ -26,6 +26,8 @@
 
 using std::min;
 
+namespace alpaca {
+
 W_pol_dir::W_pol_dir(const State &ini_sta,
                      const vector<pair<Transition, State>> cas_ste)
     : W_gamma_gamma(ini_sta, cas_ste), w_dir_dir(W_dir_dir(ini_sta, cas_ste)) {
@@ -46,7 +48,7 @@ double W_pol_dir::operator()(const double theta, const double phi) const {
   }
 
   int polarization_sign = 1;
-  if (cascade_steps[0].first.em_charp == magnetic) {
+  if (cascade_steps[0].first.em_charp == EMCharacter::magnetic) {
     polarization_sign = -1;
   }
 
@@ -132,7 +134,8 @@ string W_pol_dir::string_representation(const unsigned int n_digits,
 
   string str_rep =
       w_dir_dir.string_representation(n_digits, variable_names) + "\\\\";
-  str_rep += cascade_steps[0].first.em_charp == magnetic ? "+" : "-";
+  str_rep +=
+      cascade_steps[0].first.em_charp == EMCharacter::magnetic ? "+" : "-";
   str_rep += "\\cos\\left(2" + azimuthal_angle_variable +
              "\\right)\\left\\{\\right.\\\\";
 
@@ -167,3 +170,5 @@ string W_pol_dir::string_representation(const unsigned int n_digits,
 
   return str_rep;
 }
+
+} // namespace alpaca

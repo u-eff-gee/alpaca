@@ -118,6 +118,8 @@
 
 #include "alpaca/StringRepresentable.hh"
 
+namespace alpaca {
+
 class FCoefficient : public StringRepresentable {
 public:
   /**
@@ -240,3 +242,5 @@ protected:
   const int two_j;
   double value;
 };
+
+} // namespace alpaca

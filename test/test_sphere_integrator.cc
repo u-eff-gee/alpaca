@@ -22,6 +22,9 @@
 #include "alpaca/SphereIntegrator.hh"
 #include "alpaca/TestUtilities.hh"
 
+using alpaca::SphereIntegrator;
+using alpaca::test_numerical_equality;
+
 int main() {
 
   SphereIntegrator sph_int;

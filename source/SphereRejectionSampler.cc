@@ -29,6 +29,8 @@ using std::array;
 #include "alpaca/EulerAngleRotation.hh"
 #include "alpaca/SphereRejectionSampler.hh"
 
+namespace alpaca {
+
 SphereRejectionSampler::SphereRejectionSampler(
     function<double(const double, const double)> dis, const double dis_max,
     const int seed, const unsigned int max_tri)
@@ -71,3 +73,5 @@ double SphereRejectionSampler::sample_phi() {
 array<double, 2> SphereRejectionSampler::sample_theta_phi() {
   return {sample_theta(), sample_phi()};
 }
+
+} // namespace alpaca

@@ -37,6 +37,8 @@ using std::vector;
 #include "alpaca/AngularCorrelation.hh"
 #include "alpaca/ReferenceFrameSampler.hh"
 
+namespace alpaca {
+
 /**
  * \brief Sample directions of emission from an arbitrarily long cascade of
  * angular correlations.
@@ -169,3 +171,5 @@ protected:
                                        are initialized on construction with
                                        AngularCorrelation objects. */
 };
+
+} // namespace alpaca

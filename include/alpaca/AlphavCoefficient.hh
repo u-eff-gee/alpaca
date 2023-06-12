@@ -23,6 +23,8 @@
 #include "alpaca/KappaCoefficient.hh"
 #include "alpaca/StringRepresentable.hh"
 
+namespace alpaca {
+
 /**
  * \brief Class for an \f$\alpha_\nu\f$ coefficient.
  *
@@ -91,3 +93,5 @@ protected:
   double linear_coefficient;
   double quadratic_coefficient;
 };
+
+} // namespace alpaca

@@ -28,10 +28,12 @@ using std::invalid_argument;
 using std::runtime_error;
 using std::string;
 
+namespace alpaca {
+
 /**
  * \brief Enum for the possible values of the electromagnetic (EM) character.
  */
-enum EMCharacter : short { electric = -1, magnetic = 1, em_unknown = 0 };
+enum class EMCharacter : short { electric = -1, magnetic = 1, unknown = 0 };
 
 /**
  * \brief Struct to store properties of an EM transition between nuclear states.
@@ -82,10 +84,10 @@ struct Transition {
    */
   static string em_str_rep(const EMCharacter em) {
 
-    if (em == electric) {
+    if (em == EMCharacter::electric) {
       return "E";
     }
-    if (em == magnetic) {
+    if (em == EMCharacter::magnetic) {
       return "M";
     }
 
@@ -127,3 +129,5 @@ struct Transition {
    */
   int check_two_L(const int two_L) const;
 };
+
+} // namespace alpaca

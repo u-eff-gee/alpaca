@@ -18,21 +18,26 @@
 */
 
 #include <fstream>
-
-using std::ofstream;
-
 #include <iostream>
-
-using std::endl;
-
 #include <sstream>
 
+using std::endl;
+using std::ofstream;
 using std::stringstream;
 
 #include "alpaca/State.hh"
 #include "alpaca/Transition.hh"
 #include "alpaca/W_dir_dir.hh"
+#include "alpaca/W_gamma_gamma.hh"
 #include "alpaca/W_pol_dir.hh"
+
+using alpaca::EMCharacter;
+using alpaca::Parity;
+using alpaca::State;
+using alpaca::Transition;
+using alpaca::W_dir_dir;
+using alpaca::W_gamma_gamma;
+using alpaca::W_pol_dir;
 
 vector<W_gamma_gamma *> w_gamma_gamma{
     new W_dir_dir(State(0),
@@ -47,23 +52,30 @@ vector<W_gamma_gamma *> w_gamma_gamma{
                       {Transition(2, 4, 0.), State(4)},
                   }),
     new W_pol_dir(
-        State(0, positive),
+        State(0, Parity::positive),
         {
-            {Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-            {Transition(magnetic, 2, electric, 4, 0.), State(4, positive)},
+            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+             State(2, Parity::positive)},
+            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+             State(4, Parity::positive)},
         }),
     new W_pol_dir(
-        State(3, negative),
+        State(3, Parity::negative),
         {
-            {Transition(magnetic, 2, electric, 4, 0.), State(5, negative)},
-            {Transition(magnetic, 2, electric, 4, 0.), State(3, negative)},
+            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+             State(5, Parity::negative)},
+            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+             State(3, Parity::negative)},
         }),
     new W_pol_dir(
-        State(0, positive),
+        State(0, Parity::positive),
         {
-            {Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-            {Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-            {Transition(magnetic, 2, electric, 4, 0.), State(4, positive)},
+            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+             State(2, Parity::positive)},
+            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+             State(2, Parity::positive)},
+            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+             State(4, Parity::positive)},
         }),
 };
 

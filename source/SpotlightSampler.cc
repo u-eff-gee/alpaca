@@ -23,6 +23,8 @@
 
 #include "alpaca/SpotlightSampler.hh"
 
+namespace alpaca {
+
 SpotlightSampler::SpotlightSampler(const array<double, 2> theta_phi,
                                    const int seed)
     : SpotlightSampler(theta_phi, 0., seed) {}
@@ -50,3 +52,5 @@ pair<unsigned int, array<double, 3>> SpotlightSampler::sample() {
 
   return {1, euler_angle_transform::from_spherical({theta, phi}, 0.)};
 }
+
+} // namespace alpaca

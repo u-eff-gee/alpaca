@@ -35,6 +35,8 @@ using std::tuple;
 
 #include "alpaca/ReferenceFrameSampler.hh"
 
+namespace alpaca {
+
 /**
  * \brief Sample from a probability distribution in spherical coordinates using
  * rejection sampling.
@@ -186,3 +188,5 @@ protected:
       uniform_random; /**< Uniform distribution from which all random numbers
                          are derived here. */
 };
+
+} // namespace alpaca

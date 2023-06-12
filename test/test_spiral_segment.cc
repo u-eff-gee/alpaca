@@ -26,6 +26,9 @@
 
 using std::vector;
 
+using alpaca::SpherePointSampler;
+using alpaca::test_numerical_equality;
+
 /**
  * Test the calculation of the length of a spiral segment by comparison to a
  * simple (and inefficient) algorithm that determines the same quantity from a

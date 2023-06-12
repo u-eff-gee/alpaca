@@ -18,8 +18,14 @@
 */
 
 #include <cassert>
+#include <string>
 
 #include "alpaca/AvCoefficient.hh"
+
+using std::string;
+
+using alpaca::AvCoefficient;
+using alpaca::FCoefficient;
 
 int main() {
   // As a test case, use the nu=0 coefficient for the mixed 1->2 transition in

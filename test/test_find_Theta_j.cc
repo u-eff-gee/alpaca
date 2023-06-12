@@ -19,13 +19,12 @@
 
 #include <cassert>
 #include <stdexcept>
-#include <vector>
 
 #include "alpaca/SpherePointSampler.hh"
 #include "alpaca/TestUtilities.hh"
 
-using std::invalid_argument;
-using std::vector;
+using alpaca::SpherePointSampler;
+using alpaca::test_numerical_equality;
 
 int main() {
 

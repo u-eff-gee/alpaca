@@ -25,6 +25,8 @@ using std::array;
 
 #include "alpaca/ReferenceFrameSampler.hh"
 
+namespace alpaca {
+
 class DeterministicReferenceFrameSampler : public ReferenceFrameSampler {
 public:
   DeterministicReferenceFrameSampler(const array<double, 3> Phi_Theta_Psi)
@@ -37,3 +39,5 @@ public:
 protected:
   const array<double, 3> Phi_Theta_Psi;
 };
+
+} // namespace alpaca

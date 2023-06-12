@@ -19,12 +19,14 @@
 
 #include "alpaca/State.hh"
 
+namespace alpaca {
+
 string State::parity_str_rep(const Parity parity) const {
 
-  if (parity == positive) {
+  if (parity == Parity::positive) {
     return "+";
   }
-  if (parity == negative) {
+  if (parity == Parity::negative) {
     return "-";
   }
 
@@ -42,7 +44,7 @@ string State::spin_str_rep(const int two_J) const {
 
 string State::str_rep() const {
 
-  if (parity != parity_unknown) {
+  if (parity != Parity::unknown) {
     return spin_str_rep(two_J) + "^" + parity_str_rep(parity);
   }
 
@@ -66,3 +68,5 @@ double State::check_excitation_energy(const double e_x) const {
 
   return e_x;
 }
+
+} // namespace alpaca

@@ -27,6 +27,8 @@
 using std::array;
 using std::vector;
 
+namespace alpaca {
+
 double SphereIntegrator::operator()(double f(double theta, double phi),
                                     const unsigned int n,
                                     bool is_in_omega(double theta,
@@ -44,3 +46,5 @@ double SphereIntegrator::operator()(double f(double theta, double phi),
 
   return 4. * M_PI / (double)n * integral;
 }
+
+} // namespace alpaca

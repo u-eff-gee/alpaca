@@ -18,22 +18,27 @@
 */
 
 #include <cassert>
+#include <string>
 
 #include "alpaca/AlphavCoefficient.hh"
+
+using alpaca::AlphavCoefficient;
+using alpaca::FCoefficient;
+using alpaca::KappaCoefficient;
 
 int main() {
   // As a test case, use the nu=2 coefficient for the polarized 0->1 transition
   // in the polarization-direction correlation in Sec. "4 Numerical example" of
   // Ref. \cite Iliadis2021. Here, the difference between the Ev coefficients
   // used in the aforementioned publication and the kappa coefficients used here
-  // is once more apparent: In this code, the negative sign due to the magnetic
+  // is once more apparent: In this code, the Parity::negative sign due to the EMCharacter::magnetic
   // character of the transition is not included in W_LP but applied later as a
   // factor. Therefore, the entire term seems to have a different sign as in
   // Ref. \cite Iliadis2021. See also the discussion in
   // `alpaca/test/test_Ev_coefficient.cc`.
   AlphavCoefficient av_coef(4, 2, 4, 0, 2);
-  const string str_rep =
-      string("(-1)") + KappaCoefficient(4, 2, 2).string_representation() +
+  const std::string str_rep =
+      std::string("(-1)") + KappaCoefficient(4, 2, 2).string_representation() +
       FCoefficient(4, 2, 2, 0, 2).string_representation() + "+2" +
       KappaCoefficient(4, 2, 4).string_representation() +
       FCoefficient(4, 2, 4, 0, 2).string_representation() + "\\delta" + "+" +

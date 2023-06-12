@@ -31,6 +31,8 @@ using std::pair;
 #include "alpaca/StringRepresentable.hh"
 #include "alpaca/Transition.hh"
 
+namespace alpaca {
+
 /**
  * \brief Abstract class for angular correlations of two photons.
  *
@@ -101,12 +103,12 @@ public:
    * If a useful upper limit estimate exists for a given angular correlation,
    * this function will return it. If no useful upper limit exists, or the
    * absolute value of \f$W\f$ does not have a limit, this function returns a
-   * negative number.
+   * Parity::negative number.
    *
    * \return \f$\mathrm{max}_{\theta \in \left[ 0, \pi \right], \varphi \in
    * \left[ 0, 2\pi \right]} | W \left( \theta, \varphi \right) | \f$, or an
    * upper limit for this quantity. If no useful upper limit can be given or if
-   * there is no limit, a negative number is returned.
+   * there is no limit, a Parity::negative number is returned.
    */
   virtual double get_upper_limit() const = 0;
 
@@ -280,3 +282,5 @@ protected:
   int nu_max; /**< Maximum value of \f$\nu\f$ for which the coefficients do not
                  vanish */
 };
+
+} // namespace alpaca

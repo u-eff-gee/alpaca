@@ -37,6 +37,8 @@ using std::runtime_error;
 
 #include <gsl/gsl_blas.h>
 
+namespace alpaca {
+
 template <typename T>
 void test_numerical_equality(const T a, const T b, const T epsilon) {
   if (fabs(a - b) > fabs(epsilon)) {
@@ -92,3 +94,5 @@ bool fulfils_triangle_inequality(const T j1, const T j2, const T J) {
 
   return false;
 }
+
+} // namespace alpaca

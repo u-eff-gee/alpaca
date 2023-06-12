@@ -22,6 +22,8 @@
 #include "alpaca/FCoefficient.hh"
 #include "alpaca/Transition.hh"
 
+namespace alpaca {
+
 /**
  * \brief Class for an \f$E_\nu\f$ coefficient.
  *
@@ -99,3 +101,5 @@ protected:
   const FCoefficient constant_f_coefficient, linear_f_coefficient,
       quadratic_f_coefficient;
 };
+
+} // namespace alpaca

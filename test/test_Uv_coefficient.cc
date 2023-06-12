@@ -26,6 +26,9 @@ using std::unique_ptr;
 #include "alpaca/TestUtilities.hh"
 #include "alpaca/UvCoefficient.hh"
 
+using alpaca::test_numerical_equality;
+using alpaca::UvCoefficient;
+
 int main() {
 
   // Test the calculation of \f$U_\nu\f$ coefficients using the example given in

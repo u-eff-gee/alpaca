@@ -27,6 +27,8 @@ using std::to_string;
 
 #include "alpaca/UvCoefficient.hh"
 
+namespace alpaca {
+
 UvCoefficient::UvCoefficient(const unsigned int two_nu, const int two_j,
                              const int two_L, const int two_jp)
     : two_nu(two_nu), two_j(two_j), two_L(two_L), two_Lp(two_L + 2), delta(0.),
@@ -79,7 +81,7 @@ double UvCoefficient::phase_norm_6j_symbol(const int two_nu, const int two_j,
          gsl_sf_coupling_6j(two_j, two_nu, two_j, two_jp, two_L, two_jp);
 }
 
-string
+std::string
 UvCoefficient::string_representation(const unsigned int n_digits,
                                      vector<string> variable_names) const {
 
@@ -97,3 +99,5 @@ UvCoefficient::string_representation(const unsigned int n_digits,
          to_string(two_j / 2) + "," + to_string(two_Lp / 2) + "," +
          to_string(two_jp / 2) + "\\right)" + delta_variable + "^{2}";
 }
+
+} // namespace alpaca

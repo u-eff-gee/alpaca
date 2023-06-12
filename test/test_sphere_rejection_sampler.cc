@@ -25,9 +25,11 @@ using std::array;
 
 #include <gsl/gsl_math.h>
 
-#include "alpaca/EulerAngleRotation.hh"
 #include "alpaca/SphereRejectionSampler.hh"
 #include "alpaca/TestUtilities.hh"
+
+using alpaca::SphereRejectionSampler;
+using alpaca::test_numerical_equality;
 
 /**
  * This script tests the correctness of SphereRejectionSampler by sampling from

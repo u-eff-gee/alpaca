@@ -24,6 +24,13 @@
 #include "alpaca/Transition.hh"
 #include "alpaca/W_dir_dir.hh"
 
+using alpaca::EMCharacter;
+using alpaca::Parity;
+using alpaca::State;
+using alpaca::test_numerical_equality;
+using alpaca::Transition;
+using alpaca::W_dir_dir;
+
 /**
  * Eq. (68) in Ref. \cite AjzenbergSelove1960.
  */
@@ -44,15 +51,16 @@ int main() {
 
   double w_num{0.}, w_ana{0.};
 
-  W_dir_dir w_dir_dir(State(12, parity_unknown),
-                      {
-                          {Transition(em_unknown, 4, em_unknown, 6, 0.),
-                           State(8, parity_unknown)},
-                          {Transition(em_unknown, 2, em_unknown, 4, 0.),
-                           State(6, parity_unknown)},
-                          {Transition(em_unknown, 4, em_unknown, 6, 0.),
-                           State(2, parity_unknown)},
-                      });
+  W_dir_dir w_dir_dir(
+      State(12, Parity::unknown),
+      {
+          {Transition(EMCharacter::unknown, 4, EMCharacter::unknown, 6, 0.),
+           State(8, Parity::unknown)},
+          {Transition(EMCharacter::unknown, 2, EMCharacter::unknown, 4, 0.),
+           State(6, Parity::unknown)},
+          {Transition(EMCharacter::unknown, 4, EMCharacter::unknown, 6, 0.),
+           State(2, Parity::unknown)},
+      });
 
   for (double theta = 0.; theta < M_PI; theta += 0.5) {
     for (double phi = 0.; phi < M_2_PI; phi += 0.5) {

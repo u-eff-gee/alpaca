@@ -18,9 +18,6 @@
 */
 
 #include <array>
-
-using std::array;
-
 #include <cassert>
 
 #include <gsl/gsl_sf.h>
@@ -30,6 +27,20 @@ using std::array;
 #include "alpaca/EulerAngleRotation.hh"
 #include "alpaca/SphereRejectionSampler.hh"
 #include "alpaca/TestUtilities.hh"
+#include "alpaca/Transition.hh"
+
+using std::array;
+
+namespace euler_angle_transform = alpaca::euler_angle_transform;
+
+using alpaca::AngCorrRejectionSampler;
+using alpaca::AngularCorrelation;
+using alpaca::EMCharacter;
+using alpaca::Parity;
+using alpaca::SphereRejectionSampler;
+using alpaca::State;
+using alpaca::test_numerical_equality;
+using alpaca::Transition;
 
 /**
  * Test the AngCorrRejectionSampler by verifying that the class, using an
@@ -41,9 +52,11 @@ int main() {
   const int seed = 0;
 
   AngularCorrelation ang_cor(
-      State(0, positive),
-      {{Transition(magnetic, 2, electric, 4, 0.), State(2, positive)},
-       {Transition(magnetic, 2, electric, 4, 0.), State(0, positive)}});
+      State(0, Parity::positive),
+      {{Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+        State(2, Parity::positive)},
+       {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
+        State(0, Parity::positive)}});
 
   AngCorrRejectionSampler ang_cor_sam(ang_cor, seed);
 

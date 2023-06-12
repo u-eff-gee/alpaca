@@ -27,6 +27,9 @@
 using std::invalid_argument;
 using std::vector;
 
+using alpaca::SpherePointSampler;
+using alpaca::test_numerical_equality;
+
 int main() {
 
   const vector<unsigned int> n_points_values{2,     10,     100,    1000,
