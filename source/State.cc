@@ -17,11 +17,18 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
+#include <stdexcept>
+#include <string>
+
 #include "alpaca/State.hh"
+
+using std::runtime_error;
+using std::string;
+using std::to_string;
 
 namespace alpaca {
 
-string State::parity_str_rep(const Parity parity) const {
+string State::parity_str_rep(const Parity parity) {
 
   if (parity == Parity::positive) {
     return "+";
@@ -33,7 +40,7 @@ string State::parity_str_rep(const Parity parity) const {
   throw runtime_error("No string representation for unknown parity.");
 }
 
-string State::spin_str_rep(const int two_J) const {
+string State::spin_str_rep(const int two_J) {
 
   if (two_J % 2 == 0) {
     return to_string(two_J / 2);
@@ -49,15 +56,6 @@ string State::str_rep() const {
   }
 
   return spin_str_rep(two_J);
-}
-
-int State::check_two_J(const int two_J) const {
-
-  if (two_J < 0) {
-    throw invalid_argument("two_J must be a nonnegative integer.");
-  }
-
-  return two_J;
 }
 
 double State::check_excitation_energy(const double e_x) const {

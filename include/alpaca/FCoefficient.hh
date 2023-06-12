@@ -169,7 +169,7 @@ public:
 
   double get_value() const { return value; }
 
-  string string_representation([[maybe_unused]] const unsigned int n_digits = 0,
+  string string_representation([[maybe_unused]] const int n_digits = 0,
                                vector<string> variable_names = {}) const;
 
   /**
@@ -235,11 +235,11 @@ protected:
     return ((two_j1 + two_j2 + two_j3) % 2 == 0);
   };
 
-  const int two_nu;
-  const int two_L;
-  const int two_Lp;
-  const int two_j1;
-  const int two_j;
+  int two_nu;
+  int two_L;
+  int two_Lp;
+  int two_j1;
+  int two_j;
   double value;
 };
 

@@ -21,7 +21,6 @@
 #include <iostream>
 #include <sstream>
 
-using std::endl;
 using std::ofstream;
 using std::stringstream;
 

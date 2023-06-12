@@ -33,7 +33,7 @@ namespace alpaca {
 
 SphereRejectionSampler::SphereRejectionSampler(
     function<double(const double, const double)> dis, const double dis_max,
-    const int seed, const unsigned int max_tri)
+    const unsigned long seed, const unsigned int max_tri)
     : distribution(dis), distribution_maximum(dis_max), max_tries(max_tri) {
   random_engine = mt19937(seed);
 }

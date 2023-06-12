@@ -19,9 +19,13 @@
 
 #pragma once
 
+#include <string>
+
 #include "alpaca/FCoefficient.hh"
 #include "alpaca/KappaCoefficient.hh"
 #include "alpaca/StringRepresentable.hh"
+
+using std::string;
 
 namespace alpaca {
 
@@ -62,8 +66,23 @@ public:
    * final state of a transition \param two_j Angular momentum quantum number
    * \f$2 j\f$ of the intermediate state of a transition
    */
-  AlphavCoefficient(const int two_nu, const int two_L, const int two_Lp,
-                    const int two_jn, const int two_j);
+  AlphavCoefficient(int a_two_nu, int a_two_L, int a_two_Lp, int a_two_jn,
+                    int a_two_j)
+      : two_nu(a_two_nu), two_L(a_two_L), two_Lp(a_two_Lp), two_jn(a_two_jn),
+        two_j(a_two_j),
+        constant_f_coefficient(a_two_nu, a_two_L, a_two_L, a_two_jn, a_two_j),
+        linear_f_coefficient(a_two_nu, a_two_L, a_two_Lp, a_two_jn, a_two_j),
+        quadratic_f_coefficient(a_two_nu, a_two_Lp, a_two_Lp, a_two_jn,
+                                a_two_j),
+        constant_kappa_coefficient(a_two_nu, a_two_L, a_two_L),
+        linear_kappa_coefficient(a_two_nu, a_two_L, a_two_Lp),
+        quadratic_kappa_coefficient(a_two_nu, a_two_Lp, a_two_Lp),
+        constant_coefficient(-constant_kappa_coefficient.get_value() *
+                             constant_f_coefficient.get_value()),
+        linear_coefficient(2. * linear_kappa_coefficient.get_value() *
+                           linear_f_coefficient.get_value()),
+        quadratic_coefficient(quadratic_kappa_coefficient.get_value() *
+                              quadratic_f_coefficient.get_value()) {}
 
   /**
    * \brief Return value of a specific \f$\alpha_\nu\f$ coefficient.
@@ -72,21 +91,24 @@ public:
    *
    * \return \f$\alpha_\nu \left( L, L^\prime, j_n, j, \delta_n \right)\f$
    */
-  double operator()(const double delta) const;
+  inline double operator()(const double delta) const {
+    return constant_coefficient + delta * linear_coefficient +
+           delta * delta * quadratic_coefficient;
+  }
 
-  string string_representation(const unsigned int n_digits = 0,
+  string string_representation(const int n_digits = 0,
                                const vector<string> variable_names = {}) const;
 
 protected:
-  const int two_nu;
-  const int two_L;
-  const int two_Lp;
-  const int two_jn;
-  const int two_j;
+  int two_nu;
+  int two_L;
+  int two_Lp;
+  int two_jn;
+  int two_j;
 
-  const FCoefficient constant_f_coefficient, linear_f_coefficient,
+  FCoefficient constant_f_coefficient, linear_f_coefficient,
       quadratic_f_coefficient;
-  const KappaCoefficient constant_kappa_coefficient, linear_kappa_coefficient,
+  KappaCoefficient constant_kappa_coefficient, linear_kappa_coefficient,
       quadratic_kappa_coefficient;
 
   double constant_coefficient;

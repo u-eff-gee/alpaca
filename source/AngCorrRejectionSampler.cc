@@ -17,17 +17,13 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include <array>
-
-using std::array;
-
 #include "alpaca/AngCorrRejectionSampler.hh"
 #include "alpaca/EulerAngleRotation.hh"
 
 namespace alpaca {
 
 AngCorrRejectionSampler::AngCorrRejectionSampler(AngularCorrelation &w,
-                                                 const int seed,
+                                                 const unsigned long seed,
                                                  const unsigned int max_tri)
     : SphereRejectionSampler(w, w.get_upper_limit(), seed, max_tri) {}
 

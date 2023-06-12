@@ -23,9 +23,7 @@
 #include <string>
 
 using std::invalid_argument;
-using std::runtime_error;
 using std::string;
-using std::to_string;
 
 namespace alpaca {
 
@@ -57,6 +55,8 @@ struct State {
   State(const int t_J)
       : two_J(check_two_J(t_J)), parity(Parity::unknown),
         excitation_energy(0.){};
+  State(double t_J) = delete;
+
   /**
    * \brief Constructor which does not require energy information
    *
@@ -69,6 +69,7 @@ struct State {
    */
   State(const int t_J, const Parity p)
       : two_J(check_two_J(t_J)), parity(p), excitation_energy(0.){};
+  State(double t_J, Parity p) = delete;
   /**
    * \brief Constructor which does not require parity information
    *
@@ -83,6 +84,7 @@ struct State {
   State(const int t_J, const Parity p, const double e_x)
       : two_J(check_two_J(t_J)), parity(p),
         excitation_energy(check_excitation_energy(e_x)){};
+  State(double t_J, Parity p, double e_x) = delete;
   /**
    * \brief Constructor
    *
@@ -96,6 +98,7 @@ struct State {
   State(const int t_J, const double e_x)
       : two_J(check_two_J(t_J)), parity(Parity::unknown),
         excitation_energy(check_excitation_energy(e_x)){};
+  State(double t_J, double e_x) = delete;
 
   int two_J; /**< Two times the angular momentum quantum number in units of the
                 reduced Planck constant. */
@@ -112,7 +115,7 @@ struct State {
    *
    * \throw runtime_error if parity is neither positive nor negative.
    */
-  string parity_str_rep(const Parity parity) const;
+  string static parity_str_rep(const Parity parity);
 
   /**
    * \brief String representation of angular momentum quantum numbers.
@@ -122,7 +125,7 @@ struct State {
    *
    * \return String representation
    */
-  string spin_str_rep(const int two_J) const;
+  string static spin_str_rep(const int two_J);
 
   /**
    * \brief String representation of a State.
@@ -147,7 +150,13 @@ struct State {
    *
    * \throw std::invalid_argument if two_J is invalid
    */
-  int check_two_J(const int two_J) const;
+  constexpr static int check_two_J(const int two_J) {
+    if (two_J < 0) {
+      throw invalid_argument("two_J must be a nonnegative integer.");
+    }
+
+    return two_J;
+  }
 
   /**
    * \brief Ensure that given excitation energy is valid.

@@ -171,7 +171,7 @@ public:
   double get_upper_limit() const override;
 
   string string_representation(
-      const unsigned int n_digits = 0,
+      const int n_digits = 0,
       const vector<string> variable_names = {}) const override;
 
 protected:

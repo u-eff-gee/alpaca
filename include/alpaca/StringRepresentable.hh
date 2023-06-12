@@ -21,18 +21,12 @@
 
 #include <iomanip>
 
-using std::setprecision;
-
 #include <sstream>
-
-using std::stringstream;
-
 #include <string>
-
-using std::string;
-
 #include <vector>
 
+using std::string;
+using std::stringstream;
 using std::vector;
 
 namespace alpaca {
@@ -43,6 +37,13 @@ namespace alpaca {
 class StringRepresentable {
 
 public:
+  virtual ~StringRepresentable() = default;
+  StringRepresentable() = default;
+  StringRepresentable(const StringRepresentable &) = default;
+  StringRepresentable &operator=(const StringRepresentable &) = default;
+  StringRepresentable(StringRepresentable &&) = default;
+  StringRepresentable &operator=(StringRepresentable &&) = default;
+
   /**
    * \brief Return string representation of expression.
    *
@@ -59,11 +60,11 @@ public:
    * \return String representation.
    */
   virtual string
-  string_representation(const unsigned int n_digits = 0,
+  string_representation(const int n_digits = 0,
                         const vector<string> variable_names = {}) const = 0;
 
 protected:
-  string float_string_representation(const unsigned int n_digits,
+  string float_string_representation(const int n_digits,
                                      const double number) const {
     stringstream str_rep;
     if (number < 0.) {

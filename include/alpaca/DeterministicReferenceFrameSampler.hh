@@ -29,8 +29,8 @@ namespace alpaca {
 
 class DeterministicReferenceFrameSampler : public ReferenceFrameSampler {
 public:
-  DeterministicReferenceFrameSampler(const array<double, 3> Phi_Theta_Psi)
-      : Phi_Theta_Psi(Phi_Theta_Psi) {}
+  DeterministicReferenceFrameSampler(const array<double, 3> a_Phi_Theta_Psi)
+      : Phi_Theta_Psi(a_Phi_Theta_Psi) {}
 
   pair<unsigned int, array<double, 3>> sample() override {
     return {1, Phi_Theta_Psi};

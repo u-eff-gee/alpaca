@@ -38,13 +38,13 @@ double SphereIntegrator::operator()(double f(double theta, double phi),
 
   double integral = 0.;
 
-  for (size_t i = 0; i < (size_t)n; ++i) {
+  for (size_t i = 0; i < static_cast<size_t>(n); ++i) {
     if (is_in_omega(theta_phi[0][i], theta_phi[1][i])) {
       integral += f(theta_phi[0][i], theta_phi[1][i]);
     }
   }
 
-  return 4. * M_PI / (double)n * integral;
+  return 4. * M_PI / static_cast<double>(n) * integral;
 }
 
 } // namespace alpaca

@@ -19,13 +19,11 @@
 
 #pragma once
 
+#include <utility>
 #include <vector>
 
-using std::vector;
-
-#include <utility>
-
 using std::pair;
+using std::vector;
 
 #include "alpaca/State.hh"
 #include "alpaca/StringRepresentable.hh"
@@ -59,17 +57,6 @@ public:
                 const vector<pair<Transition, State>> cas_ste)
       : initial_state(ini_sta), cascade_steps(cas_ste),
         n_cascade_steps(cas_ste.size()) {}
-
-  /**
-   * \brief Destructor
-   *
-   * Virtual destructor needed to ensure that destructors of derived classes
-   * W_dir_dir and W_pol_dir are called whenever a W_gamma_gamma goes out of
-   * scope. Since AngularCorrelation, the main user interface, is always in
-   * posession of a unique_ptr to one of the derived classes, not having this
-   * destructor lead to memory leaks in the past.
-   */
-  virtual ~W_gamma_gamma(){};
 
   /**
    * \brief Call operator of the gamma-gamma angular correlation
@@ -262,7 +249,7 @@ public:
    * \return String representation.
    */
   virtual string string_representation(
-      const unsigned int n_digits = 0,
+      const int n_digits = 0,
       const vector<string> variable_names = {}) const override = 0;
 
 protected:

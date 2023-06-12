@@ -19,7 +19,11 @@
 
 #pragma once
 
+#include <string>
+
 #include "alpaca/StringRepresentable.hh"
+
+using std::string;
 
 namespace alpaca {
 
@@ -121,9 +125,9 @@ namespace alpaca {
  *
  * When testing the formulation above for transitions with half-integer angular
  * momentum quantum numbers, it was found that the \f$U_\nu\f$ coefficients of
- * Fagg and Hanna could cause the entire angular correlation to become Parity::negative.
- * A comparison to other definitions in the literature, for example by
- * Biedenharn (see below) or Krane, Steffen, and Wheeler \cite
+ * Fagg and Hanna could cause the entire angular correlation to become
+ * negative. A comparison to other definitions in the literature, for
+ * example by Biedenharn (see below) or Krane, Steffen, and Wheeler \cite
  * KraneSteffenWheeler1973 [Eq. (53) therein] indicates that the phase factor is
  * not correct in Ref. \cite FaggHanna1959. For this reason, the definition in
  * Sec. 1.a.1.iii of the book chapter by Biedenharn \cite AjzenbergSelove1960 is
@@ -221,8 +225,12 @@ public:
    * \param two_L \f$2 L_{m+1}\f$
    * \param two_jp \f$2 j_{m+1}\f$
    */
-  UvCoefficient(const unsigned int two_nu, const int two_j, const int two_L,
-                const int two_jp);
+  UvCoefficient(const int a_two_nu, const int a_two_j, const int a_two_L,
+                const int a_two_jp)
+      : two_nu(a_two_nu), two_j(a_two_j), two_L(a_two_L), two_Lp(a_two_L + 2),
+        delta(0.), two_jp(a_two_jp),
+        value_L(phase_norm_6j_symbol(a_two_nu, a_two_j, a_two_L, a_two_jp)),
+        value_Lp(0.), value(value_L) {}
 
   /**
    * \brief Constructor, \f$U_\nu\f$ coefficient for a mixed transition.
@@ -240,26 +248,34 @@ public:
    * \param delta \f$\delta_m\f$
    * \param two_jp \f$2 j_{m+1}\f$
    */
-  UvCoefficient(const unsigned int two_nu, const int two_j, const int two_L,
-                const int two_Lp, const double delta, const int two_jp);
+  UvCoefficient(const int a_two_nu, const int a_two_j, const int a_two_L,
+                const int a_two_Lp, const double a_delta, const int a_two_jp)
+      : two_nu(a_two_nu), two_j(a_two_j), two_L(a_two_L), two_Lp(a_two_Lp),
+        delta(a_delta), two_jp(a_two_jp),
+        value_L(phase_norm_6j_symbol(a_two_nu, a_two_j, a_two_L, a_two_jp)),
+        value_Lp((a_delta != 0.) ? a_delta * a_delta *
+                                       phase_norm_6j_symbol(a_two_nu, a_two_j,
+                                                            a_two_Lp, a_two_jp)
+                                 : 0.),
+        value(value_L + value_Lp) {}
 
   double get_value() const { return value; };
 
-  string string_representation(const unsigned int n_digits = 0,
+  string string_representation(const int n_digits = 0,
                                vector<string> variable_names = {}) const;
 
 protected:
-  double phase_norm_6j_symbol(const int two_nu, const int two_j,
-                              const int two_L, const int two_jp) const;
+  static double phase_norm_6j_symbol(const int two_nu, const int two_j,
+                                     const int two_L, const int two_jp);
 
-  const int two_nu;
-  const int two_j;
-  const int two_L;
-  const int two_Lp;
-  const double delta;
-  const int two_jp;
+  int two_nu;
+  int two_j;
+  int two_L;
+  int two_Lp;
+  double delta;
+  int two_jp;
 
-  double value, value_L, value_Lp;
+  double value_L, value_Lp, value;
 };
 
 } // namespace alpaca

@@ -17,10 +17,6 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include <vector>
-
-using std::vector;
-
 namespace alpaca {
 
 /**

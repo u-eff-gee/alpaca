@@ -18,15 +18,9 @@
 */
 
 #include <numeric>
-
-using std::accumulate;
-
-#include <utility>
-
-using std::pair;
-
 #include <vector>
 
+using std::accumulate;
 using std::vector;
 
 #include "alpaca/EulerAngleRotation.hh"
@@ -43,8 +37,9 @@ double ReferenceFrameSampler::estimate_efficiency(const unsigned int n_tries) {
     required_tries[i] = sample().first;
   }
 
-  return (double)n_tries /
-         (double)accumulate(required_tries.begin(), required_tries.end(), 0);
+  return static_cast<double>(n_tries) /
+         static_cast<double>(
+             accumulate(required_tries.begin(), required_tries.end(), 0));
 }
 
 } // namespace alpaca

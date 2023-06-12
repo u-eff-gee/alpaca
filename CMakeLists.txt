@@ -37,7 +37,18 @@ if(BUILD_TESTS)
                 -fPIC
                 -Wall
                 -Wextra
-                -Wpedantic
+                -Wshadow # warn if a variable declaration shadows one from a parent context
+                -Wconversion # warn on type conversions that may lose data
+                -Wpedantic # warn if non-standard C++ is used
+                -Wnon-virtual-dtor # warn if class with virtual functions has non-virtual destructor
+                -Wold-style-cast # warn for c-style casts
+                -Wcast-align # warn for potential performance problem casts
+                -Wunused # warn on anything being unused
+                -Woverloaded-virtual # warn if you overload (not override) a virtual function
+                -Wsign-conversion # warn on sign conversions
+                -Wnull-dereference # warn if a null dereference is detected
+                -Wdouble-promotion # warn if float is implicit promoted to double
+                -Wformat=2 # warn on security issues around functions that format output (ie printf)
                 -fprofile-arcs
                 -ftest-coverage
                 --coverage)
@@ -56,7 +67,7 @@ add_compile_options(
         -Wcast-align # warn for potential performance problem casts
         -Wunused # warn on anything being unused
         -Woverloaded-virtual # warn if you overload (not override) a virtual function
-        #-Wsign-conversion # warn on sign conversions
+        -Wsign-conversion # warn on sign conversions
         -Wnull-dereference # warn if a null dereference is detected
         -Wdouble-promotion # warn if float is implicit promoted to double
         -Wformat=2 # warn on security issues around functions that format output (ie printf)

@@ -28,7 +28,6 @@
 #include "alpaca/Transition.hh"
 #include "alpaca/W_gamma_gamma.hh"
 
-using std::array;
 using std::pair;
 using std::unique_ptr;
 using std::vector;

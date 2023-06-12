@@ -20,20 +20,14 @@
 #pragma once
 
 #include <array>
-
-using std::array;
-
 #include <cmath>
-
-using std::fabs;
-
 #include <sstream>
-
-using std::stringstream;
-
 #include <stdexcept>
 
+using std::array;
+using std::fabs;
 using std::runtime_error;
+using std::stringstream;
 
 #include <gsl/gsl_blas.h>
 

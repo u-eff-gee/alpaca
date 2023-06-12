@@ -19,8 +19,6 @@
 
 #include <vector>
 
-using std::vector;
-
 namespace alpaca {
 
 /**

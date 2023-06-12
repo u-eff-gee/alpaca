@@ -79,17 +79,17 @@ namespace alpaca {
  *
  * One will also run into problems for \f$\nu = 0\f$,
  * since two different angular momenta \f$L\f$ and \f$L^\prime\f$ can not be
- *coupled to zero, and the behavior of the factorial for Parity::negative numbers is
- *undefined (The latter problem persists for \f$\nu = 1\f$. However, this case
- *is not encountered here). Reference \cite FaggHanna1959 and Ref. \cite
- *LLoyd1952, which is cited by the former for \f$\kappa_\nu\f$, only give values
- *for the coefficients with \f$\nu > 2\f$ [see Tab. II(b) \cite FaggHanna1959
- *and Tab. III \cite LLoyd1952, respectively, and note the different
- *normalization]. Equation (I-8) of Ref. \cite FaggHanna1959 mentions a
- *restriction to even, nonzero values of \f$\nu\f$ when the dir-dir correlation
- *is extended to include polarization, but does not attribute this to the
- *\f$\kappa_\nu\f$ coefficients. In the present implementation, it was decided
- *to throw an exception when \f$\kappa_{\nu < 2}\f$ is requested.
+ *coupled to zero, and the behavior of the factorial for negative
+ *numbers is undefined (The latter problem persists for \f$\nu = 1\f$. However,
+ *this case is not encountered here). Reference \cite FaggHanna1959 and Ref.
+ *\cite LLoyd1952, which is cited by the former for \f$\kappa_\nu\f$, only give
+ *values for the coefficients with \f$\nu > 2\f$ [see Tab. II(b) \cite
+ *FaggHanna1959 and Tab. III \cite LLoyd1952, respectively, and note the
+ *different normalization]. Equation (I-8) of Ref. \cite FaggHanna1959 mentions
+ *a restriction to even, nonzero values of \f$\nu\f$ when the dir-dir
+ *correlation is extended to include polarization, but does not attribute this
+ *to the \f$\kappa_\nu\f$ coefficients. In the present implementation, it was
+ *decided to throw an exception when \f$\kappa_{\nu < 2}\f$ is requested.
  */
 class KappaCoefficient : public StringRepresentable {
 public:
@@ -110,7 +110,7 @@ public:
 
   double get_value() const { return value; };
 
-  string string_representation([[maybe_unused]] const unsigned int n_digits = 0,
+  string string_representation([[maybe_unused]] const int n_digits = 0,
                                vector<string> variable_names = {}) const;
 
 protected:

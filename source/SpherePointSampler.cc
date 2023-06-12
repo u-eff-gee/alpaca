@@ -39,7 +39,7 @@ SpherePointSampler::sample(const unsigned int n) const {
 
   const double c = find_c(n);
 
-  for (size_t j = 1; j <= n; ++j) {
+  for (unsigned int j = 1; j <= n; ++j) {
     theta_phi[0][j] = find_Theta_j(j, n, c);
     theta_phi[1][j] = c * theta_phi[0][j];
   }
@@ -159,7 +159,7 @@ double SpherePointSampler::segment_length(const double Theta,
 
 double SpherePointSampler::segment_length_linear_interpolation(
     const double Theta, const double c, const unsigned int n_points) const {
-  const double theta_increment = Theta / ((double)n_points - 1.);
+  const double theta_increment = Theta / (static_cast<double>(n_points) - 1.);
   array<double, 3> x_i{0., 0., 1.};
   array<double, 3> x_i_plus_one{0., 0., 0.};
   double phi_i_plus_one{0.}, segment_increment_squared{0.}, segment_length{0.},
@@ -251,9 +251,10 @@ SpherePointSampler::find_Theta_j(const unsigned int j, const unsigned int n,
 
   // Initial guess from Ref. \cite Koay2011
   // Note that j is fixed here, and the iteration index is denoted as l
-  const double Theta_j_0 = acos(1. - (2. * j - 1.) / (double)n);
+  const double Theta_j_0 = acos(1. - (2. * j - 1.) / static_cast<double>(n));
   double Theta_j_l = Theta_j_0;
-  const double epsilon_segment = epsilon * segment_length(M_PI, c) / (double)n;
+  const double epsilon_segment =
+      epsilon * segment_length(M_PI, c) / static_cast<double>(n);
 
   double Theta_j_l_plus_one = 0.;
 

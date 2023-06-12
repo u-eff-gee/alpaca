@@ -19,8 +19,14 @@
 
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include "alpaca/FCoefficient.hh"
 #include "alpaca/StringRepresentable.hh"
+
+using std::string;
+using std::vector;
 
 namespace alpaca {
 
@@ -339,8 +345,17 @@ public:
    * final state of a transition \param two_j Angular momentum quantum number
    * \f$2 j\f$ of the intermediate state of a transition
    */
-  AvCoefficient(const int two_nu, const int two_L, const int two_Lp,
-                const int two_jn, const int two_j);
+  AvCoefficient(const int a_two_nu, const int a_two_L, const int a_two_Lp,
+                const int a_two_jn, const int a_two_j)
+      : two_nu(a_two_nu), two_L(a_two_L), two_Lp(a_two_Lp), two_jn(a_two_jn),
+        two_j(a_two_j),
+        constant_f_coefficient(a_two_nu, a_two_L, a_two_L, a_two_jn, a_two_j),
+        linear_f_coefficient(a_two_nu, a_two_L, a_two_Lp, a_two_jn, a_two_j),
+        quadratic_f_coefficient(a_two_nu, a_two_Lp, a_two_Lp, a_two_jn,
+                                a_two_j),
+        constant_coefficient(constant_f_coefficient.get_value()),
+        linear_coefficient(2. * linear_f_coefficient.get_value()),
+        quadratic_coefficient(quadratic_f_coefficient.get_value()) {}
 
   /**
    * \brief Return value of a specific \f$A_\nu\f$ coefficient.
@@ -351,17 +366,17 @@ public:
    */
   double operator()(const double delta) const;
 
-  string string_representation(const unsigned int n_digits = 0,
+  string string_representation(const int n_digits = 0,
                                const vector<string> variable_names = {}) const;
 
 protected:
-  const int two_nu;
-  const int two_L;
-  const int two_Lp;
-  const int two_jn;
-  const int two_j;
+  int two_nu;
+  int two_L;
+  int two_Lp;
+  int two_jn;
+  int two_j;
 
-  const FCoefficient constant_f_coefficient, linear_f_coefficient,
+  FCoefficient constant_f_coefficient, linear_f_coefficient,
       quadratic_f_coefficient;
 
   double constant_coefficient, linear_coefficient, quadratic_coefficient;

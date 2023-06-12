@@ -43,13 +43,13 @@ int main() {
   vector<double> c_values{2., 20.};
 
   const size_t n_Theta = 10;
-  const double Theta_increment = M_PI / ((double)n_Theta - 1);
+  const double Theta_increment = M_PI / (static_cast<double>(n_Theta) - 1);
   vector<double> Theta_values(n_Theta, 0.);
 
   const unsigned int n_interpolation_points = 1e4;
 
   for (size_t i = 0; i < n_Theta; ++i) {
-    Theta_values[i] = i * Theta_increment;
+    Theta_values[i] = static_cast<double>(i) * Theta_increment;
   }
 
   double spiral_segment_elliptic_integral{0.},

@@ -31,18 +31,22 @@ namespace alpaca {
 
 class SpotlightSampler : public ReferenceFrameSampler {
 public:
-  SpotlightSampler(const array<double, 2> theta_phi, const int seed);
   SpotlightSampler(const array<double, 2> theta_phi, const double opening_angle,
-                   const int seed);
-  SpotlightSampler(const array<double, 2> theta_phi, const double distance,
-                   const double radius, const int seed);
+                   const unsigned long seed);
+  SpotlightSampler(const array<double, 2> a_theta_phi,
+                   const unsigned long a_seed)
+      : SpotlightSampler(a_theta_phi, 0., a_seed) {}
+  SpotlightSampler(const array<double, 2> a_theta_phi, const double distance,
+                   const double radius, const unsigned long a_seed)
+      : SpotlightSampler(a_theta_phi, asin(radius / distance), a_seed) {}
+
   pair<unsigned int, array<double, 3>> sample();
 
 protected:
-  const array<double, 2> theta_phi;
-  const double opening_angle;
+  array<double, 2> theta_phi;
+  double opening_angle;
   double u_min{0.5};
-  const int seed;
+  unsigned long seed;
 
   mt19937 random_engine; /**< Deterministic random number engine. */
   uniform_real_distribution<double>

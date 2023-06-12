@@ -18,25 +18,20 @@
 */
 
 #include <cmath>
+#include <utility>
 
 #include <gsl/gsl_math.h>
 
 #include "alpaca/SpotlightSampler.hh"
 
+using std::pair;
+
 namespace alpaca {
 
-SpotlightSampler::SpotlightSampler(const array<double, 2> theta_phi,
-                                   const int seed)
-    : SpotlightSampler(theta_phi, 0., seed) {}
-
-SpotlightSampler::SpotlightSampler(const array<double, 2> theta_phi,
-                                   const double distance, const double radius,
-                                   const int seed)
-    : SpotlightSampler(theta_phi, asin(radius / distance), seed) {}
-
-SpotlightSampler::SpotlightSampler(const array<double, 2> theta_phi,
-                                   const double opening_angle, const int seed)
-    : theta_phi(theta_phi), opening_angle(opening_angle), seed(seed) {
+SpotlightSampler::SpotlightSampler(const array<double, 2> a_theta_phi,
+                                   const double a_opening_angle,
+                                   const unsigned long a_seed)
+    : theta_phi(a_theta_phi), opening_angle(a_opening_angle), seed(a_seed) {
   u_min = 0.5 * (1. + cos(opening_angle));
   random_engine = mt19937(seed);
 }

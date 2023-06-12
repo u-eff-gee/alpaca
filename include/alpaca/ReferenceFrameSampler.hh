@@ -20,11 +20,9 @@
 #pragma once
 
 #include <array>
-
-using std::array;
-
 #include <utility>
 
+using std::array;
 using std::pair;
 
 namespace alpaca {
@@ -44,6 +42,13 @@ namespace alpaca {
  */
 class ReferenceFrameSampler {
 public:
+  virtual ~ReferenceFrameSampler() = default;
+  ReferenceFrameSampler() = default;
+  ReferenceFrameSampler(const ReferenceFrameSampler &) = default;
+  ReferenceFrameSampler &operator=(const ReferenceFrameSampler &) = default;
+  ReferenceFrameSampler(ReferenceFrameSampler &&) = default;
+  ReferenceFrameSampler &operator=(ReferenceFrameSampler &&) = default;
+
   /**
    * \brief Sample a random reference frame and record the
    * number of tries.
@@ -82,4 +87,4 @@ public:
   double estimate_efficiency(const unsigned int n_tries);
 };
 
-}
+} // namespace alpaca

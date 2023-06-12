@@ -50,7 +50,7 @@ public:
    * before the algorithm terminates without success and returns \f$\left( 0, 0
    * \right)\f$.
    */
-  AngCorrRejectionSampler(AngularCorrelation &w, const int seed,
+  AngCorrRejectionSampler(AngularCorrelation &w, const unsigned long seed,
                           const unsigned int max_tri = 1000);
 };
 

@@ -181,12 +181,14 @@ int main() {
   error_thrown = false;
 
   // Not an error: Triangle inequality fulfilled by second transition
-  AngularCorrelation ang_corr(
-      State(0, Parity::positive),
-      {{Transition(EMCharacter::electric, 10, EMCharacter::electric, 2, 0.),
-        State(2, Parity::negative)},
-       {Transition(EMCharacter::electric, 2, EMCharacter::magnetic, 4, 0.),
-        State(0, Parity::positive)}});
+  {
+    AngularCorrelation ang_corr(
+        State(0, Parity::positive),
+        {{Transition(EMCharacter::electric, 10, EMCharacter::electric, 2, 0.),
+          State(2, Parity::negative)},
+         {Transition(EMCharacter::electric, 2, EMCharacter::magnetic, 4, 0.),
+          State(0, Parity::positive)}});
+  }
 
   // Error: First electromagnetic character wrong
   try {

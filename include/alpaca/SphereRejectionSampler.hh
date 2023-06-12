@@ -20,18 +20,13 @@
 #pragma once
 
 #include <functional>
-
-using std::function;
-
 #include <random>
-
-using std::mt19937;
-using std::uniform_real_distribution;
-
 #include <utility>
 
+using std::function;
+using std::mt19937;
 using std::pair;
-using std::tuple;
+using std::uniform_real_distribution;
 
 #include "alpaca/ReferenceFrameSampler.hh"
 
@@ -134,7 +129,7 @@ public:
    * 1000).
    */
   SphereRejectionSampler(function<double(const double, const double)> dis,
-                         const double dis_max, const int seed,
+                         const double dis_max, const unsigned long seed,
                          const unsigned int max_tri = 1000);
 
   /**

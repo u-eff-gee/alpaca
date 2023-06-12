@@ -38,7 +38,6 @@ using alpaca::EMCharacter;
 using alpaca::Parity;
 using alpaca::SpherePointSampler;
 using alpaca::State;
-using alpaca::test_numerical_equality;
 using alpaca::Transition;
 using alpaca::W_dir_dir;
 using alpaca::W_gamma_gamma;

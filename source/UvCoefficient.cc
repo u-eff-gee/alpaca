@@ -18,10 +18,11 @@
 */
 
 #include <cmath>
-
 #include <string>
+#include <vector>
 
 using std::to_string;
+using std::vector;
 
 #include <gsl/gsl_sf.h>
 
@@ -29,37 +30,8 @@ using std::to_string;
 
 namespace alpaca {
 
-UvCoefficient::UvCoefficient(const unsigned int two_nu, const int two_j,
-                             const int two_L, const int two_jp)
-    : two_nu(two_nu), two_j(two_j), two_L(two_L), two_Lp(two_L + 2), delta(0.),
-      two_jp(two_jp) {
-
-  value_L = phase_norm_6j_symbol(two_nu, two_j, two_L, two_jp);
-  value_Lp = 0.;
-  value = value_L;
-}
-
-UvCoefficient::UvCoefficient(const unsigned int two_nu, const int two_j,
-                             const int two_L, const int two_Lp,
-                             const double delta, const int two_jp)
-    : two_nu(two_nu), two_j(two_j), two_L(two_L), two_Lp(two_Lp), delta(delta),
-      two_jp(two_jp) {
-
-  value_L = phase_norm_6j_symbol(two_nu, two_j, two_L, two_jp);
-
-  if (delta != 0.) {
-    value_Lp =
-        delta * delta * phase_norm_6j_symbol(two_nu, two_j, two_Lp, two_jp);
-  } else {
-    value_Lp = 0.;
-  }
-
-  value = value_L + value_Lp;
-}
-
 double UvCoefficient::phase_norm_6j_symbol(const int two_nu, const int two_j,
-                                           const int two_L,
-                                           const int two_jp) const {
+                                           const int two_L, const int two_jp) {
 
   // Definition of Fagg and Hanna \cite FaggHanna1959 [Eq. (I-1') and the
   // expression below that one]. Causes some tests to fail.
@@ -82,7 +54,7 @@ double UvCoefficient::phase_norm_6j_symbol(const int two_nu, const int two_j,
 }
 
 std::string
-UvCoefficient::string_representation(const unsigned int n_digits,
+UvCoefficient::string_representation(const int n_digits,
                                      vector<string> variable_names) const {
 
   string delta_variable = variable_names.size() ? variable_names[0] : "\\delta";

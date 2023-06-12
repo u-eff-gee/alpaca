@@ -69,7 +69,16 @@ struct Transition {
    * \throw invalid_argument if an invalid value for \f$2 L\f$ or \f$2
    * L^\prime\f$ was given, or if the two are equal.
    */
-  Transition(const int t_L, const int t_Lp, const double del = 0.);
+  constexpr Transition(const int t_L, const int t_Lp, const double del = 0.)
+      : em_char(EMCharacter::unknown), two_L(check_two_L(t_L)),
+        em_charp(EMCharacter::unknown), two_Lp(check_two_L(t_Lp)), delta(del) {
+    if (two_L == two_Lp) {
+      throw invalid_argument(
+          "The two multipolarities for a transition may not be equal. This "
+          "holds even if the coupling allows only a single multipolarity.");
+    }
+  }
+
   /**
    * \brief Constructor
    *
@@ -83,8 +92,16 @@ struct Transition {
    * \throw invalid_argument if an invalid value for \f$2 L\f$ or \f$2
    * L^\prime\f$ was given, or if the two are equal.
    */
-  Transition(const EMCharacter em, const int t_L, const EMCharacter emp,
-             const int t_Lp, const double del);
+  constexpr Transition(const EMCharacter em, const int t_L,
+                       const EMCharacter emp, const int t_Lp, const double del)
+      : em_char(em), two_L(check_two_L(t_L)), em_charp(emp),
+        two_Lp(check_two_L(t_Lp)), delta(del) {
+    if (two_L == two_Lp) {
+      throw invalid_argument(
+          "The two multipolarities for a transition may not be equal. This "
+          "holds even if the coupling allows only a single multipolarity.");
+    }
+  }
 
   /**
    * \brief Constructor which automatically assigns second transition and does
@@ -97,7 +114,8 @@ struct Transition {
    * \param del Multipole mixing ratio.
    * \param del Multipole mixing ratio.
    */
-  inline Transition(int t_L, double del = 0.) : Transition(t_L, t_L + 2, del){};
+  constexpr Transition(int t_L, double del = 0.)
+      : Transition(t_L, t_L + 2, del){};
 
   /**
    * \brief Constructor which automatically assigns second transition
@@ -110,7 +128,7 @@ struct Transition {
    * Multipole mixing ratio.
    * \param del Multipole mixing ratio.
    */
-  inline Transition(EMCharacter em, int t_L, double del = 0.)
+  constexpr Transition(EMCharacter em, int t_L, double del = 0.)
       : Transition(em, t_L, alt_character(em), t_L + 2, del){};
 
   /**
@@ -118,7 +136,7 @@ struct Transition {
    *
    * \param del Multipole mixing ratio.
    */
-  inline static Transition Dipole(double del = 0.) {
+  constexpr static Transition Dipole(double del = 0.) {
     return Transition(2, del);
   }
 
@@ -127,7 +145,7 @@ struct Transition {
    *
    * \param del Multipole mixing ratio.
    */
-  inline static Transition E1(double delta = 0.) {
+  constexpr static Transition E1(double delta = 0.) {
     return Transition(EMCharacter::electric, 2, delta);
   }
 
@@ -136,7 +154,7 @@ struct Transition {
    *
    * \param del Multipole mixing ratio.
    */
-  inline static Transition M1(double delta = 0.) {
+  constexpr static Transition M1(double delta = 0.) {
     return Transition(EMCharacter::magnetic, 2, delta);
   }
 
@@ -145,7 +163,7 @@ struct Transition {
    *
    * \param del Multipole mixing ratio.
    */
-  inline static Transition Quadrupole(double delta = 0.) {
+  constexpr static Transition Quadrupole(double delta = 0.) {
     return Transition(4, delta);
   }
 
@@ -154,7 +172,7 @@ struct Transition {
    *
    * \param del Multipole mixing ratio.
    */
-  inline static Transition E2(double delta = 0.) {
+  constexpr static Transition E2(double delta = 0.) {
     return Transition(EMCharacter::electric, 4, delta);
   }
 
@@ -163,7 +181,7 @@ struct Transition {
    *
    * \param del Multipole mixing ratio.
    */
-  inline static Transition M2(double delta = 0.) {
+  constexpr static Transition M2(double delta = 0.) {
     return Transition(EMCharacter::magnetic, 4, delta);
   }
 
@@ -221,7 +239,14 @@ struct Transition {
    *
    * \throw std::invalid_argument if two_L is invalid
    */
-  int check_two_L(const int two_L) const;
+  constexpr static int check_two_L(const int two_L) {
+    if (two_L < 1) {
+      throw invalid_argument(
+          "two_L (two_Lp) must be a nonzero, nonnegative integer.");
+    }
+
+    return two_L;
+  }
 };
 
 inline bool operator==(const Transition &A, const Transition &B) {
