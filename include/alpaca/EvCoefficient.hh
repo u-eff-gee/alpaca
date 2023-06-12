@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "FCoefficient.hh"
-#include "Transition.hh"
+#include "alpaca/FCoefficient.hh"
+#include "alpaca/Transition.hh"
 
 /**
  * \brief Class for an \f$E_\nu\f$ coefficient.

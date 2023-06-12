@@ -19,9 +19,9 @@
 
 #pragma once
 
-#include "FCoefficient.hh"
-#include "KappaCoefficient.hh"
-#include "StringRepresentable.hh"
+#include "alpaca/FCoefficient.hh"
+#include "alpaca/KappaCoefficient.hh"
+#include "alpaca/StringRepresentable.hh"
 
 /**
  * \brief Class for an \f$\alpha_\nu\f$ coefficient.

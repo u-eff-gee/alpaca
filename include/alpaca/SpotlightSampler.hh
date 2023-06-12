@@ -24,8 +24,8 @@
 using std::mt19937;
 using std::uniform_real_distribution;
 
-#include "EulerAngleRotation.hh"
-#include "ReferenceFrameSampler.hh"
+#include "alpaca/EulerAngleRotation.hh"
+#include "alpaca/ReferenceFrameSampler.hh"
 
 class SpotlightSampler : public ReferenceFrameSampler {
 public:

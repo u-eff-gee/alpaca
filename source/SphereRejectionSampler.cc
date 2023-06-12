@@ -26,8 +26,8 @@ using std::array;
 
 #include <gsl/gsl_math.h>
 
-#include "EulerAngleRotation.hh"
-#include "SphereRejectionSampler.hh"
+#include "alpaca/EulerAngleRotation.hh"
+#include "alpaca/SphereRejectionSampler.hh"
 
 SphereRejectionSampler::SphereRejectionSampler(
     function<double(const double, const double)> dis, const double dis_max,

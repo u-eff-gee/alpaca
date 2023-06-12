@@ -20,9 +20,9 @@
 #include <cassert>
 #include <stdexcept>
 
-#include "AngularCorrelation.hh"
-#include "State.hh"
-#include "Transition.hh"
+#include "alpaca/AngularCorrelation.hh"
+#include "alpaca/State.hh"
+#include "alpaca/Transition.hh"
 
 using std::invalid_argument;
 

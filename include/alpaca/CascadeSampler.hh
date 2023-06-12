@@ -33,9 +33,9 @@ using std::vector;
 
 #include <gsl/gsl_math.h>
 
-#include "AngCorrRejectionSampler.hh"
-#include "AngularCorrelation.hh"
-#include "ReferenceFrameSampler.hh"
+#include "alpaca/AngCorrRejectionSampler.hh"
+#include "alpaca/AngularCorrelation.hh"
+#include "alpaca/ReferenceFrameSampler.hh"
 
 /**
  * \brief Sample directions of emission from an arbitrarily long cascade of

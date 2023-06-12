@@ -24,8 +24,8 @@
 #include <gsl/gsl_sf_ellint.h>
 #include <gsl/gsl_sf_elljac.h>
 
-#include "SpherePointSampler.hh"
-#include "TestUtilities.hh"
+#include "alpaca/SpherePointSampler.hh"
+#include "alpaca/TestUtilities.hh"
 
 using std::vector;
 

@@ -19,7 +19,7 @@
 
 #include <cassert>
 
-#include "AvCoefficient.hh"
+#include "alpaca/AvCoefficient.hh"
 
 int main() {
   // As a test case, use the nu=0 coefficient for the mixed 1->2 transition in

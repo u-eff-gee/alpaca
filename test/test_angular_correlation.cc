@@ -21,13 +21,13 @@
 
 #include <gsl/gsl_math.h>
 
-#include "AngularCorrelation.hh"
-#include "EulerAngleRotation.hh"
-#include "State.hh"
-#include "TestUtilities.hh"
-#include "Transition.hh"
-#include "W_dir_dir.hh"
-#include "W_pol_dir.hh"
+#include "alpaca/AngularCorrelation.hh"
+#include "alpaca/EulerAngleRotation.hh"
+#include "alpaca/State.hh"
+#include "alpaca/TestUtilities.hh"
+#include "alpaca/Transition.hh"
+#include "alpaca/W_dir_dir.hh"
+#include "alpaca/W_pol_dir.hh"
 
 /**
  * Test whether AngularCorrelation maps to the correct correlation functions and

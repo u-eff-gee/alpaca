@@ -24,7 +24,7 @@
 #include <gsl/gsl_sf_ellint.h>
 #include <gsl/gsl_sf_elljac.h>
 
-#include "SpherePointSampler.hh"
+#include "alpaca/SpherePointSampler.hh"
 
 using std::invalid_argument;
 using std::runtime_error;

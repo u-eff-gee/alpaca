@@ -18,6 +18,9 @@
 cmake_minimum_required(VERSION 3.16)
 project(alpaca VERSION 1.0.5)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 find_package(GSL REQUIRED)
 include_directories(${GSL_INCLUDE_DIRS})
 
@@ -30,11 +33,34 @@ endif(BUILD_DOCUMENTATION)
 
 option(BUILD_TESTS "Build self tests." OFF)
 if(BUILD_TESTS)
-        add_compile_options(-fPIC -Wall -Wextra -Wpedantic -fprofile-arcs -ftest-coverage --coverage)
+        add_compile_options(
+                -fPIC
+                -Wall
+                -Wextra
+                -Wpedantic
+                -fprofile-arcs
+                -ftest-coverage
+                --coverage)
         link_libraries(gcov)
 endif(BUILD_TESTS)
 
-add_compile_options(-fPIC -Wall -Wextra -Wpedantic)
+add_compile_options(
+        -fPIC
+        -Wall
+        -Wextra
+        -Wshadow # warn if a variable declaration shadows one from a parent context
+        -Wconversion # warn on type conversions that may lose data
+        -Wpedantic # warn if non-standard C++ is used
+        -Wnon-virtual-dtor # warn if class with virtual functions has non-virtual destructor
+        -Wold-style-cast # warn for c-style casts
+        -Wcast-align # warn for potential performance problem casts
+        -Wunused # warn on anything being unused
+        -Woverloaded-virtual # warn if you overload (not override) a virtual function
+        #-Wsign-conversion # warn on sign conversions
+        -Wnull-dereference # warn if a null dereference is detected
+        -Wdouble-promotion # warn if float is implicit promoted to double
+        -Wformat=2 # warn on security issues around functions that format output (ie printf)
+        -Wpedantic)
 
 include(GNUInstallDirs)
 
@@ -44,15 +70,31 @@ if(BUILD_TESTS)
         add_subdirectory(test)
 endif(BUILD_TESTS)
 
-set(installable_libs angcorrRejectionSampler angular_correlation alphavCoefficient avCoefficient cascadeSampler referenceFrameSampler fCoefficient kappa_coefficient sphereRejectionSampler state stringRepresentable transition uvCoefficient w_dir_dir w_gamma_gamma w_pol_dir)
+set(installable_libs
+        angcorrRejectionSampler
+        angular_correlation
+        alphavCoefficient
+        avCoefficient
+        cascadeSampler
+        referenceFrameSampler
+        fCoefficient
+        kappa_coefficient
+        sphereRejectionSampler
+        state
+        stringRepresentable
+        transition
+        uvCoefficient
+        w_dir_dir
+        w_gamma_gamma w_pol_dir)
 install(
-    TARGETS ${installable_libs}
-    EXPORT ALPACA
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        TARGETS ${installable_libs}
+        EXPORT ALPACA
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-install(EXPORT ALPACA
+install(
+        EXPORT ALPACA
         FILE alpaca-config.cmake
         DESTINATION lib/cmake/alpaca
 )

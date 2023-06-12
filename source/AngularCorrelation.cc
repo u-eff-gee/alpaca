@@ -25,11 +25,11 @@ using std::invalid_argument;
 
 using std::to_string;
 
-#include "AngularCorrelation.hh"
-#include "EulerAngleRotation.hh"
-#include "TestUtilities.hh"
-#include "W_dir_dir.hh"
-#include "W_pol_dir.hh"
+#include "alpaca/AngularCorrelation.hh"
+#include "alpaca/EulerAngleRotation.hh"
+#include "alpaca/TestUtilities.hh"
+#include "alpaca/W_dir_dir.hh"
+#include "alpaca/W_pol_dir.hh"
 
 AngularCorrelation::AngularCorrelation(
     const State ini_sta, const vector<pair<Transition, State>> cas_ste)

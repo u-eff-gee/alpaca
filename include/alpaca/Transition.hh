@@ -22,7 +22,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "State.hh"
+#include "alpaca/State.hh"
 
 using std::invalid_argument;
 using std::runtime_error;

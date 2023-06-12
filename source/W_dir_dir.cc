@@ -21,11 +21,11 @@
 #include <cmath>
 #include <iostream>
 
-#include "State.hh"
+#include "alpaca/State.hh"
 
 #include <gsl/gsl_sf.h>
 
-#include "W_dir_dir.hh"
+#include "alpaca/W_dir_dir.hh"
 
 using std::max;
 using std::min;

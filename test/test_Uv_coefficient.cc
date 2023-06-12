@@ -23,8 +23,8 @@
 using std::make_unique;
 using std::unique_ptr;
 
-#include "TestUtilities.hh"
-#include "UvCoefficient.hh"
+#include "alpaca/TestUtilities.hh"
+#include "alpaca/UvCoefficient.hh"
 
 int main() {
 

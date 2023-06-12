@@ -19,8 +19,8 @@
 
 #include <gsl/gsl_math.h>
 
-#include "SphereIntegrator.hh"
-#include "TestUtilities.hh"
+#include "alpaca/SphereIntegrator.hh"
+#include "alpaca/TestUtilities.hh"
 
 int main() {
 

@@ -32,9 +32,9 @@ using std::vector;
 
 #include <gsl/gsl_math.h>
 
-#include "CascadeSampler.hh"
-#include "DeterministicReferenceFrameSampler.hh"
-#include "TestUtilities.hh"
+#include "alpaca/CascadeSampler.hh"
+#include "alpaca/DeterministicReferenceFrameSampler.hh"
+#include "alpaca/TestUtilities.hh"
 
 int main() {
   const double epsilon = 1e-8;

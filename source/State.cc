@@ -17,7 +17,7 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include "State.hh"
+#include "alpaca/State.hh"
 
 string State::parity_str_rep(const Parity parity) const {
 

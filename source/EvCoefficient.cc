@@ -19,7 +19,7 @@
 
 #include <gsl/gsl_sf.h>
 
-#include "EvCoefficient.hh"
+#include "alpaca/EvCoefficient.hh"
 
 EvCoefficient::EvCoefficient(const int two_nu, const EMCharacter em,
                              const int two_L, const EMCharacter emp,

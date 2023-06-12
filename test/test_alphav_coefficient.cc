@@ -19,7 +19,7 @@
 
 #include <cassert>
 
-#include "AlphavCoefficient.hh"
+#include "alpaca/AlphavCoefficient.hh"
 
 int main() {
   // As a test case, use the nu=2 coefficient for the polarized 0->1 transition

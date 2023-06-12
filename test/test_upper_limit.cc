@@ -26,13 +26,13 @@ using std::vector;
 
 #include <gsl/gsl_sf.h>
 
-#include "SpherePointSampler.hh"
-#include "State.hh"
-#include "TestUtilities.hh"
-#include "Transition.hh"
-#include "W_dir_dir.hh"
-#include "W_gamma_gamma.hh"
-#include "W_pol_dir.hh"
+#include "alpaca/SpherePointSampler.hh"
+#include "alpaca/State.hh"
+#include "alpaca/TestUtilities.hh"
+#include "alpaca/Transition.hh"
+#include "alpaca/W_dir_dir.hh"
+#include "alpaca/W_gamma_gamma.hh"
+#include "alpaca/W_pol_dir.hh"
 
 vector<W_gamma_gamma *> ang_corrs{
     // // 0 -> 1 -> 0

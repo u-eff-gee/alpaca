@@ -19,7 +19,7 @@
 
 #include <cassert>
 
-#include "TestUtilities.hh"
+#include "alpaca/TestUtilities.hh"
 
 int main() {
 

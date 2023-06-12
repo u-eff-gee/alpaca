@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "AngularCorrelation.hh"
-#include "SphereRejectionSampler.hh"
+#include "alpaca/AngularCorrelation.hh"
+#include "alpaca/SphereRejectionSampler.hh"
 
 /**
  * \brief Sample directions in spherical coordinates from an angular

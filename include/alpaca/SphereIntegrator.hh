@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "SpherePointSampler.hh"
+#include "alpaca/SpherePointSampler.hh"
 
 /**
  * \brief Simple integration of a function of 2 variables on a sphere surface

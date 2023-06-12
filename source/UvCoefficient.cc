@@ -25,7 +25,7 @@ using std::to_string;
 
 #include <gsl/gsl_sf.h>
 
-#include "UvCoefficient.hh"
+#include "alpaca/UvCoefficient.hh"
 
 UvCoefficient::UvCoefficient(const unsigned int two_nu, const int two_j,
                              const int two_L, const int two_jp)

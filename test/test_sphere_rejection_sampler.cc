@@ -25,9 +25,9 @@ using std::array;
 
 #include <gsl/gsl_math.h>
 
-#include "EulerAngleRotation.hh"
-#include "SphereRejectionSampler.hh"
-#include "TestUtilities.hh"
+#include "alpaca/EulerAngleRotation.hh"
+#include "alpaca/SphereRejectionSampler.hh"
+#include "alpaca/TestUtilities.hh"
 
 /**
  * This script tests the correctness of SphereRejectionSampler by sampling from

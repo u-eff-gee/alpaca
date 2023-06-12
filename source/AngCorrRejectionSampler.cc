@@ -21,8 +21,8 @@
 
 using std::array;
 
-#include "AngCorrRejectionSampler.hh"
-#include "EulerAngleRotation.hh"
+#include "alpaca/AngCorrRejectionSampler.hh"
+#include "alpaca/EulerAngleRotation.hh"
 
 AngCorrRejectionSampler::AngCorrRejectionSampler(AngularCorrelation &w,
                                                  const int seed,

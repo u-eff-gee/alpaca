@@ -29,10 +29,10 @@ using std::endl;
 
 using std::stringstream;
 
-#include "State.hh"
-#include "Transition.hh"
-#include "W_dir_dir.hh"
-#include "W_pol_dir.hh"
+#include "alpaca/State.hh"
+#include "alpaca/Transition.hh"
+#include "alpaca/W_dir_dir.hh"
+#include "alpaca/W_pol_dir.hh"
 
 vector<W_gamma_gamma *> w_gamma_gamma{
     new W_dir_dir(State(0),

@@ -33,7 +33,7 @@ using std::uniform_real_distribution;
 using std::pair;
 using std::tuple;
 
-#include "ReferenceFrameSampler.hh"
+#include "alpaca/ReferenceFrameSampler.hh"
 
 /**
  * \brief Sample from a probability distribution in spherical coordinates using

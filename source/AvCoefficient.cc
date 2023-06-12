@@ -17,7 +17,7 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include "AvCoefficient.hh"
+#include "alpaca/AvCoefficient.hh"
 
 AvCoefficient::AvCoefficient(const int two_nu, const int two_L,
                              const int two_Lp, const int two_jn,

@@ -42,8 +42,8 @@ using std::vector;
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_math.h>
 
-#include "EulerAngleRotation.hh"
-#include "TestUtilities.hh"
+#include "alpaca/EulerAngleRotation.hh"
+#include "alpaca/TestUtilities.hh"
 
 void test_numerical_equality(gsl_vector *a, gsl_vector *b,
                              const double epsilon) {

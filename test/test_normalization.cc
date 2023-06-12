@@ -19,10 +19,10 @@
 
 #include <gsl/gsl_math.h>
 
-#include "SphereIntegrator.hh"
-#include "TestUtilities.hh"
-#include "W_dir_dir.hh"
-#include "W_pol_dir.hh"
+#include "alpaca/SphereIntegrator.hh"
+#include "alpaca/TestUtilities.hh"
+#include "alpaca/W_dir_dir.hh"
+#include "alpaca/W_pol_dir.hh"
 
 /**
  * \brief Test the normalization of the angular correlation functions.

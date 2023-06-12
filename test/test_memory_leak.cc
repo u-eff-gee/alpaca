@@ -17,9 +17,9 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include "AngularCorrelation.hh"
-#include "State.hh"
-#include "Transition.hh"
+#include "alpaca/AngularCorrelation.hh"
+#include "alpaca/State.hh"
+#include "alpaca/Transition.hh"
 
 void calculate_angular_correlation() {
   AngularCorrelation ang_corr(

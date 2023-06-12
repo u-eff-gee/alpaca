@@ -23,7 +23,7 @@
 
 using std::array;
 
-#include "ReferenceFrameSampler.hh"
+#include "alpaca/ReferenceFrameSampler.hh"
 
 class DeterministicReferenceFrameSampler : public ReferenceFrameSampler {
 public:

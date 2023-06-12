@@ -23,9 +23,9 @@
 using std::make_unique;
 using std::unique_ptr;
 
-#include "FCoefficient.hh"
-#include "FCoefficientLiteratureValue.hh"
-#include "TestUtilities.hh"
+#include "alpaca/FCoefficient.hh"
+#include "alpaca/FCoefficientLiteratureValue.hh"
+#include "alpaca/TestUtilities.hh"
 
 vector<FCoefficientLiteratureValue> f_coefficient_values{
     FCoefficientLiteratureValue(2, 0, 2, 2, 4, 0.70710680),

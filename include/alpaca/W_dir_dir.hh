@@ -19,9 +19,9 @@
 
 #pragma once
 
-#include "AvCoefficient.hh"
-#include "UvCoefficient.hh"
-#include "W_gamma_gamma.hh"
+#include "alpaca/AvCoefficient.hh"
+#include "alpaca/UvCoefficient.hh"
+#include "alpaca/W_gamma_gamma.hh"
 
 /**
  * \brief Class for a direction-direction (dir-dir) correlation

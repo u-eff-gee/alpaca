@@ -116,7 +116,7 @@
  *label \f$k\f$ of Ref. \cite FerentzRosenzweig1955 is replaced by \f$\nu\f$.
  */
 
-#include "StringRepresentable.hh"
+#include "alpaca/StringRepresentable.hh"
 
 class FCoefficient : public StringRepresentable {
 public:

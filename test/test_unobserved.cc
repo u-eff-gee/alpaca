@@ -19,10 +19,10 @@
 
 #include <gsl/gsl_sf.h>
 
-#include "State.hh"
-#include "TestUtilities.hh"
-#include "Transition.hh"
-#include "W_dir_dir.hh"
+#include "alpaca/State.hh"
+#include "alpaca/TestUtilities.hh"
+#include "alpaca/Transition.hh"
+#include "alpaca/W_dir_dir.hh"
 
 /**
  * Eq. (68) in Ref. \cite AjzenbergSelove1960.

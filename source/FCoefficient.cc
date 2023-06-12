@@ -25,8 +25,8 @@ using std::to_string;
 
 #include <gsl/gsl_sf.h>
 
-#include "FCoefficient.hh"
-#include "TestUtilities.hh"
+#include "alpaca/FCoefficient.hh"
+#include "alpaca/TestUtilities.hh"
 
 FCoefficient::FCoefficient(const int two_nu, const int two_L, const int two_Lp,
                            const int two_j1, const int two_j)

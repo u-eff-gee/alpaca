@@ -24,9 +24,9 @@
 #include <utility>
 #include <vector>
 
-#include "State.hh"
-#include "Transition.hh"
-#include "W_gamma_gamma.hh"
+#include "alpaca/State.hh"
+#include "alpaca/Transition.hh"
+#include "alpaca/W_gamma_gamma.hh"
 
 using std::array;
 using std::pair;

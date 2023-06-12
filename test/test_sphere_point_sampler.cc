@@ -19,8 +19,8 @@
 
 #include <cassert>
 
-#include "SpherePointSampler.hh"
-#include "TestUtilities.hh"
+#include "alpaca/SpherePointSampler.hh"
+#include "alpaca/TestUtilities.hh"
 
 int main() {
   // Test the method that samples points in cartesian coordinates by verifying

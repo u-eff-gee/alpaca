@@ -22,10 +22,10 @@
 
 #include <gsl/gsl_math.h>
 
-#include "State.hh"
-#include "TestUtilities.hh"
-#include "Transition.hh"
-#include "W_dir_dir.hh"
+#include "alpaca/State.hh"
+#include "alpaca/TestUtilities.hh"
+#include "alpaca/Transition.hh"
+#include "alpaca/W_dir_dir.hh"
 
 /**
  * \brief Analytical expression for the angular distribution of a \f$0 \to 2 \to

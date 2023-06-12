@@ -19,7 +19,7 @@
 
 #include <cassert>
 
-#include "State.hh"
+#include "alpaca/State.hh"
 
 int main() {
   // Test IO of the State class.

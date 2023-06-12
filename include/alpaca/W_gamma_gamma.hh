@@ -27,9 +27,9 @@ using std::vector;
 
 using std::pair;
 
-#include "State.hh"
-#include "StringRepresentable.hh"
-#include "Transition.hh"
+#include "alpaca/State.hh"
+#include "alpaca/StringRepresentable.hh"
+#include "alpaca/Transition.hh"
 
 /**
  * \brief Abstract class for angular correlations of two photons.

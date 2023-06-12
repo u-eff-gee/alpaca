@@ -25,11 +25,11 @@ using std::array;
 
 #include <gsl/gsl_sf.h>
 
-#include "AngCorrRejectionSampler.hh"
-#include "AngularCorrelation.hh"
-#include "EulerAngleRotation.hh"
-#include "SphereRejectionSampler.hh"
-#include "TestUtilities.hh"
+#include "alpaca/AngCorrRejectionSampler.hh"
+#include "alpaca/AngularCorrelation.hh"
+#include "alpaca/EulerAngleRotation.hh"
+#include "alpaca/SphereRejectionSampler.hh"
+#include "alpaca/TestUtilities.hh"
 
 /**
  * Test the AngCorrRejectionSampler by verifying that the class, using an

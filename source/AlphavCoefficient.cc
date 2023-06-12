@@ -21,7 +21,7 @@
 
 using std::stringstream;
 
-#include "AlphavCoefficient.hh"
+#include "alpaca/AlphavCoefficient.hh"
 
 AlphavCoefficient::AlphavCoefficient(const int two_nu, const int two_L,
                                      const int two_Lp, const int two_jn,

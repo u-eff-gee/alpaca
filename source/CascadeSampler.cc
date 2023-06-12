@@ -17,9 +17,9 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include "CascadeSampler.hh"
-#include "EulerAngleRotation.hh"
-#include "ReferenceFrameSampler.hh"
+#include "alpaca/CascadeSampler.hh"
+#include "alpaca/EulerAngleRotation.hh"
+#include "alpaca/ReferenceFrameSampler.hh"
 
 CascadeSampler::CascadeSampler(
     vector<shared_ptr<ReferenceFrameSampler>> cascade)

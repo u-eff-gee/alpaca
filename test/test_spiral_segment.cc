@@ -21,8 +21,8 @@
 
 #include <gsl/gsl_math.h>
 
-#include "SpherePointSampler.hh"
-#include "TestUtilities.hh"
+#include "alpaca/SpherePointSampler.hh"
+#include "alpaca/TestUtilities.hh"
 
 using std::vector;
 

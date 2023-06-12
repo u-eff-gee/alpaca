@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "StringRepresentable.hh"
+#include "alpaca/StringRepresentable.hh"
 
 /**
  * \brief Class for a polarization coefficient

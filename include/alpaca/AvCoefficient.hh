@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "FCoefficient.hh"
-#include "StringRepresentable.hh"
+#include "alpaca/FCoefficient.hh"
+#include "alpaca/StringRepresentable.hh"
 
 /**
  * \brief Class for an \f$A_\nu\f$ coefficient.

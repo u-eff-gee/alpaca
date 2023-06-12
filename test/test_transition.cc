@@ -19,7 +19,7 @@
 
 #include <cassert>
 
-#include "Transition.hh"
+#include "alpaca/Transition.hh"
 
 int main() {
   // Test IO of the Transition class.

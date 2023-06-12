@@ -21,7 +21,7 @@
 
 #include <gsl/gsl_math.h>
 
-#include "SpotlightSampler.hh"
+#include "alpaca/SpotlightSampler.hh"
 
 SpotlightSampler::SpotlightSampler(const array<double, 2> theta_phi,
                                    const int seed)

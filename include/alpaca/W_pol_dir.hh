@@ -23,10 +23,10 @@
 
 using std::vector;
 
-#include "AlphavCoefficient.hh"
-#include "AvCoefficient.hh"
-#include "W_dir_dir.hh"
-#include "W_gamma_gamma.hh"
+#include "alpaca/AlphavCoefficient.hh"
+#include "alpaca/AvCoefficient.hh"
+#include "alpaca/W_dir_dir.hh"
+#include "alpaca/W_gamma_gamma.hh"
 
 /**
  * \brief Class for a polarization-direction (pol-dir) correlation

@@ -23,10 +23,10 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf.h>
 
-#include "State.hh"
-#include "TestUtilities.hh"
-#include "Transition.hh"
-#include "W_pol_dir.hh"
+#include "alpaca/State.hh"
+#include "alpaca/TestUtilities.hh"
+#include "alpaca/Transition.hh"
+#include "alpaca/W_pol_dir.hh"
 
 /**
  * \brief Test polarization-direction correlation

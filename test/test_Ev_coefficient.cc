@@ -17,9 +17,9 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include "AlphavCoefficient.hh"
-#include "EvCoefficient.hh"
-#include "TestUtilities.hh"
+#include "alpaca/AlphavCoefficient.hh"
+#include "alpaca/EvCoefficient.hh"
+#include "alpaca/TestUtilities.hh"
 
 int main() {
 

@@ -25,9 +25,9 @@ using std::unique_ptr;
 
 #include <stdexcept>
 
-#include "KappaCoefficient.hh"
-#include "KappaCoefficientLiteratureValue.hh"
-#include "TestUtilities.hh"
+#include "alpaca/KappaCoefficient.hh"
+#include "alpaca/KappaCoefficientLiteratureValue.hh"
+#include "alpaca/TestUtilities.hh"
 
 /*
         From Tab. II(b) of Ref. \cite FaggHanna1959

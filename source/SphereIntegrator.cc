@@ -22,7 +22,7 @@
 
 #include <gsl/gsl_math.h>
 
-#include "SphereIntegrator.hh"
+#include "alpaca/SphereIntegrator.hh"
 
 using std::array;
 using std::vector;

@@ -29,9 +29,8 @@ using std::pair;
 
 using std::vector;
 
-#include "ReferenceFrameSampler.hh"
-
-#include "EulerAngleRotation.hh"
+#include "alpaca/EulerAngleRotation.hh"
+#include "alpaca/ReferenceFrameSampler.hh"
 
 array<double, 3> ReferenceFrameSampler::operator()() { return sample().second; }
 
