@@ -84,4 +84,42 @@ int main() {
   }
 
   assert(error_thrown);
+
+  // Check named constructors
+
+  {
+    auto transA = Transition::Dipole(0.);
+    auto transB = Transition(2, 0.);
+    assert(transA == transB);
+  }
+
+  {
+    auto transA = Transition::Quadrupole(0.);
+    auto transB = Transition(4, 0.);
+    assert(transA == transB);
+  }
+
+  {
+    auto transA = Transition::E1(0.);
+    auto transB = Transition(EMCharacter::electric, 2, 0.);
+    assert(transA == transB);
+  }
+
+  {
+    auto transA = Transition::M1(0.);
+    auto transB = Transition(EMCharacter::magnetic, 2, 0.);
+    assert(transA == transB);
+  }
+
+  {
+    auto transA = Transition::E2(0.);
+    auto transB = Transition(EMCharacter::electric, 4, 0.);
+    assert(transA == transB);
+  }
+
+  {
+    auto transA = Transition::M2(0.);
+    auto transB = Transition(EMCharacter::magnetic, 4, 0.);
+    assert(transA == transB);
+  }
 }

@@ -36,6 +36,19 @@ namespace alpaca {
 enum class EMCharacter : short { electric = -1, magnetic = 1, unknown = 0 };
 
 /**
+ * \brief Alternate given EMCharacter
+ *
+ * turns electric into magnetic and vice versa
+ *
+ * \param em EMCharacter to convert
+ *
+ * \return Alternate EMCharacter
+ */
+constexpr EMCharacter alt_character(EMCharacter em) {
+  return static_cast<EMCharacter>(-static_cast<short>(em));
+}
+
+/**
  * \brief Struct to store properties of an EM transition between nuclear states.
  *
  * The transition can have two different multipolarities with their associated
@@ -72,6 +85,87 @@ struct Transition {
    */
   Transition(const EMCharacter em, const int t_L, const EMCharacter emp,
              const int t_Lp, const double del);
+
+  /**
+   * \brief Constructor which automatically assigns second transition and does
+   * not take information about the EM character
+   *
+   * The EM characters are initialized as unknown.
+   *
+   * \param t_L Two times the multipolarity. The second transition corresponds
+   * to the next multipolarity order.
+   * \param del Multipole mixing ratio.
+   * \param del Multipole mixing ratio.
+   */
+  inline Transition(int t_L, double del = 0.) : Transition(t_L, t_L + 2, del){};
+
+  /**
+   * \brief Constructor which automatically assigns second transition
+   *
+   * \param em Primary EM character. The secondary EM character is assigned
+   * automatically.
+   * \param t_L Two times the multipolarity. The second
+   * transition corresponds to the next multipolarity order.
+   * \param del
+   * Multipole mixing ratio.
+   * \param del Multipole mixing ratio.
+   */
+  inline Transition(EMCharacter em, int t_L, double del = 0.)
+      : Transition(em, t_L, alt_character(em), t_L + 2, del){};
+
+  /**
+   * \brief Named constructor for dipole radiation
+   *
+   * \param del Multipole mixing ratio.
+   */
+  inline static Transition Dipole(double del = 0.) {
+    return Transition(2, del);
+  }
+
+  /**
+   * \brief Named constructor for E1 radiation
+   *
+   * \param del Multipole mixing ratio.
+   */
+  inline static Transition E1(double delta = 0.) {
+    return Transition(EMCharacter::electric, 2, delta);
+  }
+
+  /**
+   * \brief Named constructor for M1 radiation
+   *
+   * \param del Multipole mixing ratio.
+   */
+  inline static Transition M1(double delta = 0.) {
+    return Transition(EMCharacter::magnetic, 2, delta);
+  }
+
+  /**
+   * \brief Named constructor for quadrupole radiation
+   *
+   * \param del Multipole mixing ratio.
+   */
+  inline static Transition Quadrupole(double delta = 0.) {
+    return Transition(4, delta);
+  }
+
+  /**
+   * \brief Named constructor for E2 radiation
+   *
+   * \param del Multipole mixing ratio.
+   */
+  inline static Transition E2(double delta = 0.) {
+    return Transition(EMCharacter::electric, 4, delta);
+  }
+
+  /**
+   * \brief Named constructor for M2 radiation
+   *
+   * \param del Multipole mixing ratio.
+   */
+  inline static Transition M2(double delta = 0.) {
+    return Transition(EMCharacter::magnetic, 4, delta);
+  }
 
   /**
    * \brief String representation of EM characters.
@@ -129,5 +223,11 @@ struct Transition {
    */
   int check_two_L(const int two_L) const;
 };
+
+inline bool operator==(const Transition &A, const Transition &B) {
+  return ((A.em_char == B.em_char) && (A.em_charp == B.em_charp) &&
+          (A.two_L == B.two_L) && (A.two_Lp == B.two_Lp) &&
+          (A.delta == B.delta));
+}
 
 } // namespace alpaca
