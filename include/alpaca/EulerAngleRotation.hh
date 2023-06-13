@@ -29,6 +29,10 @@ using std::array;
 
 namespace alpaca {
 
+using EulerAngles = array<double, 3>;
+using CoordDir = array<double, 2>;
+using CoordCart = array<double, 3>;
+
 /**
  * \brief Functions to perform arbitrary rotations of 3D vectors using Euler
  * angles.
@@ -183,8 +187,8 @@ inline void rotate(gsl_vector *xp_yp_zp, gsl_vector *Phi_Theta_Psi,
   gsl_matrix_free(A);
 };
 
-inline array<double, 3> rotate(array<double, 3> Phi_Theta_Psi_reference,
-                               array<double, 3> Phi_Theta_Psi) {
+inline EulerAngles rotate(EulerAngles Phi_Theta_Psi_reference,
+                          EulerAngles Phi_Theta_Psi) {
   gsl_vector *Phi_Theta_Psi_reference_gsl = gsl_vector_alloc(3);
   gsl_vector_set(Phi_Theta_Psi_reference_gsl, 0, Phi_Theta_Psi_reference[0]);
   gsl_vector_set(Phi_Theta_Psi_reference_gsl, 1, Phi_Theta_Psi_reference[1]);
@@ -207,7 +211,7 @@ inline array<double, 3> rotate(array<double, 3> Phi_Theta_Psi_reference,
 
   angles(Phi_Theta_Psi_cumulative, cumulative_rotation_matrix);
 
-  array<double, 3> result{
+  EulerAngles result{
       gsl_vector_get(Phi_Theta_Psi_cumulative, 0),
       gsl_vector_get(Phi_Theta_Psi_cumulative, 1),
       gsl_vector_get(Phi_Theta_Psi_cumulative, 2),
@@ -250,11 +254,11 @@ inline void rotate_back(gsl_vector *x_y_z, gsl_vector *Phi_Theta_Psi,
  * @param theta_phi Polar- and azimuthal angle in spherical coordinates in
  * radians.
  * @param Phi Euler angle for the first rotation around the z axis in radians.
- * @return array<double, 3> One possible set of Euler angles to rotate the z
+ * @return EulerAngles One possible set of Euler angles to rotate the z
  * axis into the given vector in spherical coordinates.
  */
-inline array<double, 3> from_spherical(const array<double, 2> theta_phi,
-                                       const double Phi = 0.) {
+inline EulerAngles from_spherical(const CoordDir theta_phi,
+                                  const double Phi = 0.) {
   return {Phi, theta_phi[0], M_PI_2 - theta_phi[1]};
 }
 
@@ -264,10 +268,10 @@ inline array<double, 3> from_spherical(const array<double, 2> theta_phi,
  *
  * @param Phi_Theta_Psi Euler angles in radians.
  * radians.
- * @return array<double, 2> Polar and azimuthal angle of the z axis after
+ * @return CoordDir Polar and azimuthal angle of the z axis after
  * rotation by three Euler angles in radians.
  */
-inline array<double, 2> to_spherical(const array<double, 3> Phi_Theta_Psi) {
+inline CoordDir to_spherical(const EulerAngles Phi_Theta_Psi) {
   return {Phi_Theta_Psi[1], M_PI_2 - Phi_Theta_Psi[2]};
 }
 

@@ -30,6 +30,9 @@ using std::uniform_real_distribution;
 
 #include "alpaca/ReferenceFrameSampler.hh"
 
+using alpaca::EulerAngles;
+using alpaca::CoordDir;
+
 namespace alpaca {
 
 /**
@@ -143,7 +146,7 @@ public:
    * of trials \f$N_\mathrm{max}\f$ is reached by the algorithm and no random
    * vector was accepted.
    */
-  virtual pair<unsigned int, array<double, 3>> sample() override;
+  virtual pair<unsigned int, EulerAngles> sample() override;
 
 protected:
   /**
@@ -168,7 +171,7 @@ protected:
    * \return \f$\left( \theta_\mathrm{rand}, \varphi_\mathrm{rand} \right)\f$,
    * random point on sphere surface.
    */
-  array<double, 2> sample_theta_phi();
+  CoordDir sample_theta_phi();
 
   function<double(const double, const double)>
       distribution; /**< \f$W \left( \theta, \varphi \right)\f$, (unnormalized)

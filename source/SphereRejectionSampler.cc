@@ -17,10 +17,6 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include <array>
-
-using std::array;
-
 #include <numeric>
 #include <utility>
 
@@ -28,6 +24,9 @@ using std::array;
 
 #include "alpaca/EulerAngleRotation.hh"
 #include "alpaca/SphereRejectionSampler.hh"
+
+using alpaca::EulerAngles;
+using alpaca::CoordDir;
 
 namespace alpaca {
 
@@ -38,9 +37,9 @@ SphereRejectionSampler::SphereRejectionSampler(
   random_engine = mt19937(seed);
 }
 
-pair<unsigned int, array<double, 3>> SphereRejectionSampler::sample() {
+pair<unsigned int, EulerAngles> SphereRejectionSampler::sample() {
 
-  array<double, 2> theta_phi;
+  CoordDir theta_phi;
   double dis_val;
 
   for (unsigned int i = 0; i < max_tries; ++i) {
@@ -70,7 +69,7 @@ double SphereRejectionSampler::sample_phi() {
   return 2. * M_PI * uniform_random(random_engine);
 }
 
-array<double, 2> SphereRejectionSampler::sample_theta_phi() {
+CoordDir SphereRejectionSampler::sample_theta_phi() {
   return {sample_theta(), sample_phi()};
 }
 

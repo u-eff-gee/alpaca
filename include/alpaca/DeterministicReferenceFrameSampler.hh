@@ -19,25 +19,23 @@
 
 #pragma once
 
-#include <array>
-
-using std::array;
-
 #include "alpaca/ReferenceFrameSampler.hh"
+
+using alpaca::EulerAngles;
 
 namespace alpaca {
 
 class DeterministicReferenceFrameSampler : public ReferenceFrameSampler {
 public:
-  DeterministicReferenceFrameSampler(const array<double, 3> a_Phi_Theta_Psi)
+  DeterministicReferenceFrameSampler(const EulerAngles a_Phi_Theta_Psi)
       : Phi_Theta_Psi(a_Phi_Theta_Psi) {}
 
-  pair<unsigned int, array<double, 3>> sample() override {
+  pair<unsigned int, EulerAngles> sample() override {
     return {1, Phi_Theta_Psi};
   }
 
 protected:
-  const array<double, 3> Phi_Theta_Psi;
+  const EulerAngles Phi_Theta_Psi;
 };
 
 } // namespace alpaca

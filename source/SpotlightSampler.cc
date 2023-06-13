@@ -23,12 +23,16 @@
 #include <gsl/gsl_math.h>
 
 #include "alpaca/SpotlightSampler.hh"
+#include "alpaca/EulerAngleRotation.hh"
 
 using std::pair;
 
+using alpaca::EulerAngles;
+using alpaca::CoordDir;
+
 namespace alpaca {
 
-SpotlightSampler::SpotlightSampler(const array<double, 2> a_theta_phi,
+SpotlightSampler::SpotlightSampler(const CoordDir a_theta_phi,
                                    const double a_opening_angle,
                                    const unsigned long a_seed)
     : theta_phi(a_theta_phi), opening_angle(a_opening_angle), seed(a_seed) {
@@ -36,7 +40,7 @@ SpotlightSampler::SpotlightSampler(const array<double, 2> a_theta_phi,
   random_engine = mt19937(seed);
 }
 
-pair<unsigned int, array<double, 3>> SpotlightSampler::sample() {
+pair<unsigned int, EulerAngles> SpotlightSampler::sample() {
   if (opening_angle == 0.0) {
     return {1, euler_angle_transform::from_spherical(theta_phi)};
   }

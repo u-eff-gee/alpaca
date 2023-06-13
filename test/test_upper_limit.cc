@@ -17,11 +17,9 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include <array>
 #include <cassert>
 #include <vector>
 
-using std::array;
 using std::vector;
 
 #include <gsl/gsl_sf.h>
@@ -667,7 +665,7 @@ int main() {
   const SpherePointSampler sph_poi_sam;
 
   const unsigned int n_sphere_points = 1000;
-  array<vector<double>, 2> sphere_points = sph_poi_sam.sample(n_sphere_points);
+  vector<CoordDir> sphere_points = sph_poi_sam.sample(n_sphere_points);
 
   double ang_cor_max{0.}, ang_cor_val{0.}, ang_cor_upp_lim{0.};
 
@@ -677,7 +675,7 @@ int main() {
 
     for (size_t i = 0; i < n_sphere_points; ++i) {
       ang_cor_val =
-          ang_cor->operator()(sphere_points[0][i], sphere_points[1][i]);
+          ang_cor->operator()(sphere_points[i][0], sphere_points[i][1]);
       assert(ang_cor_val <= ang_cor_upp_lim);
       if (ang_cor_val > ang_cor_max) {
         ang_cor_max = ang_cor_val;

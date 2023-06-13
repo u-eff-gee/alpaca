@@ -17,7 +17,6 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include <array>
 #include <cassert>
 
 #include <gsl/gsl_sf.h>
@@ -29,8 +28,6 @@
 #include "alpaca/TestUtilities.hh"
 #include "alpaca/Transition.hh"
 
-using std::array;
-
 namespace euler_angle_transform = alpaca::euler_angle_transform;
 
 using alpaca::AngCorrRejectionSampler;
@@ -41,6 +38,7 @@ using alpaca::SphereRejectionSampler;
 using alpaca::State;
 using alpaca::test_numerical_equality;
 using alpaca::Transition;
+using alpaca::CoordDir;
 
 /**
  * Test the AngCorrRejectionSampler by verifying that the class, using an
@@ -70,8 +68,8 @@ int main() {
       },
       ang_cor.get_upper_limit(), seed);
 
-  array<double, 2> theta_phi_1;
-  array<double, 2> theta_phi_2;
+  CoordDir theta_phi_1;
+  CoordDir theta_phi_2;
 
   for (unsigned int n = 0; n < 10; ++n) {
     theta_phi_1 = euler_angle_transform::to_spherical(ang_cor_sam());

@@ -19,11 +19,14 @@
 
 #pragma once
 
-#include <array>
 #include <vector>
 
-using std::array;
+#include "alpaca/EulerAngleRotation.hh"
+
 using std::vector;
+
+using alpaca::CoordCart;
+using alpaca::CoordDir;
 
 namespace alpaca {
 
@@ -69,13 +72,13 @@ public:
    *
    * \param n \f$n\f$, desired number of points
    *
-   * \return std::array that contains two std::vectors with size \f$n\f$. The
-   * first vector contains the values \f$\theta_i\f$, and the second vector
-   * contains the values \f$\varphi_i\f$. Note that the values of
-   * \f$\varphi_i\f$ are strictly increasing, i.e. values of \f$\varphi_i >
-   * 2\pi\f$ will always be sampled, except for cases with \f$c \approx 1\f$.
+   * \return std::vector of size n that contains the spherical coordinates. Note
+   * that the values of \f$\varphi_i\f$ are strictly increasing, i.e. values of
+   * \f$\varphi_i > 2\pi\f$ will always be sampled, except for cases with \f$c
+   * \approx 1\f$.
    */
-  array<vector<double>, 2> sample(const unsigned int n) const;
+
+  vector<CoordDir> sample(const unsigned int n) const;
 
   /**
    * \brief Sample \f$n\f$ points approximately uniformly on the surface of a
@@ -100,11 +103,10 @@ public:
    * \param n \f$n\f$, desired number of points
    * \param r \f$r\f$, radius of the sphere
    *
-   * \return std::array that contains three std::vectors with size \f$n\f$, that
-   * contain the \f$x\f$-, \f$y\f$-, and \f$z\f$ coordinate.
-   */
-  array<vector<double>, 3> sample_cartesian(const unsigned int n,
-                                            const double r = 1.) const;
+   * \return std::vector of size n that contains the cartesian coordinates
+   **/
+  vector<CoordCart> sample_cartesian(const unsigned int n,
+                                     const double r = 1.) const;
 
   /**
    * \brief Elliptic integral of the second kind \f$E\left( \varphi | m

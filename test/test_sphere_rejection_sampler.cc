@@ -17,17 +17,15 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include <array>
-
-using std::array;
-
 #include <cassert>
 
 #include <gsl/gsl_math.h>
 
+#include "alpaca/EulerAngleRotation.hh"
 #include "alpaca/SphereRejectionSampler.hh"
 #include "alpaca/TestUtilities.hh"
 
+using alpaca::EulerAngles;
 using alpaca::SphereRejectionSampler;
 using alpaca::test_numerical_equality;
 
@@ -65,7 +63,7 @@ int main() {
       []([[maybe_unused]] const double theta,
          [[maybe_unused]] const double phi) { return -1.; },
       0.5, 0);
-  const pair<unsigned int, array<double, 3>> theta_phi_default =
+  const pair<unsigned int, EulerAngles> theta_phi_default =
       sph_rej_sam_3.sample();
   assert(theta_phi_default.first == 1000);
   assert(theta_phi_default.second[0] == 0.);

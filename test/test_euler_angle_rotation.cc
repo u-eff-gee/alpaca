@@ -17,7 +17,6 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include <array>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
@@ -36,6 +35,7 @@ using std::string;
 using std::stringstream;
 using std::vector;
 
+using alpaca::EulerAngles;
 using alpaca::test_numerical_equality;
 namespace euler_angle_transform = alpaca::euler_angle_transform;
 
@@ -63,10 +63,10 @@ void test_numerical_equality(gsl_vector *a, gsl_vector *b,
 
 struct RotationTest {
   string name;
-  array<double, 3> initial_axis;
-  array<double, 3> target_axis;
-  array<double, 3> Phi_Theta_Psi;
-  array<double, 3> Phi_Theta_Psi_alternative;
+  EulerAngles initial_axis;
+  EulerAngles target_axis;
+  EulerAngles Phi_Theta_Psi;
+  EulerAngles Phi_Theta_Psi_alternative;
 };
 
 const vector<RotationTest> rotation_tests{

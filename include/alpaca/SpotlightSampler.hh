@@ -21,29 +21,32 @@
 
 #include <random>
 
+#include "alpaca/EulerAngleRotation.hh"
+#include "alpaca/ReferenceFrameSampler.hh"
+
 using std::mt19937;
 using std::uniform_real_distribution;
 
-#include "alpaca/EulerAngleRotation.hh"
-#include "alpaca/ReferenceFrameSampler.hh"
+using alpaca::EulerAngles;
+using alpaca::CoordDir;
 
 namespace alpaca {
 
 class SpotlightSampler : public ReferenceFrameSampler {
 public:
-  SpotlightSampler(const array<double, 2> theta_phi, const double opening_angle,
+  SpotlightSampler(const CoordDir theta_phi, const double opening_angle,
                    const unsigned long seed);
-  SpotlightSampler(const array<double, 2> a_theta_phi,
+  SpotlightSampler(const CoordDir a_theta_phi,
                    const unsigned long a_seed)
       : SpotlightSampler(a_theta_phi, 0., a_seed) {}
-  SpotlightSampler(const array<double, 2> a_theta_phi, const double distance,
+  SpotlightSampler(const CoordDir a_theta_phi, const double distance,
                    const double radius, const unsigned long a_seed)
       : SpotlightSampler(a_theta_phi, asin(radius / distance), a_seed) {}
 
-  pair<unsigned int, array<double, 3>> sample();
+  pair<unsigned int, EulerAngles> sample();
 
 protected:
-  array<double, 2> theta_phi;
+  CoordDir theta_phi;
   double opening_angle;
   double u_min{0.5};
   unsigned long seed;

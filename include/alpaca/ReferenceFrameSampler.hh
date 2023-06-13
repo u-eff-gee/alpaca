@@ -19,11 +19,13 @@
 
 #pragma once
 
-#include <array>
 #include <utility>
 
-using std::array;
+#include "alpaca/EulerAngleRotation.hh"
+
 using std::pair;
+
+using alpaca::EulerAngles;
 
 namespace alpaca {
 
@@ -61,7 +63,7 @@ public:
    * \right)\f$, if the maximum number of trials \f$N_\mathrm{max}\f$ is reached
    * by the algorithm and no random reference frame was accepted.
    */
-  virtual pair<unsigned int, array<double, 3>> sample() = 0;
+  virtual pair<unsigned int, EulerAngles> sample() = 0;
   /**
    * \brief Sample a random reference frame.
    *
@@ -70,7 +72,7 @@ public:
    * maximum number of trials \f$N_\mathrm{max}\f$ is reached by the algorithm
    * and no random vector was accepted.
    */
-  array<double, 3> operator()();
+  EulerAngles operator()();
 
   /**
    * \brief Estimate the efficiency of sampling for the given

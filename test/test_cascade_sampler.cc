@@ -17,7 +17,6 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include <array>
 #include <memory>
 #include <vector>
 
@@ -26,8 +25,8 @@
 #include "alpaca/CascadeSampler.hh"
 #include "alpaca/DeterministicReferenceFrameSampler.hh"
 #include "alpaca/TestUtilities.hh"
+#include "alpaca/EulerAngleRotation.hh"
 
-using std::array;
 using std::make_shared;
 using std::shared_ptr;
 using std::vector;
@@ -36,20 +35,21 @@ using alpaca::CascadeSampler;
 using alpaca::DeterministicReferenceFrameSampler;
 using alpaca::ReferenceFrameSampler;
 using alpaca::test_numerical_equality;
+using alpaca::EulerAngles;
 
 int main() {
   const double epsilon = 1e-8;
 
   CascadeSampler cascade_sampler(vector<shared_ptr<ReferenceFrameSampler>>{
       make_shared<DeterministicReferenceFrameSampler>(
-          array<double, 3>{0, -M_PI_2, 0}),
+                                         EulerAngles{0, -M_PI_2, 0}),
       make_shared<DeterministicReferenceFrameSampler>(
-          array<double, 3>{0, -M_PI_2, 0})});
+                                         EulerAngles{0, -M_PI_2, 0})});
 
-  vector<array<double, 3>> cascade = cascade_sampler();
+    vector<EulerAngles> cascade = cascade_sampler();
 
   test_numerical_equality<double>(
-      3, cascade[0].data(), array<double, 3>{0, -M_PI_2, 0}.data(), epsilon);
+            3, cascade[0].data(), EulerAngles{0, -M_PI_2, 0}.data(), epsilon);
   test_numerical_equality<double>(3, cascade[1].data(),
-                                  array<double, 3>{0, M_PI, 0}.data(), epsilon);
+                                  EulerAngles{0, M_PI, 0}.data(), epsilon);
 }

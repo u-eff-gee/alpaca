@@ -17,15 +17,16 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include <array>
 #include <vector>
 
 #include <gsl/gsl_math.h>
 
+#include "alpaca/EulerAngleRotation.hh"
 #include "alpaca/SphereIntegrator.hh"
 
-using std::array;
 using std::vector;
+
+using alpaca::CoordDir;
 
 namespace alpaca {
 
@@ -34,13 +35,13 @@ double SphereIntegrator::operator()(double f(double theta, double phi),
                                     bool is_in_omega(double theta,
                                                      double phi)) {
 
-  array<vector<double>, 2> theta_phi = sph_poi_samp.sample(n);
+  vector<CoordDir> theta_phi = sph_poi_samp.sample(n);
 
   double integral = 0.;
 
   for (size_t i = 0; i < static_cast<size_t>(n); ++i) {
-    if (is_in_omega(theta_phi[0][i], theta_phi[1][i])) {
-      integral += f(theta_phi[0][i], theta_phi[1][i]);
+    if (is_in_omega(theta_phi[i][0], theta_phi[i][1])) {
+      integral += f(theta_phi[i][0], theta_phi[i][1]);
     }
   }
 

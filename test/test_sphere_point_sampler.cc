@@ -19,9 +19,11 @@
 
 #include <cassert>
 
+#include "alpaca/EulerAngleRotation.hh"
 #include "alpaca/SpherePointSampler.hh"
 #include "alpaca/TestUtilities.hh"
 
+using alpaca::CoordCart;
 using alpaca::SpherePointSampler;
 using alpaca::test_numerical_equality;
 
@@ -32,11 +34,11 @@ int main() {
   const double radius = 2.;
   const double radius_squared = radius * radius;
   const unsigned int n = 100;
-  array<vector<double>, 3> x_y_z = sph_poi_sam.sample_cartesian(n, radius);
+  vector<CoordCart> x_y_z = sph_poi_sam.sample_cartesian(n, radius);
   for (size_t i = 0; i < n; ++i) {
-    test_numerical_equality<double>(x_y_z[0][i] * x_y_z[0][i] +
-                                        x_y_z[1][i] * x_y_z[1][i] +
-                                        x_y_z[2][i] * x_y_z[2][i],
+    test_numerical_equality<double>(x_y_z[i][0] * x_y_z[i][0] +
+                                        x_y_z[i][1] * x_y_z[i][1] +
+                                        x_y_z[i][2] * x_y_z[i][2],
                                     radius_squared, 1e-5);
   }
 

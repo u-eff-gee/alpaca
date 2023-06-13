@@ -19,23 +19,20 @@
 
 #pragma once
 
-#include <array>
-
-using std::array;
-
 #include <memory>
-
-using std::shared_ptr;
-
 #include <vector>
 
-using std::vector;
 
 #include <gsl/gsl_math.h>
 
 #include "alpaca/AngCorrRejectionSampler.hh"
 #include "alpaca/AngularCorrelation.hh"
 #include "alpaca/ReferenceFrameSampler.hh"
+
+using std::shared_ptr;
+using std::vector;
+
+using alpaca::EulerAngles;
 
 namespace alpaca {
 
@@ -163,7 +160,7 @@ public:
    * of the first (depends on the setting of return_first_direction) gamma ray
    * in the cascade, the second pair describes the second gamma ray, and so on.
    */
-  vector<array<double, 3>> operator()();
+  vector<EulerAngles> operator()();
 
 protected:
   vector<shared_ptr<ReferenceFrameSampler>>
