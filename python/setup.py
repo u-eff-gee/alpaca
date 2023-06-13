@@ -20,10 +20,10 @@ from setuptools import setup, find_packages
 setup(
     name="alpaca",
     version="@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@",
-    description="alpaca: a linearly-polarized angular-correlation application",
-    url="http://github.com/uga-uga/alpaca",
+    description="a linearly-polarized angular-correlation application",
+    url="https://github.com/u-eff-gee/alpaca",
     author="Udo Friman-Gayer",
-    author_email="ufg@email.unc.edu",
+    author_email="udo.friman-gayer@ess.eu",
     license="GPLv3",
     python_requires=">=3",
     packages=find_packages(),

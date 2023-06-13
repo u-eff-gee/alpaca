@@ -59,10 +59,12 @@ class CMakeBuild(build_ext):
 
 setup(
     name="alpaca",
-    version="0.0.1",
+    version="1.0.5",
+    description="a linearly-polarized angular-correlation application ",
+    url="https://github.com/u-eff-gee/alpaca",
     author="Udo Friman-Gayer",
-    description=" a linearly-polarized angular-correlation application ",
-    long_description="",
+    author_email="udo.friman-gayer@ess.eu",
+    license="GPLv3",
     ext_modules=[CMakeExtension("alpaca")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
