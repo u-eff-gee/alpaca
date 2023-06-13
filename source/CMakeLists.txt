@@ -15,10 +15,6 @@
 #
 #    Copyright (C) 2021-2023 Udo Friman-Gayer
 
-add_library(stringRepresentable StringRepresentable.cc)
-target_include_directories(stringRepresentable PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(stringRepresentable PROPERTIES PUBLIC_HEADER include/alpaca/StringRepresentable.hh)
-
 add_library(fCoefficient FCoefficient.cc)
 target_link_libraries(fCoefficient ${GSL_LIBRARIES})
 target_include_directories(fCoefficient PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
@@ -28,19 +24,6 @@ add_library(avCoefficient AvCoefficient.cc)
 target_link_libraries(avCoefficient fCoefficient)
 target_include_directories(avCoefficient PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 set_target_properties(avCoefficient PROPERTIES PUBLIC_HEADER include/alpaca/AvCoefficient.hh)
-
-add_library(state State.cc)
-target_include_directories(state PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(state PROPERTIES PUBLIC_HEADER include/alpaca/State.hh)
-
-add_library(transition Transition.cc)
-target_link_libraries(transition state)
-target_include_directories(transition PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(transition PROPERTIES PUBLIC_HEADER include/alpaca/Transition.hh)
-
-add_library(w_gamma_gamma W_gamma_gamma.cc)
-target_include_directories(w_gamma_gamma PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(w_gamma_gamma PROPERTIES PUBLIC_HEADER include/alpaca/W_gamma_gamma.hh)
 
 add_library(w_dir_dir W_dir_dir.cc)
 target_link_libraries(w_dir_dir avCoefficient uvCoefficient)
@@ -73,9 +56,20 @@ target_include_directories(w_pol_dir PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_D
 set_target_properties(w_pol_dir PROPERTIES PUBLIC_HEADER include/alpaca/W_pol_dir.hh)
 
 add_library(angular_correlation SHARED AngularCorrelation.cc)
-target_link_libraries(angular_correlation PUBLIC state transition w_dir_dir w_pol_dir)
+target_link_libraries(angular_correlation PUBLIC w_dir_dir w_pol_dir)
 target_include_directories(angular_correlation PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 set_target_properties(angular_correlation PROPERTIES PUBLIC_HEADER include/alpaca/AngularCorrelation.hh)
+
+add_library(angular_correlation_static STATIC AngularCorrelation.cc)
+target_link_libraries(angular_correlation_static PUBLIC w_dir_dir w_pol_dir)
+target_include_directories(
+  angular_correlation_static
+  PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+set_target_properties(
+  angular_correlation_static PROPERTIES PUBLIC_HEADER
+                                 include/alpaca/AngularCorrelation.hh)
+set_target_properties(angular_correlation_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 add_library(spherePointSampler SpherePointSampler.cc)
 target_link_libraries(spherePointSampler ${GSL_LIBRARIES})

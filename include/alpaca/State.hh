@@ -109,23 +109,33 @@ struct State {
   /**
    * \brief String representation of parities.
    *
-   * \param parity Parity
-   *
    * \return "+" or "-"
    *
    * \throw runtime_error if parity is neither positive nor negative.
    */
-  string static parity_str_rep(const Parity parity);
+  inline string parity_str_rep() const {
+    switch (parity) {
+    case Parity::negative:
+      return "-";
+    case Parity::positive:
+      return "+";
+    default:
+      throw std::runtime_error("No string representation for unknown parity.");
+    }
+  }
 
   /**
    * \brief String representation of angular momentum quantum numbers.
    *
-   * \param two_J Two times the angular momentum quantum number in units of the
-   * reduced Planck constant.
-   *
    * \return String representation
    */
-  string static spin_str_rep(const int two_J);
+  inline string spin_str_rep() const {
+    if (two_J % 2 == 0) {
+      return std::to_string(two_J / 2);
+    }
+
+    return std::to_string(two_J) + "/2";
+  }
 
   /**
    * \brief String representation of a State.
@@ -136,7 +146,13 @@ struct State {
    *
    * \return String representation
    */
-  string str_rep() const;
+  string str_rep() const {
+    if (parity != Parity::unknown) {
+      return spin_str_rep() + "^" + parity_str_rep();
+    }
+
+    return spin_str_rep();
+  }
 
   /**
    * \brief Ensure that given angular momentum quantum number is valid.
@@ -167,7 +183,15 @@ struct State {
    *
    * \throw std::invalid_argument if e_x is invalid.
    */
-  double check_excitation_energy(const double e_x) const;
+  constexpr static double check_excitation_energy(const double e_x) {
+    if (e_x < 0.) {
+      throw std::invalid_argument("Excitation energy must not be negative.");
+    }
+
+    return e_x;
+  }
+
+  friend bool operator==(State const &, State const &) = default;
 };
 
 } // namespace alpaca

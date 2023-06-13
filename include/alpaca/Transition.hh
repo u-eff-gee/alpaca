@@ -27,6 +27,7 @@
 using std::invalid_argument;
 using std::runtime_error;
 using std::string;
+using std::to_string;
 
 namespace alpaca {
 
@@ -219,7 +220,27 @@ struct Transition {
    *
    * \return String representation
    */
-  string str_rep(const State initial_state, const State final_state) const;
+  string str_rep(const State initial_state, const State final_state) const {
+    string string_representation = initial_state.str_rep() + " -- ( ";
+
+    if (em_char != EMCharacter::unknown) {
+      string_representation += em_str_rep(em_char);
+    }
+    string_representation += to_string(two_L / 2);
+
+    string_representation += " , ";
+
+    if (em_charp != EMCharacter::unknown) {
+      string_representation += em_str_rep(em_charp);
+    }
+    string_representation += to_string(two_Lp / 2);
+
+    string_representation += " ) --> " + final_state.str_rep();
+
+    return string_representation;
+  }
+
+  friend bool operator==(Transition const &, Transition const &) = default;
 
   EMCharacter em_char;  /**< Primary EM character. */
   int two_L;            /**< Two times the primary multipolarity. */
@@ -248,11 +269,5 @@ struct Transition {
     return two_L;
   }
 };
-
-inline bool operator==(const Transition &A, const Transition &B) {
-  return ((A.em_char == B.em_char) && (A.em_charp == B.em_charp) &&
-          (A.two_L == B.two_L) && (A.two_Lp == B.two_Lp) &&
-          (A.delta == B.delta));
-}
 
 } // namespace alpaca

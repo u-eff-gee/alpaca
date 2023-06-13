@@ -18,7 +18,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(alpaca VERSION 1.0.5)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(GSL REQUIRED)
@@ -91,12 +91,9 @@ set(installable_libs
         fCoefficient
         kappa_coefficient
         sphereRejectionSampler
-        state
-        stringRepresentable
-        transition
         uvCoefficient
         w_dir_dir
-        w_gamma_gamma w_pol_dir)
+        w_pol_dir)
 install(
         TARGETS ${installable_libs}
         EXPORT ALPACA
