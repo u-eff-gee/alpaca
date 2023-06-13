@@ -45,7 +45,7 @@ NB_MODULE(alpaca, m) {
   nb::enum_<Parity>(m, "Parity")
     .value("negative", Parity::negative)
     .value("positive", Parity::positive)
-    .value("parity_unknown", Parity::unknown);
+    .value("unknown", Parity::unknown);
   nb::class_<State>(m, "State")
     .def(nb::init<int>(), nb::arg("two_J"))
     .def(nb::init<int, Parity>(), nb::arg("two_J"), nb::arg("parity"))

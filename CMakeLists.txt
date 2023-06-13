@@ -93,27 +93,23 @@ if(BUILD_TESTS)
 endif(BUILD_TESTS)
 
 set(installable_libs
-        angcorrRejectionSampler
-        angular_correlation
-        alphavCoefficient
-        avCoefficient
-        cascadeSampler
-        referenceFrameSampler
-        fCoefficient
-        kappa_coefficient
-        sphereRejectionSampler
-        uvCoefficient
-        w_dir_dir
-        w_pol_dir)
+        coeff
+        coeff_static
+        angcorr
+        angcorr_static
+        sampler
+        sampler_static)
 install(
-        TARGETS ${installable_libs}
-        EXPORT ALPACA
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+       TARGETS ${installable_libs}
+       EXPORT ALPACA
+       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 install(
-        EXPORT ALPACA
-        FILE alpaca-config.cmake
-        DESTINATION lib/cmake/alpaca
+       EXPORT ALPACA
+       FILE alpaca-config.cmake
+       NAMESPACE alpaca::
+       DESTINATION lib/cmake/alpaca
 )
