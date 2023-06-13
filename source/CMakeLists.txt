@@ -104,3 +104,12 @@ add_library(cascadeSampler CascadeSampler.cc)
 target_link_libraries(cascadeSampler angular_correlation angcorrRejectionSampler)
 target_include_directories(cascadeSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 set_target_properties(cascadeSampler PROPERTIES PUBLIC_HEADER include/alpaca/CascadeSampler.hh)
+
+
+if(BUILD_PYTHON)
+        nanobind_add_module(alpaca alpaca.cc)
+        target_link_libraries(alpaca PRIVATE angular_correlation_static)
+        target_include_directories(
+          alpaca PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+                        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+endif()

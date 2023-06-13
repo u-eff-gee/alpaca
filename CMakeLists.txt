@@ -75,6 +75,17 @@ add_compile_options(
 
 include(GNUInstallDirs)
 
+set(BUILD_PYTHON ON CACHE STRING "Enable building python bindings")
+
+if(BUILD_PYTHON)
+        include(FetchContent)
+        FetchContent_Declare(nanobind
+          GIT_REPOSITORY https://github.com/wjakob/nanobind.git
+          GIT_TAG        v1.4.0)
+        FetchContent_MakeAvailable(nanobind)
+        find_package(Python 3.8 COMPONENTS Interpreter Development.Module REQUIRED)
+endif()
+
 add_subdirectory(python)
 add_subdirectory(source)
 if(BUILD_TESTS)

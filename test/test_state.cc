@@ -34,7 +34,7 @@ int main() {
     // Error: Unknown parities cannot be converted to string.
     // Usually, a user should never have to call this function.
     try {
-      state.parity_str_rep(Parity::unknown);
+      state.parity_str_rep();
     } catch (const std::runtime_error &e) {
       error_thrown = true;
     }
