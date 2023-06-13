@@ -73,9 +73,19 @@ target_include_directories(objsampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_
 add_library(alpaca::sampler ALIAS sampler)
 
 if(BUILD_PYTHON)
-       nanobind_add_module(alpaca PythonBindings.cc)
-       target_link_libraries(alpaca PRIVATE coeff_static angcorr_static sampler_static)
-       target_include_directories(
-         alpaca PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        find_package(pybind11 QUIET)
+        if(NOT pybind11_FOUND)
+                include(FetchContent)
+                FetchContent_Declare(pybind11
+                        GIT_REPOSITORY https://github.com/pybind/pybind11.git
+                        GIT_TAG        v2.10.4)
+                FetchContent_MakeAvailable(pybind11)
+                find_package(pybind11 REQUIRED)
+        endif()
+
+        pybind11_add_module(alpaca PythonBindings.cc)
+        target_link_libraries(alpaca PRIVATE coeff_static angcorr_static sampler_static)
+        target_include_directories(
+                alpaca PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
                        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 endif()
