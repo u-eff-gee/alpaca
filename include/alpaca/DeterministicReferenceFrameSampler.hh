@@ -35,7 +35,7 @@ public:
   }
 
 protected:
-  const EulerAngles Phi_Theta_Psi;
+  EulerAngles Phi_Theta_Psi;
 };
 
 } // namespace alpaca

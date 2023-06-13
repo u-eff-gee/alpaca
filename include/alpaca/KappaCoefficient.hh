@@ -114,9 +114,9 @@ public:
                                vector<string> variable_names = {}) const;
 
 protected:
-  const int two_nu;
-  const int two_L;
-  const int two_Lp;
+  int two_nu;
+  int two_L;
+  int two_Lp;
 
   double value;
 };

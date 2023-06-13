@@ -261,9 +261,9 @@ protected:
                         */
   vector<pair<Transition, State>> cascade_steps;
 
-  double normalization_factor;  /**< Normalization factor for the angular
-                                   distribution */
-  const size_t n_cascade_steps; /**< Number of transitions in the cascade. */
+  double normalization_factor; /**< Normalization factor for the angular
+                                  distribution */
+  size_t n_cascade_steps;      /**< Number of transitions in the cascade. */
   int two_nu_max; /**< Maximum value of \f$2 \nu\f$ for which the coefficients
                      do not vanish */
   int nu_max; /**< Maximum value of \f$\nu\f$ for which the coefficients do not

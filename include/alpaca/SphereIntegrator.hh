@@ -88,7 +88,7 @@ public:
                     bool is_in_omega(double theta, double phi));
 
 protected:
-  const SpherePointSampler
+  SpherePointSampler
       sph_poi_samp; /**< Instance of the SpherePointSampler class. */
 };
 
