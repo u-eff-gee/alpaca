@@ -161,6 +161,10 @@ public:
    */
   vector<EulerAngles> operator()();
 
+  [[nodiscard]] inline size_t size() const {
+    return angular_correlation_samplers.size();
+  }
+
 protected:
   vector<shared_ptr<ReferenceFrameSampler>>
       angular_correlation_samplers; /**< List of AngCorrRejectionSamplers which
