@@ -30,15 +30,17 @@ double AvCoefficient::operator()(const double delta) const {
 string AvCoefficient::string_representation(
     const int n_digits, const vector<string> variable_names) const {
 
-  string multipole_mixing_ratio_variable =
-      variable_names.size() ? variable_names[0] : "\\delta";
+  const string multipole_mixing_ratio_variable =
+      variable_names.empty() ? "\\delta" : variable_names[0];
+
+  const string times = (n_digits != 0 ? "\\times" : "");
 
   return constant_f_coefficient.string_representation(n_digits, {}) + "+" +
-         "2" + (n_digits ? "\\times" : "") +
-         linear_f_coefficient.string_representation(n_digits, {}) +
-         (n_digits ? "\\times" : "") + multipole_mixing_ratio_variable + "+" +
-         quadratic_f_coefficient.string_representation(n_digits, {}) +
-         (n_digits ? "\\times" : "") + multipole_mixing_ratio_variable + "^{2}";
+         "2" + times +
+         linear_f_coefficient.string_representation(n_digits, {}) + times +
+         multipole_mixing_ratio_variable + "+" +
+         quadratic_f_coefficient.string_representation(n_digits, {}) + times +
+         multipole_mixing_ratio_variable + "^{2}";
 }
 
 } // namespace alpaca

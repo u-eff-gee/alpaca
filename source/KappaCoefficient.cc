@@ -35,7 +35,7 @@ KappaCoefficient::KappaCoefficient(const int a_two_nu, const int a_two_L,
                                    const int a_two_Lp)
     : two_nu(a_two_nu), two_L(a_two_L), two_Lp(a_two_Lp), value(0.) {
 
-  const unsigned int nu = static_cast<unsigned int>(two_nu / 2);
+  const auto nu = static_cast<unsigned int>(two_nu / 2);
   if (nu < 2) {
     throw invalid_argument("nu must be an integer larger than 1.");
   }
@@ -70,7 +70,7 @@ KappaCoefficient::KappaCoefficient(const int a_two_nu, const int a_two_L,
 std::string KappaCoefficient::string_representation(
     const int n_digits,
     [[maybe_unused]] vector<std::string> variable_names) const {
-  if (n_digits) {
+  if (n_digits != 0) {
     return float_string_representation(n_digits, value);
   }
   return "\\kappa_{" + to_string(two_nu / 2) + "}" + "\\left(" +

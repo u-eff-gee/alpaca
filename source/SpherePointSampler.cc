@@ -61,7 +61,7 @@ vector<CoordCart> SpherePointSampler::sample_cartesian(const unsigned int n,
                  [=](CoordDir sph_coord) {
                    CoordCart res;
                    const auto &[theta, phi] = sph_coord;
-                   double sine_theta = sin(theta);
+                   const double sine_theta = sin(theta);
                    res[0] = r * sine_theta * cos(phi);
                    res[1] = r * sine_theta * sin(phi);
                    res[2] = r * cos(theta);
@@ -165,8 +165,11 @@ double SpherePointSampler::segment_length_linear_interpolation(
   const double theta_increment = Theta / (static_cast<double>(n_points) - 1.);
   EulerAngles x_i{0., 0., 1.};
   EulerAngles x_i_plus_one{0., 0., 0.};
-  double phi_i_plus_one{0.}, segment_increment_squared{0.}, segment_length{0.},
-      sine_theta_i_plus_one{0.}, theta_i_plus_one{0.};
+  double phi_i_plus_one{0.};
+  double segment_increment_squared{0.};
+  double segment_length{0.};
+  double sine_theta_i_plus_one{0.};
+  double theta_i_plus_one{0.};
 
   for (unsigned int i = 0; i < n_points - 1; ++i) {
     theta_i_plus_one = (i + 1) * theta_increment;
@@ -205,7 +208,8 @@ double SpherePointSampler::find_c(const unsigned int n, const double epsilon,
   double c_j = c_0;
   double c_j_plus_one = 0.;
   double negative_c_j_squared = 0;
-  double complete_elliptic_integral_1st{0.}, complete_elliptic_integral_2nd{0.};
+  double complete_elliptic_integral_1st{0.};
+  double complete_elliptic_integral_2nd{0.};
 
   const double n_times_pi = n * M_PI;
 

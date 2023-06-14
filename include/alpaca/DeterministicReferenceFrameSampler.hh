@@ -27,7 +27,7 @@ namespace alpaca {
 
 class DeterministicReferenceFrameSampler : public ReferenceFrameSampler {
 public:
-  DeterministicReferenceFrameSampler(const EulerAngles a_Phi_Theta_Psi)
+  explicit DeterministicReferenceFrameSampler(const EulerAngles a_Phi_Theta_Psi)
       : Phi_Theta_Psi(a_Phi_Theta_Psi) {}
 
   pair<unsigned int, EulerAngles> sample() override {

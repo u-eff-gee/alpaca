@@ -167,10 +167,11 @@ public:
   static bool is_nonzero(const int two_nu, const int two_L, const int two_Lp,
                          const int two_j1, const int two_j);
 
-  double get_value() const { return value; }
+  [[nodiscard]] double get_value() const { return value; }
 
-  string string_representation([[maybe_unused]] const int n_digits = 0,
-                               vector<string> variable_names = {}) const;
+  [[nodiscard]] string
+  string_representation([[maybe_unused]] const int n_digits = 0,
+                        vector<string> variable_names = {}) const override;
 
   /**
    * \brief Check whether given Clebsch-Gordan coefficient is nonzero.

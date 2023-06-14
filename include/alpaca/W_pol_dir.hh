@@ -168,9 +168,9 @@ public:
    * upper limit for this quantity. If no useful upper limit can be given or if
    * there is no limit, a Parity::negative number is returned.
    */
-  double get_upper_limit() const override;
+  [[nodiscard]] double get_upper_limit() const override;
 
-  string string_representation(
+  [[nodiscard]] string string_representation(
       const int n_digits = 0,
       const vector<string> variable_names = {}) const override;
 

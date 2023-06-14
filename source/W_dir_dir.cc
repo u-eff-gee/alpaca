@@ -68,7 +68,7 @@ double W_dir_dir::get_upper_limit() const {
 
 int W_dir_dir::calculate_two_nu_max() const {
 
-  int two_nu_max_Av = calculate_two_nu_max_Av();
+  const int two_nu_max_Av = calculate_two_nu_max_Av();
 
   if (n_cascade_steps > 2) {
     return min(two_nu_max_Av, calculate_two_nu_max_Uv());
@@ -121,14 +121,14 @@ vector<double> W_dir_dir::calculate_expansion_coefficients_Av() {
   vector<double> exp_coef;
 
   for (int two_nu = 0; two_nu <= two_nu_max; two_nu += 4) {
-    av_coefficients_excitation.push_back(AvCoefficient(
+    av_coefficients_excitation.emplace_back(
         two_nu, cascade_steps[0].first.two_L, cascade_steps[0].first.two_Lp,
-        initial_state.two_J, cascade_steps[0].second.two_J));
-    av_coefficients_decay.push_back(
-        AvCoefficient(two_nu, cascade_steps[n_cascade_steps - 1].first.two_L,
-                      cascade_steps[n_cascade_steps - 1].first.two_Lp,
-                      cascade_steps[n_cascade_steps - 1].second.two_J,
-                      cascade_steps[n_cascade_steps - 2].second.two_J));
+        initial_state.two_J, cascade_steps[0].second.two_J);
+    av_coefficients_decay.emplace_back(
+        two_nu, cascade_steps[n_cascade_steps - 1].first.two_L,
+        cascade_steps[n_cascade_steps - 1].first.two_Lp,
+        cascade_steps[n_cascade_steps - 1].second.two_J,
+        cascade_steps[n_cascade_steps - 2].second.two_J);
     exp_coef.push_back(
         av_coefficients_excitation[static_cast<size_t>(two_nu / 4)](
             cascade_steps[0].first.delta) *
@@ -145,14 +145,14 @@ vector<double> W_dir_dir::calculate_expansion_coefficients_Uv() {
   double uv_coef_product = 1.;
 
   for (int two_nu = 0; two_nu <= two_nu_max; two_nu += 4) {
-    uv_coefficients.push_back(vector<UvCoefficient>());
+    uv_coefficients.emplace_back();
     for (size_t i = 1; i < n_cascade_steps - 1; ++i) {
-      uv_coefficients[static_cast<size_t>(two_nu / 4)].push_back(
-          UvCoefficient(two_nu, cascade_steps[i - 1].second.two_J,
-                        cascade_steps[static_cast<size_t>(i)].first.two_L,
-                        cascade_steps[static_cast<size_t>(i)].first.two_Lp,
-                        cascade_steps[static_cast<size_t>(i)].first.delta,
-                        cascade_steps[static_cast<size_t>(i)].second.two_J));
+      uv_coefficients[static_cast<size_t>(two_nu / 4)].emplace_back(
+          two_nu, cascade_steps[i - 1].second.two_J,
+          cascade_steps[static_cast<size_t>(i)].first.two_L,
+          cascade_steps[static_cast<size_t>(i)].first.two_Lp,
+          cascade_steps[static_cast<size_t>(i)].first.delta,
+          cascade_steps[static_cast<size_t>(i)].second.two_J);
       uv_coef_product =
           uv_coef_product *
           uv_coefficients[static_cast<size_t>(two_nu / 4)][i - 1].get_value();
@@ -181,15 +181,15 @@ string W_dir_dir::string_representation(const int n_digits,
                                         vector<string> variable_names) const {
 
   const string polar_angle_variable =
-      variable_names.size() ? variable_names[0] : "\\theta";
+      variable_names.empty() ? "\\theta" : variable_names[0];
   const string azimuthal_angle_variable =
-      variable_names.size() ? variable_names[1] : "\\varphi";
+      variable_names.empty() ? "\\varphi" : variable_names[1];
   vector<string> delta_variables;
   for (size_t i = 0; i < n_cascade_steps; ++i) {
-    if (variable_names.size()) {
-      delta_variables.push_back(variable_names[2 + i]);
-    } else {
+    if (variable_names.empty()) {
       delta_variables.push_back("\\delta_" + to_string(i + 1));
+    } else {
+      delta_variables.push_back(variable_names[2 + i]);
     }
   }
 
@@ -202,20 +202,20 @@ string W_dir_dir::string_representation(const int n_digits,
     str_rep += "\\left[" +
                av_coefficients_excitation[i].string_representation(
                    n_digits, {delta_variables[0]}) +
-               "\\right]\\\\";
+               R"(\right]\\)";
     if (n_cascade_steps > 2) {
       for (size_t j = 0; j < uv_coefficients[i].size(); ++j) {
         str_rep += "\\times\\left[" +
                    uv_coefficients[i][j].string_representation(
                        n_digits, {delta_variables[1 + j]}) +
-                   "\\right]\\\\";
+                   R"(\right]\\)";
       }
     }
     str_rep += "\\times\\left[" +
                av_coefficients_decay[i].string_representation(
                    n_digits, {delta_variables[delta_variables.size() - 1]}) +
-               "\\right]\\\\" + "\\times P_{" + to_string(2 * i) +
-               "}\\left[\\cos\\left(" + polar_angle_variable +
+               R"(\right]\\)" + "\\times P_{" + to_string(2 * i) +
+               R"(}\left[\cos\left()" + polar_angle_variable +
                "\\right)\\right]";
     if (static_cast<int>(i) != nu_max / 2) {
       str_rep += "\\\\";

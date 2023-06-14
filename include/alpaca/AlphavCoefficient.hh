@@ -91,13 +91,14 @@ public:
    *
    * \return \f$\alpha_\nu \left( L, L^\prime, j_n, j, \delta_n \right)\f$
    */
-  inline double operator()(const double delta) const {
+  [[nodiscard]] inline double operator()(const double delta) const {
     return constant_coefficient + delta * linear_coefficient +
            delta * delta * quadratic_coefficient;
   }
 
-  string string_representation(const int n_digits = 0,
-                               const vector<string> variable_names = {}) const;
+  [[nodiscard]] string string_representation(
+      const int n_digits = 0,
+      const vector<string> variable_names = {}) const override;
 
 protected:
   int two_nu;

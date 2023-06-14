@@ -52,7 +52,7 @@ struct State {
    *
    * \throw std::invalid_argument if two_J is invalid
    */
-  State(const int t_J)
+  explicit State(const int t_J)
       : two_J(check_two_J(t_J)), parity(Parity::unknown),
         excitation_energy(0.){};
   State(double t_J) = delete;
@@ -113,7 +113,7 @@ struct State {
    *
    * \throw runtime_error if parity is neither positive nor negative.
    */
-  inline string parity_str_rep() const {
+  [[nodiscard]] inline string parity_str_rep() const {
     switch (parity) {
     case Parity::negative:
       return "-";
@@ -129,7 +129,7 @@ struct State {
    *
    * \return String representation
    */
-  inline string spin_str_rep() const {
+  [[nodiscard]] inline string spin_str_rep() const {
     if (two_J % 2 == 0) {
       return std::to_string(two_J / 2);
     }
@@ -146,7 +146,7 @@ struct State {
    *
    * \return String representation
    */
-  string str_rep() const {
+  [[nodiscard]] string str_rep() const {
     if (parity != Parity::unknown) {
       return spin_str_rep() + "^" + parity_str_rep();
     }

@@ -225,9 +225,6 @@ public:
    */
   AngularCorrelation(const State ini_sta, const vector<State> cas_sta);
 
-  /**
-   * Copy constructor
-   */
   AngularCorrelation(const AngularCorrelation &ang_cor)
       : AngularCorrelation(ang_cor.get_initial_state(),
                            ang_cor.get_cascade_steps()){};
@@ -253,14 +250,16 @@ public:
    *
    * \return Initial state.
    */
-  State get_initial_state() const { return w_gamma_gamma->get_initial_state(); }
+  [[nodiscard]] State get_initial_state() const {
+    return w_gamma_gamma->get_initial_state();
+  }
 
   /**
    * \brief Return the cascade steps.
    *
    * \return vector of Transition-State pairs.
    */
-  vector<pair<Transition, State>> get_cascade_steps() const {
+  [[nodiscard]] vector<pair<Transition, State>> get_cascade_steps() const {
     return w_gamma_gamma->get_cascade_steps();
   }
 
@@ -290,7 +289,9 @@ public:
    * upper limit for this quantity. If no useful upper limit can be given or if
    * there is no limit, a negative number is returned.
    */
-  double get_upper_limit() const { return w_gamma_gamma->get_upper_limit(); }
+  [[nodiscard]] double get_upper_limit() const {
+    return w_gamma_gamma->get_upper_limit();
+  }
 
 protected:
   /**
@@ -407,8 +408,9 @@ protected:
    *
    * \return true, if the parity selection rule is fulfilled, false otherwise.
    */
-  bool valid_em_character(const Parity p0, const Parity p1, const int two_L,
-                          const EMCharacter em) const;
+  [[nodiscard]] bool valid_em_character(const Parity p0, const Parity p1,
+                                        const int two_L,
+                                        const EMCharacter em) const;
 
   /**
    * \brief Infer the most likely transition that connects two given states.
@@ -426,7 +428,8 @@ protected:
    * \throw invalid_argument, if both states have spin 0. In this case, no EM
    * transition is possible.
    */
-  Transition infer_transition(const pair<State, State> states) const;
+  [[nodiscard]] Transition
+  infer_transition(const pair<State, State> states) const;
 
   /**
    * \brief Pointer to an object of the W_gamma_gamma class.

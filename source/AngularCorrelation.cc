@@ -54,12 +54,12 @@ AngularCorrelation::AngularCorrelation(const State ini_sta,
 
   vector<pair<Transition, State>> cascade_steps;
 
-  cascade_steps.push_back(
-      {infer_transition({ini_sta, cas_sta[0]}), cas_sta[0]});
+  cascade_steps.emplace_back(infer_transition({ini_sta, cas_sta[0]}),
+                             cas_sta[0]);
 
   for (size_t i = 0; i < cas_sta.size() - 1; ++i) {
-    cascade_steps.push_back(
-        {infer_transition({cas_sta[i], cas_sta[i + 1]}), cas_sta[i + 1]});
+    cascade_steps.emplace_back(infer_transition({cas_sta[i], cas_sta[i + 1]}),
+                               cas_sta[i + 1]);
   }
 
   if (cascade_steps[0].first.em_char == EMCharacter::unknown) {
@@ -133,8 +133,8 @@ void AngularCorrelation::check_angular_momenta(
 
   const int even_odd = ini_sta.two_J % 2;
 
-  for (size_t i = 0; i < cas_ste.size(); ++i) {
-    if (cas_ste[i].second.two_J % 2 != even_odd) {
+  for (const auto &step : cas_ste) {
+    if (step.second.two_J % 2 != even_odd) {
       throw invalid_argument(
           "Unphysical mixing of half-integer and integer spins in cascade.");
     }
@@ -300,7 +300,7 @@ double angular_correlation(const double theta, const double phi,
                            const size_t n_cas_ste, int *two_J, short *par,
                            short *em_char, int *two_L, short *em_charp,
                            int *two_Lp, double *delta) {
-  State initial_state{two_J[0], static_cast<Parity>(par[0])};
+  const State initial_state{two_J[0], static_cast<Parity>(par[0])};
   vector<pair<Transition, State>> cascade_steps;
 
   for (size_t i = 0; i < n_cas_ste; ++i) {
@@ -319,7 +319,7 @@ void *create_angular_correlation(const size_t n_cas_ste, int *two_J, short *par,
                                  short *em_char, int *two_L, short *em_charp,
                                  int *two_Lp, double *delta) {
 
-  State initial_state{two_J[0], static_cast<Parity>(par[0])};
+  const State initial_state{two_J[0], static_cast<Parity>(par[0])};
   vector<pair<Transition, State>> cascade_steps;
 
   for (size_t i = 0; i < n_cas_ste; ++i) {
@@ -336,7 +336,7 @@ void *
 create_angular_correlation_with_transition_inference(const size_t n_cas_ste,
                                                      int *two_J, short *par) {
 
-  State initial_state{two_J[0], static_cast<Parity>(par[0])};
+  const State initial_state{two_J[0], static_cast<Parity>(par[0])};
   vector<State> cascade_states;
 
   for (size_t i = 0; i < n_cas_ste; ++i) {

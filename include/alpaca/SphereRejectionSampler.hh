@@ -146,7 +146,7 @@ public:
    * of trials \f$N_\mathrm{max}\f$ is reached by the algorithm and no random
    * vector was accepted.
    */
-  virtual pair<unsigned int, EulerAngles> sample() override;
+  pair<unsigned int, EulerAngles> sample() override;
 
 protected:
   /**

@@ -22,7 +22,6 @@
 #include <memory>
 #include <vector>
 
-
 #include <gsl/gsl_math.h>
 
 #include "alpaca/AngCorrRejectionSampler.hh"
@@ -150,7 +149,7 @@ namespace alpaca {
 class CascadeSampler {
 
 public:
-  CascadeSampler(vector<shared_ptr<ReferenceFrameSampler>> cascade);
+  explicit CascadeSampler(vector<shared_ptr<ReferenceFrameSampler>> cascade);
 
   /**
    * \brief Sample random gamma-ray directions from the cascade.

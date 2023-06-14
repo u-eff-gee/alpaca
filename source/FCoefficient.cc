@@ -35,17 +35,16 @@ FCoefficient::FCoefficient(const int a_two_nu, const int a_two_L,
     : two_nu(a_two_nu), two_L(a_two_L), two_Lp(a_two_Lp), two_j1(a_two_j1),
       two_j(a_two_j), value(0.) {
 
-  double wigner3j{gsl_sf_coupling_3j(a_two_L, a_two_Lp, a_two_nu, 2, -2, 0)};
-
-  double wigner6j;
+  const double wigner3j{
+      gsl_sf_coupling_3j(a_two_L, a_two_Lp, a_two_nu, 2, -2, 0)};
 
   // Shortcut to avoid further calculations.
   if (wigner3j == 0.) {
     value = 0.;
   } else {
 
-    wigner6j = gsl_sf_coupling_6j(a_two_j, a_two_j, a_two_nu, a_two_Lp, a_two_L,
-                                  a_two_j1);
+    const double wigner6j = gsl_sf_coupling_6j(a_two_j, a_two_j, a_two_nu,
+                                               a_two_Lp, a_two_L, a_two_j1);
 
     // Another shortcut
     if (wigner6j == 0.) {
@@ -72,12 +71,15 @@ bool FCoefficient::cg_is_nonzero(const int two_j1, const int two_j2,
                                  const int two_m2, const int two_M) {
 
   // Maximum projection of angular momentum.
-  if ((abs(two_m1) > two_j1) || (abs(two_m2) > two_j2) || (abs(two_M) > two_J))
+  if ((abs(two_m1) > two_j1) || (abs(two_m2) > two_j2) ||
+      (abs(two_M) > two_J)) {
     return false;
+  }
 
   // Conservation of angular momentum for magnetic quantum number.
-  if (two_m1 + two_m2 != two_M)
+  if (two_m1 + two_m2 != two_M) {
     return false;
+  }
 
   // Triangle inequality for coupling.
   return fulfils_triangle_inequality<int>(two_j1, two_j2, two_J);
@@ -100,13 +102,13 @@ bool FCoefficient::racah_is_nonzero(const int two_j1, const int two_j2,
 std::string FCoefficient::string_representation(
     const int n_digits,
     [[maybe_unused]] vector<std::string> variable_names) const {
-  if (n_digits) {
+  if (n_digits != 0) {
     return float_string_representation(n_digits, value);
   }
   std::string str_rep = "F_{" + to_string(two_nu / 2) + "}\\left(" +
                         to_string(two_L / 2) + "," + to_string(two_Lp / 2) +
                         ",";
-  if (two_j1 % 2) {
+  if ((two_j1 % 2) != 0) {
     str_rep += to_string(two_j1) + "/2," + to_string(two_j) + "/2";
   } else {
     str_rep += to_string(two_j1 / 2) + "," + to_string(two_j / 2);

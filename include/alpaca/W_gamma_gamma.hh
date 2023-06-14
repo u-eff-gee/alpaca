@@ -54,7 +54,7 @@ public:
    * populated by that transition.
    */
   W_gamma_gamma(const State &ini_sta,
-                const vector<pair<Transition, State>> cas_ste)
+                const vector<pair<Transition, State>> &cas_ste)
       : initial_state(ini_sta), cascade_steps(cas_ste),
         n_cascade_steps(cas_ste.size()) {}
 
@@ -97,21 +97,21 @@ public:
    * upper limit for this quantity. If no useful upper limit can be given or if
    * there is no limit, a Parity::negative number is returned.
    */
-  virtual double get_upper_limit() const = 0;
+  [[nodiscard]] virtual double get_upper_limit() const = 0;
 
   /**
    * \brief Return the initial state of the angular correlation.
    *
    * \return Initial state.
    */
-  State get_initial_state() const { return initial_state; }
+  [[nodiscard]] State get_initial_state() const { return initial_state; }
 
   /**
    * \brief Return the cascade steps.
    *
    * \return vector of Transition-State pairs.
    */
-  vector<pair<Transition, State>> get_cascade_steps() const {
+  [[nodiscard]] vector<pair<Transition, State>> get_cascade_steps() const {
     return cascade_steps;
   }
 
@@ -248,7 +248,7 @@ public:
    *
    * \return String representation.
    */
-  virtual string string_representation(
+  [[nodiscard]] string string_representation(
       const int n_digits = 0,
       const vector<string> variable_names = {}) const override = 0;
 

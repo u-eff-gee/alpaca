@@ -78,7 +78,7 @@ public:
    * \approx 1\f$.
    */
 
-  vector<CoordDir> sample(const unsigned int n) const;
+  [[nodiscard]] vector<CoordDir> sample(const unsigned int n) const;
 
   /**
    * \brief Sample \f$n\f$ points approximately uniformly on the surface of a
@@ -105,8 +105,8 @@ public:
    *
    * \return std::vector of size n that contains the cartesian coordinates
    **/
-  vector<CoordCart> sample_cartesian(const unsigned int n,
-                                     const double r = 1.) const;
+  [[nodiscard]] vector<CoordCart> sample_cartesian(const unsigned int n,
+                                                   const double r = 1.) const;
 
   /**
    * \brief Elliptic integral of the second kind \f$E\left( \varphi | m
@@ -184,8 +184,9 @@ public:
    *
    * \return \f$E\left( \varphi | m \right)\f$
    */
-  double elliptic_integral_2nd_kind_arbitrary_m(const double phi,
-                                                const double m) const;
+  [[nodiscard]] double
+  elliptic_integral_2nd_kind_arbitrary_m(const double phi,
+                                         const double m) const;
 
   /**
    * \brief Length of a spiral segment in the range \f$ 0 \leq \theta \leq
@@ -201,7 +202,7 @@ public:
    *
    * \return \f$S \left( \Theta, c \right)\f$
    */
-  double segment_length(const double Theta, const double c) const;
+  [[nodiscard]] double segment_length(const double Theta, const double c) const;
 
   /**
    * \brief Length of a spiral segment in the range \f$ 0 \leq \theta \leq
@@ -245,8 +246,9 @@ public:
    *
    * \return \f$S \left( \Theta, c \right)\f$
    */
-  double segment_length_linear_interpolation(const double Theta, const double c,
-                                             const unsigned int n_points) const;
+  [[nodiscard]] double
+  segment_length_linear_interpolation(const double Theta, const double c,
+                                      const unsigned int n_points) const;
 
   /**
    * \brief For a desired number of points, find the optimum number of cycles of
@@ -284,8 +286,9 @@ public:
    *
    * \return \f$c\f$
    */
-  double find_c(const unsigned int n, const double epsilon = 1e-8,
-                const unsigned int max_n_iterations = 10000) const;
+  [[nodiscard]] double
+  find_c(const unsigned int n, const double epsilon = 1e-8,
+         const unsigned int max_n_iterations = 10000) const;
 
   /**
    * \brief Find the polar angle of the mid point of the j-th spiral segment for
@@ -338,9 +341,10 @@ public:
    *
    * \return \f$\Theta_j\f$
    */
-  double find_Theta_j(const unsigned int j, const unsigned int n,
-                      const double c, const double epsilon = 1e-3,
-                      const unsigned int max_n_iterations = 10000) const;
+  [[nodiscard]] double
+  find_Theta_j(const unsigned int j, const unsigned int n, const double c,
+               const double epsilon = 1e-3,
+               const unsigned int max_n_iterations = 10000) const;
 
   /**
    * \brief Elliptic integral of the first kind \f$F\left( \varphi | m
@@ -358,8 +362,9 @@ public:
    *
    * \return \f$F\left( \varphi | m \right)\f$
    */
-  double elliptic_integral_1st_kind_arbitrary_m(const double phi,
-                                                const double m) const;
+  [[nodiscard]] double
+  elliptic_integral_1st_kind_arbitrary_m(const double phi,
+                                         const double m) const;
 };
 
 } // namespace alpaca

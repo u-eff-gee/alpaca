@@ -366,8 +366,9 @@ public:
    */
   double operator()(const double delta) const;
 
-  string string_representation(const int n_digits = 0,
-                               const vector<string> variable_names = {}) const;
+  [[nodiscard]] string string_representation(
+      const int n_digits = 0,
+      const vector<string> variable_names = {}) const override;
 
 protected:
   int two_nu;

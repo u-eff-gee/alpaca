@@ -108,10 +108,11 @@ public:
    */
   KappaCoefficient(const int two_nu, const int two_L, const int two_Lp);
 
-  double get_value() const { return value; };
+  [[nodiscard]] double get_value() const { return value; };
 
-  string string_representation([[maybe_unused]] const int n_digits = 0,
-                               vector<string> variable_names = {}) const;
+  [[nodiscard]] string
+  string_representation([[maybe_unused]] const int n_digits = 0,
+                        vector<string> variable_names = {}) const override;
 
 protected:
   int two_nu;

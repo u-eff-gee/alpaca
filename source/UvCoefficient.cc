@@ -57,9 +57,10 @@ std::string
 UvCoefficient::string_representation(const int n_digits,
                                      vector<string> variable_names) const {
 
-  string delta_variable = variable_names.size() ? variable_names[0] : "\\delta";
+  const string delta_variable =
+      variable_names.empty() ? "\\delta" : variable_names[0];
 
-  if (n_digits) {
+  if (n_digits != 0) {
     return float_string_representation(n_digits, value_L) + "+" +
            float_string_representation(n_digits, value_Lp) + "\\times" +
            delta_variable + "^{2}";

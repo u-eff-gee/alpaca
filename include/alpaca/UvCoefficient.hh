@@ -259,10 +259,11 @@ public:
                                  : 0.),
         value(value_L + value_Lp) {}
 
-  double get_value() const { return value; };
+  [[nodiscard]] double get_value() const { return value; };
 
-  string string_representation(const int n_digits = 0,
-                               vector<string> variable_names = {}) const;
+  [[nodiscard]] string
+  string_representation(const int n_digits = 0,
+                        vector<string> variable_names = {}) const override;
 
 protected:
   static double phase_norm_6j_symbol(const int two_nu, const int two_j,

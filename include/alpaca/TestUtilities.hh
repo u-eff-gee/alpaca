@@ -83,10 +83,7 @@ void test_numerical_equality(array<array<T, n>, n> a, array<array<T, n>, n> b,
  */
 template <typename T>
 bool fulfils_triangle_inequality(const T j1, const T j2, const T J) {
-  if ((J >= abs(j1 - j2)) && (J <= j1 + j2))
-    return true;
-
-  return false;
+  return static_cast<bool>((J >= abs(j1 - j2)) && (J <= j1 + j2));
 }
 
 } // namespace alpaca

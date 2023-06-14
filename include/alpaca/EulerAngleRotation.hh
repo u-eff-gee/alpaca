@@ -140,12 +140,12 @@ namespace euler_angle_transform {
 
 inline void rotation_matrix(gsl_matrix *A, gsl_vector *Phi_Theta_Psi) {
 
-  const double cos_phi{cos(gsl_vector_get(Phi_Theta_Psi, 0))},
-      sin_phi{sin(gsl_vector_get(Phi_Theta_Psi, 0))},
-      cos_the{cos(gsl_vector_get(Phi_Theta_Psi, 1))},
-      sin_the{sin(gsl_vector_get(Phi_Theta_Psi, 1))},
-      cos_psi{cos(gsl_vector_get(Phi_Theta_Psi, 2))},
-      sin_psi{sin(gsl_vector_get(Phi_Theta_Psi, 2))};
+  const double cos_phi{cos(gsl_vector_get(Phi_Theta_Psi, 0))};
+  const double sin_phi{sin(gsl_vector_get(Phi_Theta_Psi, 0))};
+  const double cos_the{cos(gsl_vector_get(Phi_Theta_Psi, 1))};
+  const double sin_the{sin(gsl_vector_get(Phi_Theta_Psi, 1))};
+  const double cos_psi{cos(gsl_vector_get(Phi_Theta_Psi, 2))};
+  const double sin_psi{sin(gsl_vector_get(Phi_Theta_Psi, 2))};
 
   gsl_matrix_set(A, 0, 0, cos_psi * cos_phi - sin_psi * cos_the * sin_phi);
   gsl_matrix_set(A, 0, 1, -cos_psi * sin_phi - sin_psi * cos_the * cos_phi);

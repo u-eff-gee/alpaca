@@ -41,7 +41,7 @@ double ReferenceFrameSampler::estimate_efficiency(const unsigned int n_tries) {
 
   return static_cast<double>(n_tries) /
          static_cast<double>(
-             accumulate(required_tries.begin(), required_tries.end(), 0));
+             accumulate(required_tries.begin(), required_tries.end(), 0U));
 }
 
 } // namespace alpaca

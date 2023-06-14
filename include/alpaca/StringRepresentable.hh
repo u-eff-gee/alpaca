@@ -20,7 +20,6 @@
 #pragma once
 
 #include <iomanip>
-
 #include <sstream>
 #include <string>
 #include <vector>
@@ -59,13 +58,13 @@ public:
    *
    * \return String representation.
    */
-  virtual string
+  [[nodiscard]] virtual string
   string_representation(const int n_digits = 0,
                         const vector<string> variable_names = {}) const = 0;
 
 protected:
-  string float_string_representation(const int n_digits,
-                                     const double number) const {
+  [[nodiscard]] static string float_string_representation(const int n_digits,
+                                                          const double number) {
     stringstream str_rep;
     if (number < 0.) {
       str_rep << "\\left(" << std::setprecision(n_digits) << number

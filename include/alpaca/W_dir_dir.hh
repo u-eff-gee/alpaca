@@ -131,7 +131,7 @@ public:
    *
    * \return \f$W \left( \theta \right)\f$
    */
-  double operator()(const double theta, const double) const override {
+  double operator()(const double theta, const double /*phi*/) const override {
     return operator()(theta);
   }
 
@@ -194,22 +194,24 @@ public:
    * upper limit for this quantity. If no useful upper limit can be given or if
    * there is no limit, a negative number is returned.
    */
-  double get_upper_limit() const override;
+  [[nodiscard]] double get_upper_limit() const override;
 
   /**
    * \brief Return \f$\nu_\mathrm{max}\f$
    */
-  int get_nu_max() const { return nu_max; };
+  [[nodiscard]] int get_nu_max() const { return nu_max; };
 
   /**
    * \brief Return \f$2 \nu_\mathrm{max}\f$
    */
-  int get_two_nu_max() const { return two_nu_max; };
+  [[nodiscard]] int get_two_nu_max() const { return two_nu_max; };
 
   /**
    * \brief Return mixing-ratio dependent normalization factor.
    */
-  double get_normalization_factor() const { return normalization_factor; };
+  [[nodiscard]] double get_normalization_factor() const {
+    return normalization_factor;
+  };
 
   /**
    * \brief Return \f$U_\nu\f$ coefficients for the dir-dir correlation.
@@ -225,7 +227,7 @@ public:
    * index) and the cascade step number (second index, runs from \f$2\f$ to
    * \f$n-1\f$).
    */
-  vector<vector<UvCoefficient>> get_Uv_coefficients() const {
+  [[nodiscard]] vector<vector<UvCoefficient>> get_Uv_coefficients() const {
     return uv_coefficients;
   };
 
@@ -246,11 +248,11 @@ public:
    * \return List of products of \f$U_\nu\f$ coefficients for all values of
    * \f$\nu\f$.
    */
-  vector<double> get_Uv_coefficient_products() const {
+  [[nodiscard]] vector<double> get_Uv_coefficient_products() const {
     return uv_coefficient_products;
   };
 
-  string string_representation(
+  [[nodiscard]] string string_representation(
       const int n_digits = 0,
       const vector<string> variable_names = {}) const override;
 
@@ -294,7 +296,7 @@ protected:
    *
    * \return \f$2\nu_\mathrm{max}\f$
    */
-  int calculate_two_nu_max() const;
+  [[nodiscard]] int calculate_two_nu_max() const;
 
   /**
    * \brief Get the maximum value \f$\nu_\mathrm{max}\f$ for which the product
@@ -305,7 +307,7 @@ protected:
    * \return \f$2\nu_\mathrm{max}\f$, restriction due to properties of the
    * \f$A_\nu\f$ coefficients
    */
-  int calculate_two_nu_max_Av() const;
+  [[nodiscard]] int calculate_two_nu_max_Av() const;
 
   /**
    * \brief Get the maximum value \f$\nu_\mathrm{max}\f$ for which the product
@@ -316,7 +318,7 @@ protected:
    * \return \f$2\nu_\mathrm{max}\f$, restriction due to properties of the
    * \f$U_\nu\f$ coefficients
    */
-  int calculate_two_nu_max_Uv() const;
+  [[nodiscard]] int calculate_two_nu_max_Uv() const;
 
   /**
    * \brief Calculate the set of expansion coefficients for the dir-dir
@@ -375,7 +377,7 @@ protected:
    *
    * \return \f$\prod_{i} \left( 1+\delta_i^2 \right)^{-1}\f$
    */
-  double calculate_normalization_factor() const;
+  [[nodiscard]] double calculate_normalization_factor() const;
 
   vector<AvCoefficient>
       av_coefficients_excitation; /**< Vector of AvCoefficient objects for the

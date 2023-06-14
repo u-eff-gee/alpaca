@@ -115,7 +115,7 @@ struct Transition {
    * \param del Multipole mixing ratio.
    * \param del Multipole mixing ratio.
    */
-  constexpr Transition(int t_L, double del = 0.)
+  constexpr explicit Transition(int t_L, double del = 0.)
       : Transition(t_L, t_L + 2, del){};
 
   /**
@@ -147,7 +147,7 @@ struct Transition {
    * \param del Multipole mixing ratio.
    */
   constexpr static Transition E1(double delta = 0.) {
-    return Transition(EMCharacter::electric, 2, delta);
+    return {EMCharacter::electric, 2, delta};
   }
 
   /**
@@ -156,7 +156,7 @@ struct Transition {
    * \param del Multipole mixing ratio.
    */
   constexpr static Transition M1(double delta = 0.) {
-    return Transition(EMCharacter::magnetic, 2, delta);
+    return {EMCharacter::magnetic, 2, delta};
   }
 
   /**
@@ -174,7 +174,7 @@ struct Transition {
    * \param del Multipole mixing ratio.
    */
   constexpr static Transition E2(double delta = 0.) {
-    return Transition(EMCharacter::electric, 4, delta);
+    return {EMCharacter::electric, 4, delta};
   }
 
   /**
@@ -183,7 +183,7 @@ struct Transition {
    * \param del Multipole mixing ratio.
    */
   constexpr static Transition M2(double delta = 0.) {
-    return Transition(EMCharacter::magnetic, 4, delta);
+    return {EMCharacter::magnetic, 4, delta};
   }
 
   /**
@@ -220,7 +220,8 @@ struct Transition {
    *
    * \return String representation
    */
-  string str_rep(const State initial_state, const State final_state) const {
+  [[nodiscard]] string str_rep(const State initial_state,
+                               const State final_state) const {
     string string_representation = initial_state.str_rep() + " -- ( ";
 
     if (em_char != EMCharacter::unknown) {

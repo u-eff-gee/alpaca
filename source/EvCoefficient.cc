@@ -25,7 +25,7 @@ namespace alpaca {
 
 double EvCoefficient::operator()(const double delta) const {
 
-  const unsigned int nu = static_cast<unsigned int>(two_nu / 2);
+  const auto nu = static_cast<unsigned int>(two_nu / 2);
   const double nu_times_nu_plus_one = nu * (nu + 1.);
   const int L = two_L / 2;
   const double two_L_times_L_plus_one = 2 * L * (L + 1);
