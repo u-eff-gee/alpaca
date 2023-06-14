@@ -61,8 +61,7 @@ KappaCoefficient::KappaCoefficient(const int a_two_nu, const int a_two_L,
        can be used. Note, however, that \f$M\f$ changes its sign when going from
        the CG coefficient to the Wigner-3j symbol.
     */
-    value = -sqrt(static_cast<double>(gsl_sf_fact(nu - 2)) /
-                  static_cast<double>(gsl_sf_fact(nu + 2))) *
+    value = -sqrt(gsl_sf_fact(nu - 2) / gsl_sf_fact(nu + 2)) *
             gsl_sf_coupling_3j(two_L, two_Lp, two_nu, 2, 2, -4) /
             gsl_sf_coupling_3j(two_L, two_Lp, two_nu, 2, -2, 0);
   }
