@@ -16,6 +16,7 @@
 # Copyright (C) 2021-2023 Udo Friman-Gayer
 
 import pytest
+from pathlib import Path
 
 import numpy as np
 
@@ -39,7 +40,7 @@ angular_correlations = [
 ]
 
 
-def test_angular_correlation_table():
+def test_angular_correlation_table(tmp_path):
 
     theta_labels = range(0, 190, 30)
     theta = np.array(theta_labels) / 180.0 * np.pi
@@ -53,6 +54,6 @@ def test_angular_correlation_table():
             AngularCorrelation(ang_cor[1], ang_cor[2])
         )
 
-        with open(ang_cor[0], "w") as output_file:
+        with open(Path(tmp_path) / ang_cor[0], "w") as output_file:
             output_file.write(ang_cor_tab.print(theta, phi, theta_labels, phi_labels))
             output_file.close()

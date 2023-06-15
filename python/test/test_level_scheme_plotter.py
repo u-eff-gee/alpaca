@@ -16,6 +16,7 @@
 # Copyright (C) 2021-2023 Udo Friman-Gayer
 
 import pytest
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 
@@ -23,7 +24,7 @@ from alpaca import Parity, State, EMCharacter, Transition
 from alpaca.level_scheme_plotter import LevelSchemePlotter
 
 
-def test_level_scheme_plotter():
+def test_level_scheme_plotter(tmp_path):
     lvl_scheme_excited = LevelSchemePlotter(
         initial_state=State(0, Parity.positive),
         cascade_steps=[
@@ -76,4 +77,4 @@ def test_level_scheme_plotter():
     lvl_scheme_excited.plot(ax[0])
     ax[1].axis("off")
     lvl_scheme_ground.plot(ax[1])
-    plt.savefig("test_level_scheme_plotter.pdf")
+    plt.savefig(Path(tmp_path) / "test_level_scheme_plotter.pdf")

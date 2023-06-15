@@ -16,6 +16,7 @@
 # Copyright (C) 2021-2023 Udo Friman-Gayer
 
 import pytest
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -23,12 +24,13 @@ import numpy as np
 from alpaca import AngularCorrelation, Parity, State
 from alpaca.angular_correlation_plotter import AngularCorrelationPlotter
 
-angular_correlations = [
-    ["0_1_0.pdf", State(0), [State(2), State(0)]],
-]
 
 
-def test_angular_correlation_plotter():
+def test_angular_correlation_plotter(tmp_path):
+    angular_correlations = [
+        ["0_1_0.pdf", State(0), [State(2), State(0)]],
+    ]
+
     for ang_cor in angular_correlations:
         ang_cor_plot = AngularCorrelationPlotter(
             AngularCorrelation(ang_cor[1], ang_cor[2])
@@ -56,4 +58,4 @@ def test_angular_correlation_plotter():
             ax.set_ylabel(
                 r" $\leftarrow$ Polarization Plane $\rightarrow$", labelpad=-2
             )
-        plt.savefig(ang_cor[0])
+        plt.savefig(Path(tmp_path) / ang_cor[0])

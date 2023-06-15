@@ -15,6 +15,7 @@
 
 # Copyright (C) 2021-2023 Udo Friman-Gayer
 
+from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -23,7 +24,7 @@ from alpaca import AngularCorrelation, Parity, State, EMCharacter, Transition
 from alpaca.analyzing_power import AnalyzingPower
 
 
-def test_analyzing_power_pure_transitions():
+def test_analyzing_power_pure_transitions(tmp_path):
     spins = [2, 4, 6]
     spin_markers = ["o", "s", "^"]
     parity_colors = ["crimson", "royalblue"]
@@ -98,4 +99,4 @@ def test_analyzing_power_pure_transitions():
         )
     ax.legend()
     plt.tight_layout()
-    plt.savefig("analyzing_power_0_123_0.pdf")
+    plt.savefig(Path(tmp_path) / "analyzing_power_0_123_0.pdf")

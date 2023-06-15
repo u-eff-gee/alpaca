@@ -24,8 +24,10 @@ from alpaca import AngularCorrelation, Parity, State, EMCharacter, Transition
 
 from alpaca.analyzing_power_plotter import AnalyzingPowerPlotter
 
-plots = [
-    AnalyzingPowerPlotter(
+
+
+def test_analyzing_power_single_no_mixing(tmp_path):
+    ana_pow_plot = AnalyzingPowerPlotter(
         AngularCorrelation(
             State(0, Parity.positive),
             [
@@ -44,9 +46,12 @@ plots = [
         returns_to_initial_state=False,
         show_polarization=[True, False],
         analyzing_power_experimental=((-0.3, 0.05), (-0.1, 0.05)),
-        output_file_name="analyzing_power_0_1_2.pdf",
-    ),
-    AnalyzingPowerPlotter(
+        output_file_name=Path(tmp_path) / "analyzing_power_0_1_2.pdf")
+    
+    ana_pow_plot.plot()
+
+def test_analyzing_power_single_mixing(tmp_path):
+    ana_pow_plot = AnalyzingPowerPlotter(
         AngularCorrelation(
             State(3, Parity.positive),
             [
@@ -65,12 +70,6 @@ plots = [
         returns_to_initial_state=True,
         show_polarization=[True, False],
         analyzing_power_experimental=((-0.3, 0.05), (-0.1, 0.05)),
-        output_file_name="analyzing_power_15_25_15.pdf",
-    ),
-]
+        output_file_name=Path(tmp_path) / "analyzing_power_15_25_15.pdf")
 
-
-def test_analyzing_power_single_mixing():
-    for ana_pow_plot in plots:
-        # if not Path(ana_pow_plot.output_file_name).exists():
-        ana_pow_plot.plot()
+    ana_pow_plot.plot()
