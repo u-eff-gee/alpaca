@@ -225,9 +225,17 @@ public:
    */
   AngularCorrelation(const State ini_sta, const vector<State> cas_sta);
 
-  AngularCorrelation(const AngularCorrelation &ang_cor)
-      : AngularCorrelation(ang_cor.get_initial_state(),
-                           ang_cor.get_cascade_steps()){};
+  ~AngularCorrelation() = default;
+  AngularCorrelation(AngularCorrelation const &other)
+      : w_gamma_gamma(other.w_gamma_gamma->clone()) {}
+  AngularCorrelation(AngularCorrelation &&other) = default;
+  AngularCorrelation &operator=(AngularCorrelation const &other) {
+    if (&other != this) {
+      w_gamma_gamma = other.w_gamma_gamma->clone();
+    }
+    return *this;
+  }
+  AngularCorrelation &operator=(AngularCorrelation &&other) = default;
 
   /**
    * \brief Return the angular correlation for given spherical coordinates.

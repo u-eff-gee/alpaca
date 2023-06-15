@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <memory>
 #include <utility>
 #include <vector>
 
@@ -252,7 +253,13 @@ public:
       const int n_digits = 0,
       const vector<string> variable_names = {}) const override = 0;
 
+  [[nodiscard]] auto clone() const {
+    return std::unique_ptr<W_gamma_gamma>(clone_impl());
+  }
+
 protected:
+  [[nodiscard]] virtual W_gamma_gamma *clone_impl() const = 0;
+
   State initial_state; /**< Initial state */
                        /**
                         * Steps of the gamma-ray cascade following an excitation.

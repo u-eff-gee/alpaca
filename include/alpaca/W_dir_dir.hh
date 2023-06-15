@@ -257,6 +257,12 @@ public:
       const vector<string> variable_names = {}) const override;
 
 protected:
+  [[nodiscard]] W_dir_dir *clone_impl() const override {
+    // NOLINTBEGIN(cppcoreguidelines-owning-memory)
+    return new W_dir_dir(*this);
+    // NOLINTEND(cppcoreguidelines-owning-memory)
+  };
+
   /**
    * \brief Calculate products of \f$U_\nu\f$ coefficients for the dir-dir
    * correlation.

@@ -175,6 +175,12 @@ public:
       const vector<string> variable_names = {}) const override;
 
 protected:
+  [[nodiscard]] W_pol_dir *clone_impl() const override {
+    // NOLINTBEGIN(cppcoreguidelines-owning-memory)
+    return new W_pol_dir(*this);
+    // NOLINTEND(cppcoreguidelines-owning-memory)
+  };
+
   /**
    * \brief Calculate the set of expansion coefficients for the pol-dir
    * correlation.
