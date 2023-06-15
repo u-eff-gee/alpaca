@@ -43,7 +43,7 @@ vector<CoordDir> SpherePointSampler::sample(const unsigned int n) const {
 
   const double c = find_c(n);
 
-  for (unsigned int j = 1; j <= n; ++j) {
+  for (unsigned int j = 1; j < n; ++j) {
     theta_phi[j][0] = find_Theta_j(j, n, c);
     theta_phi[j][1] = c * theta_phi[j][0];
   }
