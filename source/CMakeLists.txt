@@ -73,6 +73,7 @@ target_include_directories(objsampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_
 add_library(alpaca::sampler ALIAS sampler)
 
 if(BUILD_PYTHON)
+        find_package(Python 3.8 COMPONENTS Interpreter Development REQUIRED)
         find_package(pybind11 QUIET)
         if(NOT pybind11_FOUND)
                 include(FetchContent)
@@ -83,9 +84,9 @@ if(BUILD_PYTHON)
                 FetchContent_MakeAvailable(pybind11)
         endif()
 
-        pybind11_add_module(alpaca PythonBindings.cc)
-        target_link_libraries(alpaca PRIVATE coeff_static angcorr_static sampler_static alpaca_options)
+        pybind11_add_module(_alpaca PythonBindings.cc)
+        target_link_libraries(_alpaca PRIVATE coeff_static angcorr_static sampler_static alpaca_options)
         target_include_directories(
-                alpaca PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+                _alpaca PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
                        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 endif()

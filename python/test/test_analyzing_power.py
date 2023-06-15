@@ -19,19 +19,23 @@ import pytest
 
 import numpy as np
 
-from alpaca.angular_correlation import AngularCorrelation
-from alpaca.state import NEGATIVE, POSITIVE, State
-from alpaca.transition import ELECTRIC, MAGNETIC, Transition
+from alpaca import AngularCorrelation, Transition, Parity, State, EMCharacter
 from alpaca.analyzing_power import AnalyzingPower, arctan_grid
 
 
 def test_analyzing_power():
 
     ang_cor = AngularCorrelation(
-        State(0, POSITIVE),
+        State(0, Parity.positive),
         [
-            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
-            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(0, POSITIVE)],
+            [
+                Transition(EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.0),
+                State(2, Parity.negative),
+            ],
+            [
+                Transition(EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.0),
+                State(0, Parity.positive),
+            ],
         ],
     )
 
@@ -74,10 +78,16 @@ def test_analyzing_power():
     # Test AnalyzingPower.evaluate for scalar input
     theta = 0.5 * np.pi
     ang_cor = AngularCorrelation(
-        State(0, POSITIVE),
+        State(0, Parity.positive),
         [
-            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.5), State(2, NEGATIVE)],
-            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.5), State(0, POSITIVE)],
+            [
+                Transition(EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.5),
+                State(2, Parity.negative),
+            ],
+            [
+                Transition(EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.5),
+                State(0, Parity.positive),
+            ],
         ],
     )
     ana_pow = AnalyzingPower(ang_cor)
@@ -88,10 +98,16 @@ def test_analyzing_power():
     # is an arbitrary function.
     theta = 0.5 * np.pi
     ang_cor = AngularCorrelation(
-        State(0, POSITIVE),
+        State(0, Parity.positive),
         [
-            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.5), State(2, NEGATIVE)],
-            [Transition(ELECTRIC, 2, MAGNETIC, 4, -0.5), State(0, POSITIVE)],
+            [
+                Transition(EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.5),
+                State(2, Parity.negative),
+            ],
+            [
+                Transition(EMCharacter.electric, 2, EMCharacter.magnetic, 4, -0.5),
+                State(0, Parity.positive),
+            ],
         ],
     )
     ana_pow = AnalyzingPower(ang_cor)
@@ -103,19 +119,39 @@ def test_analyzing_power():
         [
             AnalyzingPower(
                 AngularCorrelation(
-                    State(0, POSITIVE),
+                    State(0, Parity.positive),
                     [
-                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
-                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.1), State(4, POSITIVE)],
+                        [
+                            Transition(
+                                EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.0
+                            ),
+                            State(2, Parity.negative),
+                        ],
+                        [
+                            Transition(
+                                EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.1
+                            ),
+                            State(4, Parity.positive),
+                        ],
                     ],
                 )
             )(theta),
             AnalyzingPower(
                 AngularCorrelation(
-                    State(0, POSITIVE),
+                    State(0, Parity.positive),
                     [
-                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
-                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.2), State(4, POSITIVE)],
+                        [
+                            Transition(
+                                EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.0
+                            ),
+                            State(2, Parity.negative),
+                        ],
+                        [
+                            Transition(
+                                EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.2
+                            ),
+                            State(4, Parity.positive),
+                        ],
                     ],
                 )
             )(theta),
@@ -123,19 +159,39 @@ def test_analyzing_power():
         [
             AnalyzingPower(
                 AngularCorrelation(
-                    State(0, POSITIVE),
+                    State(0, Parity.positive),
                     [
-                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
-                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.3), State(4, POSITIVE)],
+                        [
+                            Transition(
+                                EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.0
+                            ),
+                            State(2, Parity.negative),
+                        ],
+                        [
+                            Transition(
+                                EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.3
+                            ),
+                            State(4, Parity.positive),
+                        ],
                     ],
                 )
             )(theta),
             AnalyzingPower(
                 AngularCorrelation(
-                    State(0, POSITIVE),
+                    State(0, Parity.positive),
                     [
-                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
-                        [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.4), State(4, POSITIVE)],
+                        [
+                            Transition(
+                                EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.0
+                            ),
+                            State(2, Parity.negative),
+                        ],
+                        [
+                            Transition(
+                                EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.4
+                            ),
+                            State(4, Parity.positive),
+                        ],
                     ],
                 )
             )(theta),
@@ -144,10 +200,16 @@ def test_analyzing_power():
 
     ang_cor_matrix = AnalyzingPower(
         AngularCorrelation(
-            State(0, POSITIVE),
+            State(0, Parity.positive),
             [
-                [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
-                [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.1), State(4, POSITIVE)],
+                [
+                    Transition(EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.0),
+                    State(2, Parity.negative),
+                ],
+                [
+                    Transition(EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.1),
+                    State(4, Parity.positive),
+                ],
             ],
         )
     ).evaluate(np.array([[0.1, 0.2], [0.3, 0.4]]), [0.0, "delta"], theta=theta)

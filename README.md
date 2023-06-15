@@ -65,6 +65,7 @@ Besides all prerequisites for the C++ libraries, the following libraries/tools a
 
 * [python3](https://www.python.org/) (it is assumed that the command-line executable is called 'python3')
 * [numpy](https://numpy.org/)
+* [scipy](https://scipy.org/)
 * [matplotlib](https://matplotlib.org/)
 * [black](https://black.readthedocs.io/) (testing, optional)
 * [pytest](https://docs.pytest.org/) (testing, optional)
@@ -110,25 +111,21 @@ $ cd ALPACA_BUILD_DIR/test
 $ ctest
 ```
 
-### 2.v Build (python)
+### 2.v Installation (python)
 
-Follow the steps for the C++ build in the previous section.
-After that, the python code can be found in `ALPACA_BUILD_DIR/python`.
-For a system-wide install of the library, type:
+To install the python library, simply run
 
 ```
-$ cd ALPACA_BUILD_DIR/python
-$ python3 setup.py install
+$ pip install git+https://github.com/u-eff-gee/alpaca.git@master
 ```
 
 in that directory.
 
 #### 2.vi Optional Testing (python)
 
-To run a self test of the python code, type:
+To run a self test of the python code, run:
 
 ```
-$ cd ALPACA_BUILD_DIR/python
 $ tox
 ```
 

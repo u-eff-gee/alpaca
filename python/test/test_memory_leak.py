@@ -19,10 +19,8 @@ import pytest
 
 import numpy as np
 
-from alpaca.angular_correlation import AngularCorrelation
+from alpaca import AngularCorrelation, State, Parity, Transition, EMCharacter
 from alpaca.inversion_by_piecewise_interpolation import interpolate_and_invert
-from alpaca.state import NEGATIVE, POSITIVE, State
-from alpaca.transition import ELECTRIC, MAGNETIC, Transition
 from alpaca.analyzing_power import AnalyzingPower, arctan_grid
 
 # This test, which implements a common application of finding multipole mixing ratios that
@@ -37,13 +35,23 @@ def test_memory_leak():
 
     delta_results = []
 
-    for n in range(n_monte_carlo):
+    for _ in range(n_monte_carlo):
         ana_pow = AnalyzingPower(
             AngularCorrelation(
-                State(0, POSITIVE),
+                State(0, Parity.positive),
                 [
-                    [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
-                    [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(4, POSITIVE)],
+                    [
+                        Transition(
+                            EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.0
+                        ),
+                        State(2, Parity.negative),
+                    ],
+                    [
+                        Transition(
+                            EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.0
+                        ),
+                        State(4, Parity.positive),
+                    ],
                 ],
             )
         ).evaluate(delta, [0.0, "delta"])

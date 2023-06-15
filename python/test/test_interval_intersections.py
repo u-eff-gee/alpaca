@@ -22,9 +22,7 @@ from alpaca.interval_intersections import (
     intersection_of_interval_with_list_of_intervals,
     intersection,
 )
-from alpaca.angular_correlation import AngularCorrelation
-from alpaca.state import POSITIVE, State
-from alpaca.transition import ELECTRIC, MAGNETIC, Transition
+from alpaca import AngularCorrelation, Parity, State
 
 
 def test_interval_intersections():

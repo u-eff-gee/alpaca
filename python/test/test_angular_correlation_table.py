@@ -19,14 +19,21 @@ import pytest
 
 import numpy as np
 
-from alpaca.angular_correlation import AngularCorrelation
+from alpaca import AngularCorrelation, Parity, State
 from alpaca.angular_correlation_table import AngularCorrelationTable
-from alpaca.state import NEGATIVE, POSITIVE, State
 
 angular_correlations = [
     ["0_1_0.txt", State(0), [State(2), State(0)]],
-    ["0p_1p_0p.txt", State(0, POSITIVE), [State(2, POSITIVE), State(0, POSITIVE)]],
-    ["0p_1m_0p.txt", State(0, POSITIVE), [State(2, NEGATIVE), State(0, POSITIVE)]],
+    [
+        "0p_1p_0p.txt",
+        State(0, Parity.positive),
+        [State(2, Parity.positive), State(0, Parity.positive)],
+    ],
+    [
+        "0p_1m_0p.txt",
+        State(0, Parity.positive),
+        [State(2, Parity.negative), State(0, Parity.positive)],
+    ],
     ["0_2_0.txt", State(0), [State(4), State(0)]],
     ["0_2_2.txt", State(0), [State(4), State(4)]],
 ]

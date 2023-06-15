@@ -18,9 +18,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from alpaca.angular_correlation import AngularCorrelation
-from alpaca.state import NEGATIVE, POSITIVE, State
-from alpaca.transition import ELECTRIC, MAGNETIC, Transition
+from alpaca import AngularCorrelation, Parity, State, EMCharacter, Transition
 
 from alpaca.analyzing_power import AnalyzingPower
 
@@ -32,21 +30,23 @@ def test_analyzing_power_pure_transitions():
     analyzing_powers = []
 
     for two_J in spins:
-        em = ELECTRIC if two_J % 4 == 0 else MAGNETIC
-        emp = ELECTRIC if em == MAGNETIC else MAGNETIC
+        em = EMCharacter.electric if two_J % 4 == 0 else EMCharacter.magnetic
+        emp = (
+            EMCharacter.electric if em == EMCharacter.magnetic else EMCharacter.magnetic
+        )
 
         analyzing_powers.append(
             AnalyzingPower(
                 AngularCorrelation(
-                    State(0, POSITIVE),
+                    State(0, Parity.positive),
                     [
                         [
                             Transition(em, two_J, emp, two_J + 2, 0.0),
-                            State(two_J, POSITIVE),
+                            State(two_J, Parity.positive),
                         ],
                         [
                             Transition(em, two_J, emp, two_J + 2, 0.0),
-                            State(0, POSITIVE),
+                            State(0, Parity.positive),
                         ],
                     ],
                 ),
@@ -54,21 +54,23 @@ def test_analyzing_power_pure_transitions():
             )
         )
 
-        em = ELECTRIC if two_J % 4 != 0 else MAGNETIC
-        emp = ELECTRIC if em == MAGNETIC else MAGNETIC
+        em = EMCharacter.electric if two_J % 4 != 0 else EMCharacter.magnetic
+        emp = (
+            EMCharacter.electric if em == EMCharacter.magnetic else EMCharacter.magnetic
+        )
 
         analyzing_powers.append(
             AnalyzingPower(
                 AngularCorrelation(
-                    State(0, POSITIVE),
+                    State(0, Parity.positive),
                     [
                         [
                             Transition(em, two_J, emp, two_J + 2, 0.0),
-                            State(two_J, NEGATIVE),
+                            State(two_J, Parity.negative),
                         ],
                         [
                             Transition(em, two_J, emp, two_J + 2, 0.0),
-                            State(0, POSITIVE),
+                            State(0, Parity.positive),
                         ],
                     ],
                 ),
@@ -92,7 +94,7 @@ def test_analyzing_power_pure_transitions():
             spin_markers[i // 2],
             color=parity_colors[0] if i % 2 == 0 else parity_colors[1],
             markersize=8,
-            label=ana.angular_correlation.cascade_steps[0][1].tex(),
+            # label=ana.angular_correlation.cascade_steps[0][1].tex(),
         )
     ax.legend()
     plt.tight_layout()

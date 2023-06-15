@@ -253,13 +253,14 @@ class LevelSchemePlotter:
             linewidth=self.state_line_width,
             zorder=self.zorder_states,
         )
-        axis.text(
-            state_label_left_x,
-            initial_state_y,
-            self.initial_state.tex(parity_variable_symbol=self.parity_variable_symbol),
-            verticalalignment="center",
-            fontsize=self.fontsize,
-        )
+        # FIXME: tex not implemented
+        # axis.text(
+        #     state_label_left_x,
+        #     initial_state_y,
+        #     self.initial_state.tex(parity_variable_symbol=self.parity_variable_symbol),
+        #     verticalalignment="center",
+        #     fontsize=self.fontsize,
+        # )
         axis.plot(
             [state_x, state_x + state_width],
             [excited_state_y] * 2,
@@ -267,15 +268,16 @@ class LevelSchemePlotter:
             linewidth=self.state_line_width,
             zorder=self.zorder_states,
         )
-        axis.text(
-            state_label_left_x,
-            excited_state_y,
-            self.cascade_steps[0][1].tex(
-                parity_variable_symbol=self.parity_variable_symbol
-            ),
-            verticalalignment="center",
-            fontsize=self.fontsize,
-        )
+        # FIXME: tex not implemented
+        # axis.text(
+        #     state_label_left_x,
+        #     excited_state_y,
+        #     self.cascade_steps[0][1].tex(
+        #         parity_variable_symbol=self.parity_variable_symbol
+        #     ),
+        #     verticalalignment="center",
+        #     fontsize=self.fontsize,
+        # )
 
         # Excitation
         axis.plot(
@@ -297,19 +299,20 @@ class LevelSchemePlotter:
             edgecolor=excitation_arrow_color,
             zorder=self.zorder_arrows,
         )
-        axis.text(
-            excitation_label_left_x,
-            0.5 * (excited_state_y - initial_state_y) + initial_state_y,
-            self.cascade_steps[0][0].tex(
-                em_variable_symbol=self.em_variable_symbol,
-                always_show_secondary=False,
-                show_polarization=self.show_polarization[0],
-            ),
-            verticalalignment="center",
-            fontsize=fontsize_single_multipole
-            if self.cascade_steps[0][0].delta == 0.0
-            else fontsize_two_multipoles,
-        )
+        # FIXME: tex not implemented
+        # axis.text(
+        #     excitation_label_left_x,
+        #     0.5 * (excited_state_y - initial_state_y) + initial_state_y,
+        #     self.cascade_steps[0][0].tex(
+        #         em_variable_symbol=self.em_variable_symbol,
+        #         always_show_secondary=False,
+        #         show_polarization=self.show_polarization[0],
+        #     ),
+        #     verticalalignment="center",
+        #     fontsize=fontsize_single_multipole
+        #     if self.cascade_steps[0][0].delta == 0.0
+        #     else fontsize_two_multipoles,
+        # )
         axis.text(
             delta_label_left_x,
             0.5 * (excited_state_y - initial_state_y) + initial_state_y,
@@ -349,15 +352,16 @@ class LevelSchemePlotter:
                 linewidth=self.state_line_width,
                 zorder=self.zorder_states,
             )
-            axis.text(
-                state_label_right_x,
-                cascade_states_y[i],
-                self.cascade_steps[i + 1][1].tex(
-                    parity_variable_symbol=self.parity_variable_symbol
-                ),
-                verticalalignment="center",
-                fontsize=self.fontsize,
-            )
+            # FIXME: tex not implemented
+            # axis.text(
+            #     state_label_right_x,
+            #     cascade_states_y[i],
+            #     self.cascade_steps[i + 1][1].tex(
+            #         parity_variable_symbol=self.parity_variable_symbol
+            #     ),
+            #     verticalalignment="center",
+            #     fontsize=self.fontsize,
+            # )
 
         # First transition in cascade
         axis.plot(
@@ -378,19 +382,20 @@ class LevelSchemePlotter:
             color=decay_arrow_color,
             zorder=self.zorder_arrows,
         )
-        axis.text(
-            decay_label_right_x,
-            0.5 * (excited_state_y - cascade_states_y[0]) + cascade_states_y[0],
-            self.cascade_steps[1][0].tex(
-                em_variable_symbol=self.em_variable_symbol,
-                always_show_secondary=False,
-                show_polarization=self.show_polarization[1],
-            ),
-            verticalalignment="center",
-            fontsize=fontsize_single_multipole
-            if self.cascade_steps[1][0].delta == 0.0
-            else fontsize_two_multipoles,
-        )
+        # FIXME: tex not implemented
+        # axis.text(
+        #     decay_label_right_x,
+        #     0.5 * (excited_state_y - cascade_states_y[0]) + cascade_states_y[0],
+        #     self.cascade_steps[1][0].tex(
+        #         em_variable_symbol=self.em_variable_symbol,
+        #         always_show_secondary=False,
+        #         show_polarization=self.show_polarization[1],
+        #     ),
+        #     verticalalignment="center",
+        #     fontsize=fontsize_single_multipole
+        #     if self.cascade_steps[1][0].delta == 0.0
+        #     else fontsize_two_multipoles,
+        # )
         axis.text(
             delta_label_right_x,
             0.5 * (excited_state_y - cascade_states_y[0]) + cascade_states_y[0],
@@ -420,20 +425,21 @@ class LevelSchemePlotter:
                 color=decay_arrow_color,
                 zorder=self.zorder_arrows,
             )
-            axis.text(
-                decay_label_right_x,
-                0.5 * (cascade_states_y[i - 1] - cascade_states_y[i])
-                + cascade_states_y[i],
-                self.cascade_steps[i + 1][0].tex(
-                    em_variable_symbol=self.em_variable_symbol,
-                    always_show_secondary=False,
-                    show_polarization=self.show_polarization[i + 1],
-                ),
-                verticalalignment="center",
-                fontsize=fontsize_single_multipole
-                if self.cascade_steps[i + 1][0].delta == 0.0
-                else fontsize_two_multipoles,
-            )
+            # FIXME: tex not implemented
+            # axis.text(
+            #     decay_label_right_x,
+            #     0.5 * (cascade_states_y[i - 1] - cascade_states_y[i])
+            #     + cascade_states_y[i],
+            #     self.cascade_steps[i + 1][0].tex(
+            #         em_variable_symbol=self.em_variable_symbol,
+            #         always_show_secondary=False,
+            #         show_polarization=self.show_polarization[i + 1],
+            #     ),
+            #     verticalalignment="center",
+            #     fontsize=fontsize_single_multipole
+            #     if self.cascade_steps[i + 1][0].delta == 0.0
+            #     else fontsize_two_multipoles,
+            # )
             axis.text(
                 delta_label_right_x,
                 0.5 * (excited_state_y - cascade_states_y[i - 1]) + cascade_states_y[i],

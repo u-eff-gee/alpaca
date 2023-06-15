@@ -15,11 +15,12 @@
 #
 #    Copyright (C) 2021-2023 Udo Friman-Gayer
 
-from alpaca.state import POSITIVE, State
 import pytest
+
+from alpaca import Parity, State
 
 
 def test_state():
     assert State(0).__str__() == "0"
     assert State(1).__str__() == "1/2"
-    assert State(0, POSITIVE).__str__() == "0^+"
+    assert State(0, Parity.positive).__str__() == "0^+"

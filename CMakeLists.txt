@@ -83,7 +83,6 @@ endif()
 include(GNUInstallDirs)
 
 
-add_subdirectory(python)
 add_subdirectory(source)
 if(BUILD_TESTS)
         add_subdirectory(test)

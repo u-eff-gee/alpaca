@@ -19,18 +19,26 @@ import pytest
 
 import matplotlib.pyplot as plt
 
+from alpaca import Parity, State, EMCharacter, Transition
 from alpaca.level_scheme_plotter import LevelSchemePlotter
-from alpaca.state import NEGATIVE, PARITY_UNKNOWN, POSITIVE, State
-from alpaca.transition import ELECTRIC, EM_UNKNOWN, MAGNETIC, Transition
 
 
 def test_level_scheme_plotter():
     lvl_scheme_excited = LevelSchemePlotter(
-        initial_state=State(0, POSITIVE),
+        initial_state=State(0, Parity.positive),
         cascade_steps=[
-            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
-            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.5), State(4, POSITIVE)],
-            [Transition(EM_UNKNOWN, 4, EM_UNKNOWN, 6, 0.0), State(8, PARITY_UNKNOWN)],
+            [
+                Transition(EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.0),
+                State(2, Parity.negative),
+            ],
+            [
+                Transition(EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.5),
+                State(4, Parity.positive),
+            ],
+            [
+                Transition(EMCharacter.unknown, 4, EMCharacter.unknown, 6, 0.0),
+                State(8, Parity.unknown),
+            ],
         ],
         delta_labels=[r"", r"$\delta_2$", r"$\delta_3$"],
         fontsize=10,
@@ -38,12 +46,24 @@ def test_level_scheme_plotter():
     )
 
     lvl_scheme_ground = LevelSchemePlotter(
-        initial_state=State(0, POSITIVE),
+        initial_state=State(0, Parity.positive),
         cascade_steps=[
-            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.0), State(2, NEGATIVE)],
-            [Transition(ELECTRIC, 2, MAGNETIC, 4, 0.5), State(4, POSITIVE)],
-            [Transition(EM_UNKNOWN, 4, EM_UNKNOWN, 6, 0.0), State(8, PARITY_UNKNOWN)],
-            [Transition(EM_UNKNOWN, 8, EM_UNKNOWN, 10, 0.0), State(0, POSITIVE)],
+            [
+                Transition(EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.0),
+                State(2, Parity.negative),
+            ],
+            [
+                Transition(EMCharacter.electric, 2, EMCharacter.magnetic, 4, 0.5),
+                State(4, Parity.positive),
+            ],
+            [
+                Transition(EMCharacter.unknown, 4, EMCharacter.unknown, 6, 0.0),
+                State(8, Parity.unknown),
+            ],
+            [
+                Transition(EMCharacter.unknown, 8, EMCharacter.unknown, 10, 0.0),
+                State(0, Parity.positive),
+            ],
         ],
         delta_labels=["", r"$\delta_2$", r"$\delta_3$", ""],
         fontsize=10,

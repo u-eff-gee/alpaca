@@ -267,6 +267,10 @@ struct Transition {
           "two_L (two_Lp) must be a nonzero, nonnegative integer.");
     }
 
+    if (two_L % 2 == 1) {
+      throw invalid_argument("two_L (two_Lp) must be even.");
+    }
+
     return two_L;
   }
 };

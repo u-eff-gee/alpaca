@@ -36,7 +36,7 @@ class CMakeBuild(build_ext):
         # from Python.
         cmake_args = [
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}",
-            f"-DPYTHON_EXECUTABLE={sys.executable}",
+            f"-DPython_Python_EXECUTABLEEXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",
         ]
         build_args = []
@@ -65,8 +65,10 @@ setup(
     author="Udo Friman-Gayer",
     author_email="udo.friman-gayer@ess.eu",
     license="GPLv3",
-    ext_modules=[CMakeExtension("alpaca")],
+    ext_modules=[CMakeExtension("_alpaca")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     python_requires=">=3.8",
+    package_dir={"alpaca": "python"},
+    packages=["alpaca"],
 )

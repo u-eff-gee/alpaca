@@ -20,19 +20,23 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
-from alpaca.angular_correlation import AngularCorrelation
-from alpaca.state import NEGATIVE, POSITIVE, State
-from alpaca.transition import ELECTRIC, MAGNETIC, Transition
+from alpaca import AngularCorrelation, Parity, State, EMCharacter, Transition
 
 from alpaca.analyzing_power_plotter import AnalyzingPowerPlotter
 
 plots = [
     AnalyzingPowerPlotter(
         AngularCorrelation(
-            State(0, POSITIVE),
+            State(0, Parity.positive),
             [
-                [Transition(MAGNETIC, 2, ELECTRIC, 4, 0.0), State(2, POSITIVE)],
-                [Transition(MAGNETIC, 2, ELECTRIC, 4, 0.0), State(4, POSITIVE)],
+                [
+                    Transition(EMCharacter.magnetic, 2, EMCharacter.electric, 4, 0.0),
+                    State(2, Parity.positive),
+                ],
+                [
+                    Transition(EMCharacter.magnetic, 2, EMCharacter.electric, 4, 0.0),
+                    State(4, Parity.positive),
+                ],
             ],
         ),
         (0.0, r"\delta_2"),
@@ -44,10 +48,16 @@ plots = [
     ),
     AnalyzingPowerPlotter(
         AngularCorrelation(
-            State(3, POSITIVE),
+            State(3, Parity.positive),
             [
-                [Transition(MAGNETIC, 2, ELECTRIC, 4, 1.0), State(5, POSITIVE)],
-                [Transition(MAGNETIC, 2, ELECTRIC, 4, 1.0), State(3, POSITIVE)],
+                [
+                    Transition(EMCharacter.magnetic, 2, EMCharacter.electric, 4, 1.0),
+                    State(5, Parity.positive),
+                ],
+                [
+                    Transition(EMCharacter.magnetic, 2, EMCharacter.electric, 4, 1.0),
+                    State(3, Parity.positive),
+                ],
             ],
         ),
         (r"\delta_1", r"\delta_1"),

@@ -14,7 +14,8 @@
 namespace py = pybind11;
 using namespace alpaca;
 
-PYBIND11_MODULE(alpaca, m) {
+PYBIND11_MODULE(_alpaca, m) {
+  m.attr("__name__") = "alpaca";
   py::enum_<EMCharacter>(m, "EMCharacter")
       .value("electric", EMCharacter::electric)
       .value("magnetic", EMCharacter::magnetic)
@@ -229,7 +230,11 @@ PYBIND11_MODULE(alpaca, m) {
                     correlation. If the values for theta and phi were scalars, a scalar will be returned.
                     If at least one or both of theta and phi was a numpy array of shape (M, N, ...), a
                     numpy array of shape (M, N, ...) will be returned.
-           )doc");
+           )doc")
+      .def_property_readonly("cascade_steps",
+                             &AngularCorrelation::get_cascade_steps)
+      .def_property_readonly("initial_state",
+                             &AngularCorrelation::get_initial_state);
 
   py::class_<ReferenceFrameSampler,
              std::shared_ptr<ReferenceFrameSampler> /* holder type */>(
