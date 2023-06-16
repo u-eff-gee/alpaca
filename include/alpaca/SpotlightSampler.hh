@@ -27,9 +27,6 @@
 using std::mt19937;
 using std::uniform_real_distribution;
 
-using alpaca::CoordDir;
-using alpaca::EulerAngles;
-
 namespace alpaca {
 
 class SpotlightSampler : public ReferenceFrameSampler {

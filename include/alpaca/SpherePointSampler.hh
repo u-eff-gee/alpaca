@@ -25,9 +25,6 @@
 
 using std::vector;
 
-using alpaca::CoordCart;
-using alpaca::CoordDir;
-
 namespace alpaca {
 
 /**

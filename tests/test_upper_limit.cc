@@ -23,6 +23,7 @@
 
 #include <gsl/gsl_sf.h>
 
+#include "alpaca/EulerAngleRotation.hh"
 #include "alpaca/SpherePointSampler.hh"
 #include "alpaca/State.hh"
 #include "alpaca/TestUtilities.hh"
@@ -34,6 +35,7 @@
 using std::make_shared;
 using std::vector;
 
+using alpaca::CoordDir;
 using alpaca::EMCharacter;
 using alpaca::Parity;
 using alpaca::SpherePointSampler;

@@ -26,8 +26,6 @@
 using std::accumulate;
 using std::vector;
 
-using alpaca::EulerAngles;
-
 namespace alpaca {
 
 EulerAngles ReferenceFrameSampler::operator()() { return sample().second; }

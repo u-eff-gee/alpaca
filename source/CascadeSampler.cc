@@ -21,8 +21,6 @@
 #include "alpaca/EulerAngleRotation.hh"
 #include "alpaca/ReferenceFrameSampler.hh"
 
-using alpaca::EulerAngles;
-
 namespace alpaca {
 
 CascadeSampler::CascadeSampler(
@@ -30,8 +28,7 @@ CascadeSampler::CascadeSampler(
     : angular_correlation_samplers(cascade) {}
 
 vector<EulerAngles> CascadeSampler::operator()() {
-    vector<EulerAngles> reference_frames(
-      angular_correlation_samplers.size());
+  vector<EulerAngles> reference_frames(angular_correlation_samplers.size());
 
   reference_frames[0] = angular_correlation_samplers[0]->operator()();
 

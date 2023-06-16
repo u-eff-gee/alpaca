@@ -32,10 +32,6 @@ using std::invalid_argument;
 using std::runtime_error;
 using std::stringstream;
 
-using alpaca::CoordCart;
-using alpaca::CoordDir;
-using alpaca::EulerAngles;
-
 namespace alpaca {
 
 vector<CoordDir> SpherePointSampler::sample(const unsigned int n) const {

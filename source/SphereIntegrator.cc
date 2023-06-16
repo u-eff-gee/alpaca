@@ -26,8 +26,6 @@
 
 using std::vector;
 
-using alpaca::CoordDir;
-
 namespace alpaca {
 
 double SphereIntegrator::operator()(double f(double theta, double phi),

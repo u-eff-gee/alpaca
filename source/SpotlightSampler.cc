@@ -27,9 +27,6 @@
 
 using std::pair;
 
-using alpaca::CoordDir;
-using alpaca::EulerAngles;
-
 namespace alpaca {
 
 pair<unsigned int, EulerAngles> SpotlightSampler::sample() {

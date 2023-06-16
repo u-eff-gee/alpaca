@@ -30,9 +30,6 @@ using std::uniform_real_distribution;
 
 #include "alpaca/ReferenceFrameSampler.hh"
 
-using alpaca::CoordDir;
-using alpaca::EulerAngles;
-
 namespace alpaca {
 
 /**

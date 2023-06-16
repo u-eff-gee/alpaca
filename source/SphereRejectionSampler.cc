@@ -25,9 +25,6 @@
 #include "alpaca/EulerAngleRotation.hh"
 #include "alpaca/SphereRejectionSampler.hh"
 
-using alpaca::EulerAngles;
-using alpaca::CoordDir;
-
 namespace alpaca {
 
 SphereRejectionSampler::SphereRejectionSampler(

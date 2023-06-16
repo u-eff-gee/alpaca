@@ -25,8 +25,6 @@
 
 using std::pair;
 
-using alpaca::EulerAngles;
-
 namespace alpaca {
 
 /**

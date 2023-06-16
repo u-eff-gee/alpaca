@@ -31,8 +31,6 @@
 using std::shared_ptr;
 using std::vector;
 
-using alpaca::EulerAngles;
-
 namespace alpaca {
 
 /**

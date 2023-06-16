@@ -21,8 +21,6 @@
 
 #include "alpaca/ReferenceFrameSampler.hh"
 
-using alpaca::EulerAngles;
-
 namespace alpaca {
 
 class DeterministicReferenceFrameSampler : public ReferenceFrameSampler {
