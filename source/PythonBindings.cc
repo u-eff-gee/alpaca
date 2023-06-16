@@ -49,17 +49,24 @@ PYBIND11_MODULE(_alpaca, m) {
       .def_readwrite("two_Lp", &Transition::two_Lp,
                      "Two times the secondary multipolarity")
       .def_readwrite("delta", &Transition::delta, "Multipole mixing ratio")
-      .def("__repr__", &Transition::str_rep);
+      .def("__repr__", &Transition::str_rep)
+      .def_static("Dipole", &Transition::Dipole, py::arg("delta") = 0.)
+      .def_static("E1", &Transition::E1, py::arg("delta") = 0.)
+      .def_static("M1", &Transition::M1, py::arg("delta") = 0.)
+      .def_static("Quadrupole", &Transition::Quadrupole, py::arg("delta") = 0.)
+      .def_static("E2", &Transition::E2, py::arg("delta") = 0.)
+      .def_static("M2", &Transition::M2, py::arg("delta") = 0.);
 
   py::enum_<Parity>(m, "Parity")
       .value("negative", Parity::negative)
       .value("positive", Parity::positive)
       .value("unknown", Parity::unknown);
   py::class_<State>(m, "State")
-      .def(py::init<int>(), py::arg("two_J"))
-      .def(py::init<int, Parity>(), py::arg("two_J"), py::arg("parity"))
-      .def(py::init<int, Parity, double>(), py::arg("two_J"), py::arg("parity"),
-           py::arg("energy"), R"doc(
+      .def(py::init<int>(), py::arg("two_J").noconvert())
+      .def(py::init<int, Parity>(), py::arg("two_J").noconvert(),
+           py::arg("parity"))
+      .def(py::init<int, Parity, double>(), py::arg("two_J").noconvert(),
+           py::arg("parity"), py::arg("energy"), R"doc(
             Constructor
 
             Parameters
@@ -71,7 +78,8 @@ PYBIND11_MODULE(_alpaca, m) {
             energy: float
                 Excitation energy of the state with respect to the ground state in MeV
         )doc")
-      .def(py::init<int, double>(), py::arg("two_J"), py::arg("energy"))
+      .def(py::init<int, double>(), py::arg("two_J").noconvert(),
+           py::arg("energy"))
       .def_readwrite(
           "two_J", &State::two_J,
           "Two times the angular momentum quantum number in units of the "
@@ -81,7 +89,15 @@ PYBIND11_MODULE(_alpaca, m) {
           "excitation_energy", &State::excitation_energy,
           "Excitation energy of the state with respect to the ground state "
           "in MeV")
-      .def("__repr__", &State::str_rep);
+      .def("__repr__", &State::str_rep)
+      .def_static("Even", &State::Even, py::arg("J"),
+                  py::arg("parity") = Parity::unknown)
+      .def_static("EvenPlus", &State::EvenPlus, py::arg("J"))
+      .def_static("EvenMinus", &State::EvenMinus, py::arg("J"))
+      .def_static("Odd", &State::Odd, py::arg("J"),
+                  py::arg("parity") = Parity::unknown)
+      .def_static("OddPlus", &State::OddPlus, py::arg("J"))
+      .def_static("OddMinus", &State::OddMinus, py::arg("J"));
 
   py::class_<AngularCorrelation>(m, "AngularCorrelation", R"doc(
                 Class for a gamma-gamma correlation.

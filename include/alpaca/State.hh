@@ -100,6 +100,28 @@ struct State {
         excitation_energy(check_excitation_energy(e_x)){};
   State(double t_J, double e_x) = delete;
 
+  inline static State Even(const int J, const Parity p = Parity::unknown) {
+    return {2 * J, p};
+  }
+
+  inline static State EvenPlus(const int J) {
+    return {2 * J, Parity::positive};
+  }
+
+  inline static State EvenMinus(const int J) {
+    return {2 * J, Parity::negative};
+  }
+
+  inline static State Odd(const int t_J, const Parity p = Parity::unknown) {
+    return {t_J, p};
+  }
+
+  inline static State OddPlus(const int t_J) { return {t_J, Parity::positive}; }
+
+  inline static State OddMinus(const int t_J) {
+    return {t_J, Parity::negative};
+  }
+
   int two_J; /**< Two times the angular momentum quantum number in units of the
                 reduced Planck constant. */
   Parity parity;            /**< Parity quantum number. */
