@@ -1,2 +1,66 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alpaca"
+description = "a linearly-polarized angular-correlation application"
+authors = [
+    {name = "Udo Friman-Gayer", email = "udo.friman-gayer@ess.eu"},
+    {name = "Oliver Papst", email = "opapst@ikp.tu-darmstadt.de"},
+]
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.8"
+license = {"file" = "COPYING"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: C++",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+keywords = [
+    "angular correlation",
+    "angular distribution",
+    "gamma spectroscopy",
+]
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/u-eff-gee/alpaca"
+"Bug Tracker" = "https://github.com/u-eff-gee/alpaca/issues"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+    "black",
+    "tox",
+]
+
 [tool.pytest.ini_options]
-addopts = "--cov=alpaca --verbose"
+addopts = ["--cov=alpaca", "--verbose"]
+testpaths = ["python/tests"]
+required_plugins = ["pytest-cov"]
+
+[tool.setuptools.packages.find]
+where = ["python"]
+exclude = ["tests*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "alpaca.__version__"}
