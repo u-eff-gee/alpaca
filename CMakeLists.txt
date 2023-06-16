@@ -34,6 +34,22 @@ option(BUILD_PYTHON "Enable building python bindings" ON)
 option(ENABLE_COVERAGE "Enable coverage reporting" OFF)
 option(WARNINGS_AS_ERRORS "Treat warnings as errors" OFF)
 
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'RelWithDebInfo' as none was specified.")
+  set(CMAKE_BUILD_TYPE
+      RelWithDebInfo
+      CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui, ccmake
+  set_property(
+    CACHE CMAKE_BUILD_TYPE
+    PROPERTY STRINGS
+             "Debug"
+             "Release"
+             "MinSizeRel"
+             "RelWithDebInfo")
+endif()
+
 if(BUILD_DOCUMENTATION)
         find_package(Doxygen)
         configure_file(${PROJECT_SOURCE_DIR}/Doxyfile.in Doxyfile)
