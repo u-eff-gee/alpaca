@@ -35,7 +35,7 @@ using std::to_string;
 namespace alpaca {
 
 W_dir_dir::W_dir_dir(const State &ini_sta,
-                     const vector<pair<Transition, State>> cas_ste)
+                     const vector<pair<Transition, State>> &cas_ste)
     : W_gamma_gamma(ini_sta, cas_ste) {
   two_nu_max = calculate_two_nu_max();
   nu_max = two_nu_max / 2;
@@ -130,9 +130,9 @@ vector<double> W_dir_dir::calculate_expansion_coefficients_Av() {
         cascade_steps[n_cascade_steps - 1].second.two_J,
         cascade_steps[n_cascade_steps - 2].second.two_J);
     exp_coef.push_back(
-        av_coefficients_excitation[static_cast<size_t>(two_nu / 4)](
+        av_coefficients_excitation.at(static_cast<size_t>(two_nu / 4))(
             cascade_steps[0].first.delta) *
-        av_coefficients_decay[static_cast<size_t>(two_nu / 4)](
+        av_coefficients_decay.at(static_cast<size_t>(two_nu / 4))(
             cascade_steps[n_cascade_steps - 1].first.delta));
   }
 

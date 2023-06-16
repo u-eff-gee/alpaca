@@ -30,7 +30,7 @@ using std::to_string;
 namespace alpaca {
 
 W_pol_dir::W_pol_dir(const State &ini_sta,
-                     const vector<pair<Transition, State>> cas_ste)
+                     const vector<pair<Transition, State>> &cas_ste)
     : W_gamma_gamma(ini_sta, cas_ste), w_dir_dir(W_dir_dir(ini_sta, cas_ste)) {
 
   two_nu_max = w_dir_dir.get_two_nu_max();
@@ -106,9 +106,9 @@ vector<double> W_pol_dir::calculate_expansion_coefficients_alphav_Av() {
         cascade_steps[n_cascade_steps - 1].first.two_Lp,
         cascade_steps[n_cascade_steps - 1].second.two_J,
         cascade_steps[n_cascade_steps - 2].second.two_J);
-    exp_coef.push_back(alphav_coefficients[static_cast<size_t>(two_nu / 4 - 1)](
-                           cascade_steps[0].first.delta) *
-                       av_coefficients[static_cast<size_t>(two_nu / 4 - 1)](
+    exp_coef.push_back(alphav_coefficients.at(static_cast<size_t>(
+                           two_nu / 4 - 1))(cascade_steps[0].first.delta) *
+                       av_coefficients.at(static_cast<size_t>(two_nu / 4 - 1))(
                            cascade_steps[n_cascade_steps - 1].first.delta));
   }
 

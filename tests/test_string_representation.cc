@@ -19,6 +19,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <sstream>
 
 using std::ofstream;
@@ -30,6 +31,10 @@ using std::stringstream;
 #include "alpaca/W_gamma_gamma.hh"
 #include "alpaca/W_pol_dir.hh"
 
+using std::make_shared;
+using std::ofstream;
+using std::stringstream;
+
 using alpaca::EMCharacter;
 using alpaca::Parity;
 using alpaca::State;
@@ -38,47 +43,53 @@ using alpaca::W_dir_dir;
 using alpaca::W_gamma_gamma;
 using alpaca::W_pol_dir;
 
-vector<W_gamma_gamma *> w_gamma_gamma{
-    new W_dir_dir(State(0),
-                  {
-                      {Transition(2, 4, 0.), State(2)},
-                      {Transition(2, 4, 0.), State(4)},
-                  }),
-    new W_dir_dir(State(0),
-                  {
-                      {Transition(2, 4, 0.), State(2)},
-                      {Transition(2, 4, 0.), State(2)},
-                      {Transition(2, 4, 0.), State(4)},
-                  }),
-    new W_pol_dir(
-        State(0, Parity::positive),
-        {
-            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
-             State(2, Parity::positive)},
-            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
-             State(4, Parity::positive)},
-        }),
-    new W_pol_dir(
-        State(3, Parity::negative),
-        {
-            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
-             State(5, Parity::negative)},
-            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
-             State(3, Parity::negative)},
-        }),
-    new W_pol_dir(
-        State(0, Parity::positive),
-        {
-            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
-             State(2, Parity::positive)},
-            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
-             State(2, Parity::positive)},
-            {Transition(EMCharacter::magnetic, 2, EMCharacter::electric, 4, 0.),
-             State(4, Parity::positive)},
-        }),
-};
-
 int main() {
+  vector<std::shared_ptr<W_gamma_gamma>> w_gamma_gamma{
+      make_shared<W_dir_dir>(W_dir_dir(State(0),
+                                       {
+                                           {Transition(2, 4, 0.), State(2)},
+                                           {Transition(2, 4, 0.), State(4)},
+                                       })),
+      make_shared<W_dir_dir>(W_dir_dir(State(0),
+                                       {
+                                           {Transition(2, 4, 0.), State(2)},
+                                           {Transition(2, 4, 0.), State(2)},
+                                           {Transition(2, 4, 0.), State(4)},
+                                       })),
+      make_shared<W_pol_dir>(
+          W_pol_dir(State(0, Parity::positive),
+                    {
+                        {Transition(EMCharacter::magnetic, 2,
+                                    EMCharacter::electric, 4, 0.),
+                         State(2, Parity::positive)},
+                        {Transition(EMCharacter::magnetic, 2,
+                                    EMCharacter::electric, 4, 0.),
+                         State(4, Parity::positive)},
+                    })),
+      make_shared<W_pol_dir>(
+          W_pol_dir(State(3, Parity::negative),
+                    {
+                        {Transition(EMCharacter::magnetic, 2,
+                                    EMCharacter::electric, 4, 0.),
+                         State(5, Parity::negative)},
+                        {Transition(EMCharacter::magnetic, 2,
+                                    EMCharacter::electric, 4, 0.),
+                         State(3, Parity::negative)},
+                    })),
+      make_shared<W_pol_dir>(
+          W_pol_dir(State(0, Parity::positive),
+                    {
+                        {Transition(EMCharacter::magnetic, 2,
+                                    EMCharacter::electric, 4, 0.),
+                         State(2, Parity::positive)},
+                        {Transition(EMCharacter::magnetic, 2,
+                                    EMCharacter::electric, 4, 0.),
+                         State(2, Parity::positive)},
+                        {Transition(EMCharacter::magnetic, 2,
+                                    EMCharacter::electric, 4, 0.),
+                         State(4, Parity::positive)},
+                    })),
+  };
 
   const unsigned int precision = 8;
 
@@ -87,7 +98,7 @@ int main() {
   texfile_buffer
       << "\\documentclass{article}\n\\usepackage{amsmath}\n\\begin{document}\n";
 
-  for (auto w : w_gamma_gamma) {
+  for (auto &w : w_gamma_gamma) {
     texfile_buffer << "\\begin{equation}\n";
     texfile_buffer << w->get_initial_state().str_rep();
     for (auto cascade_step : w->get_cascade_steps()) {

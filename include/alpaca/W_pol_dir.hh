@@ -60,7 +60,7 @@ public:
    * populated by that transition.
    */
   W_pol_dir(const State &ini_sta,
-            const vector<pair<Transition, State>> cas_ste);
+            const vector<pair<Transition, State>> &cas_ste);
 
   /**
    * \brief Return value of the pol-dir correlation at angles \f$\theta\f$ and
