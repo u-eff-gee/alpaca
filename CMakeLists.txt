@@ -50,6 +50,12 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
              "RelWithDebInfo")
 endif()
 
+option(alpaca_ENABLE_SANITIZER_ADDRESS "Enable address sanitizer" OFF)
+option(alpaca_ENABLE_SANITIZER_LEAK "Enable leak sanitizer" OFF)
+option(alpaca_ENABLE_SANITIZER_UNDEFINED "Enable undefined sanitizer" OFF)
+option(alpaca_ENABLE_SANITIZER_THREAD "Enable thread sanitizer" OFF)
+option(alpaca_ENABLE_SANITIZER_MEMORY "Enable memory sanitizer" OFF)
+
 if(BUILD_DOCUMENTATION)
         find_package(Doxygen)
         configure_file(${PROJECT_SOURCE_DIR}/Doxyfile.in Doxyfile)
@@ -59,6 +65,16 @@ endif(BUILD_DOCUMENTATION)
 add_library(alpaca_options INTERFACE)
 target_compile_features(alpaca_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 add_library(alpaca::options ALIAS alpaca_options)
+
+include(cmake/Sanitizers.cmake)
+enable_sanitizers(
+        alpaca_options
+        ${alpaca_ENABLE_SANITIZER_ADDRESS}
+        ${alpaca_ENABLE_SANITIZER_LEAK}
+        ${alpaca_ENABLE_SANITIZER_UNDEFINED}
+        ${alpaca_ENABLE_SANITIZER_THREAD}
+        ${alpaca_ENABLE_SANITIZER_MEMORY})
+
 
 target_compile_options(
         alpaca_options

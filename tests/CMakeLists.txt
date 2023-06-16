@@ -21,111 +21,114 @@ if(BUILD_TESTS)
     enable_testing()
 
     add_executable(test_test_utilities test_test_utilities.cc)
+    target_link_libraries(test_test_utilities alpaca_options)
     add_test(test_test_utilities test_test_utilities)
 
     add_executable(test_av_coefficient test_av_coefficient.cc)
-    target_link_libraries(test_av_coefficient alpaca::coeff)
+    target_link_libraries(test_av_coefficient alpaca_options alpaca::coeff)
     add_test(test_av_coefficient test_av_coefficient)
 
     add_executable(test_alphav_coefficient test_alphav_coefficient.cc)
-    target_link_libraries(test_alphav_coefficient alpaca::coeff)
+    target_link_libraries(test_alphav_coefficient alpaca_options alpaca::coeff)
     add_test(test_alphav_coefficient test_alphav_coefficient)
 
     add_executable(test_f_coefficient test_f_coefficient.cc)
-    target_link_libraries(test_f_coefficient alpaca::coeff)
+    target_link_libraries(test_f_coefficient alpaca_options alpaca::coeff)
     add_test(test_f_coefficient test_f_coefficient)
 
     add_executable(test_uv_coefficient test_Uv_coefficient.cc)
-    target_link_libraries(test_uv_coefficient alpaca::coeff)
+    target_link_libraries(test_uv_coefficient alpaca_options alpaca::coeff)
     add_test(test_uv_coefficient test_uv_coefficient)
 
     add_executable(test_w_dir_dir test_w_dir_dir.cc)
-    target_link_libraries(test_w_dir_dir alpaca::angcorr)
+    target_link_libraries(test_w_dir_dir alpaca_options alpaca::angcorr)
     add_test(test_w_dir_dir test_w_dir_dir)
 
     add_executable(test_kappa_coefficient test_kappa_coefficient.cc)
-    target_link_libraries(test_kappa_coefficient alpaca::angcorr)
+    target_link_libraries(test_kappa_coefficient alpaca_options alpaca::angcorr)
     add_test(test_kappa_coefficient test_kappa_coefficient)
 
     add_executable(test_ev_coefficient test_Ev_coefficient.cc)
-    target_link_libraries(test_ev_coefficient alpaca::coeff)
+    target_link_libraries(test_ev_coefficient alpaca_options alpaca::coeff)
     add_test(test_ev_coefficient test_ev_coefficient)
 
     add_executable(test_w_pol_dir test_w_pol_dir.cc)
-    target_link_libraries(test_w_pol_dir alpaca::angcorr ${GSL_LIBRARIES})
+    target_link_libraries(test_w_pol_dir alpaca_options alpaca::angcorr ${GSL_LIBRARIES})
     add_test(test_w_pol_dir test_w_pol_dir)
 
     add_executable(test_unobserved test_unobserved.cc)
-    target_link_libraries(test_unobserved alpaca::angcorr ${GSL_LIBRARIES})
+    target_link_libraries(test_unobserved alpaca_options alpaca::angcorr ${GSL_LIBRARIES})
     add_test(test_unobserved test_unobserved)
 
     add_executable(test_euler_angle_rotation test_euler_angle_rotation.cc)
-    target_link_libraries(test_euler_angle_rotation alpaca::angcorr ${GSL_LIBRARIES})
+    target_link_libraries(test_euler_angle_rotation alpaca_options alpaca::angcorr ${GSL_LIBRARIES})
     add_test(test_euler_angle_rotation test_euler_angle_rotation)
 
     add_executable(test_angcorr_rejection_sampler test_angcorr_rejection_sampler.cc)
-    target_link_libraries(test_angcorr_rejection_sampler alpaca::angcorr alpaca::sampler)
+    target_link_libraries(test_angcorr_rejection_sampler alpaca_options alpaca::angcorr alpaca::sampler)
     add_test(test_angcorr_rejection_sampler test_angcorr_rejection_sampler)
 
     add_executable(test_angular_correlation test_angular_correlation.cc)
-    target_link_libraries(test_angular_correlation alpaca::angcorr ${GSL_LIBRARIES})
+    target_link_libraries(test_angular_correlation alpaca_options alpaca::angcorr ${GSL_LIBRARIES})
     add_test(test_angular_correlation test_angular_correlation)
 
     add_executable(test_angular_correlation_io test_angular_correlation_io.cc)
-    target_link_libraries(test_angular_correlation_io alpaca::angcorr)
+    target_link_libraries(test_angular_correlation_io alpaca_options alpaca::angcorr)
     add_test(test_angular_correlation_io test_angular_correlation_io)
 
     add_executable(test_elliptic_integral test_elliptic_integral.cc)
-    target_link_libraries(test_elliptic_integral alpaca::sampler ${GSL_LIBRARIES})
+    target_link_libraries(test_elliptic_integral alpaca_options alpaca::sampler ${GSL_LIBRARIES})
     add_test(test_elliptic_integral test_elliptic_integral)
 
     add_executable(test_spiral_segment test_spiral_segment.cc)
-    target_link_libraries(test_spiral_segment alpaca::sampler ${GSL_LIBRARIES})
+    target_link_libraries(test_spiral_segment alpaca_options alpaca::sampler ${GSL_LIBRARIES})
     add_test(test_spiral_segment test_spiral_segment)
 
     add_executable(test_find_c test_find_c.cc)
-    target_link_libraries(test_find_c alpaca::sampler)
+    target_link_libraries(test_find_c alpaca_options alpaca::sampler)
     add_test(test_find_c test_find_c)
 
     add_executable(test_sphere_integrator test_sphere_integrator.cc)
-    target_link_libraries(test_sphere_integrator alpaca::sampler)
+    target_link_libraries(test_sphere_integrator alpaca_options alpaca::sampler)
     add_test(test_sphere_integrator test_sphere_integrator)
 
     add_executable(test_normalization test_normalization.cc)
-    target_link_libraries(test_normalization alpaca::angcorr alpaca::sampler)
+    target_link_libraries(test_normalization alpaca::angcorr alpaca_options alpaca::sampler)
     add_test(test_normalization test_normalization)
 
     add_executable(test_find_Theta_j test_find_Theta_j.cc)
-    target_link_libraries(test_find_Theta_j alpaca::sampler)
+    target_link_libraries(test_find_Theta_j alpaca_options alpaca::sampler)
     add_test(test_find_Theta_j test_find_Theta_j)
 
     add_executable(test_upper_limit test_upper_limit.cc)
-    target_link_libraries(test_upper_limit alpaca::angcorr alpaca::sampler)
+    target_link_libraries(test_upper_limit alpaca_options alpaca::angcorr alpaca::sampler)
     add_test(test_upper_limit test_upper_limit)
 
     add_executable(test_sphere_point_sampler test_sphere_point_sampler.cc)
-    target_link_libraries(test_sphere_point_sampler alpaca::sampler)
+    target_link_libraries(test_sphere_point_sampler alpaca_options alpaca::sampler)
     add_test(test_sphere_point_sampler test_sphere_point_sampler)
 
     add_executable(test_sphere_rejection_sampler test_sphere_rejection_sampler.cc)
-    target_link_libraries(test_sphere_rejection_sampler alpaca::sampler)
+    target_link_libraries(test_sphere_rejection_sampler alpaca_options alpaca::sampler)
     add_test(test_sphere_rejection_sampler test_sphere_rejection_sampler)
 
     add_executable(test_state test_state.cc)
+    target_link_libraries(test_state alpaca_options)
     add_test(test_state test_state)
 
     add_executable(test_transition test_transition.cc)
+    target_link_libraries(test_transition alpaca_options)
     add_test(test_transition test_transition)    
 
     add_executable(test_string_representation test_string_representation.cc)
-    target_link_libraries(test_string_representation alpaca::sampler)
+    target_link_libraries(test_string_representation alpaca_options alpaca::sampler)
     add_test(test_string_representation test_string_representation)
 
     add_executable(test_memory_leak test_memory_leak.cc)
-    target_link_libraries(test_memory_leak alpaca::angcorr)
+    target_link_libraries(test_memory_leak alpaca_options alpaca::angcorr)
     add_test(test_memory_leak test_memory_leak)
 
     add_executable(test_cascade_sampler test_cascade_sampler.cc)
-    target_link_libraries(test_cascade_sampler alpaca::sampler ${GSL_LIBRARIES})
+    target_link_libraries(test_cascade_sampler alpaca_options alpaca::sampler ${GSL_LIBRARIES})
     add_test(test_cascade_sampler test_cascade_sampler)
 endif(BUILD_TESTS)
