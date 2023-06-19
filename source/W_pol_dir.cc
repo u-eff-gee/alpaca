@@ -22,12 +22,15 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf.h>
 
-#include "W_pol_dir.hh"
+#include "alpaca/W_pol_dir.hh"
 
-using std::min;
+using std::string;
+using std::to_string;
+
+namespace alpaca {
 
 W_pol_dir::W_pol_dir(const State &ini_sta,
-                     const vector<pair<Transition, State>> cas_ste)
+                     const vector<pair<Transition, State>> &cas_ste)
     : W_gamma_gamma(ini_sta, cas_ste), w_dir_dir(W_dir_dir(ini_sta, cas_ste)) {
 
   two_nu_max = w_dir_dir.get_two_nu_max();
@@ -41,12 +44,12 @@ double W_pol_dir::operator()(const double theta, const double phi) const {
   double sum_over_nu{0.};
 
   for (int i = 1; i <= nu_max / 2; ++i) {
-    sum_over_nu += expansion_coefficients[i - 1] *
+    sum_over_nu += expansion_coefficients[static_cast<size_t>(i - 1)] *
                    gsl_sf_legendre_Plm(2 * i, 2, cos(theta));
   }
 
   int polarization_sign = 1;
-  if (cascade_steps[0].first.em_charp == magnetic) {
+  if (cascade_steps[0].first.em_charp == EMCharacter::magnetic) {
     polarization_sign = -1;
   }
 
@@ -58,12 +61,13 @@ double W_pol_dir::get_upper_limit() const {
 
   double upper_limit = 0.;
 
-  double associated_Legendre_upper_limit_factor = 4. * pow(M_1_PI, 0.75);
+  const double associated_Legendre_upper_limit_factor = 4. * pow(M_1_PI, 0.75);
 
   for (int i = 1; i <= nu_max / 2; ++i) {
-    upper_limit += fabs(expansion_coefficients[i - 1]) *
+    upper_limit += fabs(expansion_coefficients[static_cast<size_t>(i - 1)]) *
                    associated_Legendre_upper_limit_factor *
-                   sqrt(gsl_sf_fact(2 * i + 2) / gsl_sf_fact(2 * i - 2));
+                   sqrt(gsl_sf_fact(static_cast<unsigned int>(2 * i + 2)) /
+                        gsl_sf_fact(static_cast<unsigned int>(2 * i - 2)));
   }
 
   return w_dir_dir.get_upper_limit() +
@@ -94,36 +98,36 @@ vector<double> W_pol_dir::calculate_expansion_coefficients_alphav_Av() {
   vector<double> exp_coef;
 
   for (int two_nu = 4; two_nu <= two_nu_max; two_nu += 4) {
-    alphav_coefficients.push_back(AlphavCoefficient(
+    alphav_coefficients.emplace_back(
         two_nu, cascade_steps[0].first.two_L, cascade_steps[0].first.two_Lp,
-        initial_state.two_J, cascade_steps[0].second.two_J));
-    av_coefficients.push_back(
-        AvCoefficient(two_nu, cascade_steps[n_cascade_steps - 1].first.two_L,
-                      cascade_steps[n_cascade_steps - 1].first.two_Lp,
-                      cascade_steps[n_cascade_steps - 1].second.two_J,
-                      cascade_steps[n_cascade_steps - 2].second.two_J));
-    exp_coef.push_back(
-        alphav_coefficients[two_nu / 4 - 1](cascade_steps[0].first.delta) *
-        av_coefficients[two_nu / 4 - 1](
-            cascade_steps[n_cascade_steps - 1].first.delta));
+        initial_state.two_J, cascade_steps[0].second.two_J);
+    av_coefficients.emplace_back(
+        two_nu, cascade_steps[n_cascade_steps - 1].first.two_L,
+        cascade_steps[n_cascade_steps - 1].first.two_Lp,
+        cascade_steps[n_cascade_steps - 1].second.two_J,
+        cascade_steps[n_cascade_steps - 2].second.two_J);
+    exp_coef.push_back(alphav_coefficients.at(static_cast<size_t>(
+                           two_nu / 4 - 1))(cascade_steps[0].first.delta) *
+                       av_coefficients.at(static_cast<size_t>(two_nu / 4 - 1))(
+                           cascade_steps[n_cascade_steps - 1].first.delta));
   }
 
   return exp_coef;
 }
 
-string W_pol_dir::string_representation(const unsigned int n_digits,
+string W_pol_dir::string_representation(const int n_digits,
                                         vector<string> variable_names) const {
 
   const string polar_angle_variable =
-      variable_names.size() ? variable_names[0] : "\\theta";
+      variable_names.empty() ? "\\theta" : variable_names[0];
   const string azimuthal_angle_variable =
-      variable_names.size() ? variable_names[1] : "\\varphi";
+      variable_names.empty() ? "\\varphi" : variable_names[1];
   vector<string> delta_variables;
   for (size_t i = 0; i < n_cascade_steps; ++i) {
-    if (variable_names.size()) {
-      delta_variables.push_back(variable_names[2 + i]);
-    } else {
+    if (variable_names.empty()) {
       delta_variables.push_back("\\delta_" + to_string(i + 1));
+    } else {
+      delta_variables.push_back(variable_names[2 + i]);
     }
   }
 
@@ -132,38 +136,45 @@ string W_pol_dir::string_representation(const unsigned int n_digits,
 
   string str_rep =
       w_dir_dir.string_representation(n_digits, variable_names) + "\\\\";
-  str_rep += cascade_steps[0].first.em_charp == magnetic ? "+" : "-";
-  str_rep += "\\cos\\left(2" + azimuthal_angle_variable +
-             "\\right)\\left\\{\\right.\\\\";
+  str_rep +=
+      cascade_steps[0].first.em_charp == EMCharacter::magnetic ? "+" : "-";
+  str_rep += R"(\cos\left(2)" + azimuthal_angle_variable +
+             R"(\right)\left\{\right.\\)";
 
   for (int i = 1; i <= nu_max / 2; ++i) {
     if (i > 1) {
       str_rep += "+";
     }
 
-    str_rep += "\\left[" +
-               alphav_coefficients[i - 1].string_representation(
-                   n_digits, {delta_variables[0]}) +
-               "\\right]\\\\";
+    str_rep +=
+        R"(\left[)" +
+        alphav_coefficients[static_cast<size_t>(i - 1)].string_representation(
+            n_digits, {delta_variables[0]}) +
+        R"(\right]\\)";
     if (n_cascade_steps > 2) {
-      for (size_t j = 0; j < uv_coefficients[i].size(); ++j) {
-        str_rep += "\\times\\left[" +
-                   uv_coefficients[i][j].string_representation(
-                       n_digits, {delta_variables[1 + j]}) +
-                   "\\right]\\\\";
+      for (size_t j = 0; j < uv_coefficients[static_cast<size_t>(i)].size();
+           ++j) {
+        str_rep +=
+            R"(\times\left[)" +
+            uv_coefficients[static_cast<size_t>(i)][j].string_representation(
+                n_digits, {delta_variables[1 + j]}) +
+            R"(\right]\\)";
       }
     }
-    str_rep += "\\times\\left[" +
-               av_coefficients[i - 1].string_representation(
-                   n_digits, {delta_variables[delta_variables.size() - 1]}) +
-               "\\right]\\\\\\times P_{" + to_string(2 * i) +
-               "}^{\\left|2\\right|}\\left[\\cos\\left(" +
-               polar_angle_variable + "\\right)\\right]";
+    str_rep +=
+        R"(\times\left[)" +
+        av_coefficients[static_cast<size_t>(i - 1)].string_representation(
+            n_digits, {delta_variables[delta_variables.size() - 1]}) +
+        R"(\right]\\\times P_{)" + to_string(2 * i) +
+        R"(}^{\left|2\right|}\left[\cos\left()" + polar_angle_variable +
+        "\\right)\\right]";
     if (i != nu_max / 2) {
       str_rep += "\\\\";
     }
   }
-  str_rep += "\\left.\\right\\}";
+  str_rep += R"(\left.\right\})";
 
   return str_rep;
 }
+
+} // namespace alpaca

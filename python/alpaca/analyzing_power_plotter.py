@@ -18,13 +18,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+from . import AngularCorrelation, Transition
 from .analyzing_power import AnalyzingPower, arctan_grid
-from .angular_correlation import AngularCorrelation
 from .interval_intersections import intersection
 from .inversion_by_grid_evaluation import invert_grid
 from .level_scheme_plotter import LevelSchemePlotter
-from .state import State
-from .transition import Transition
 
 
 class AnalyzingPowerPlotter:

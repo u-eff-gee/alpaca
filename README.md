@@ -54,8 +54,8 @@ The python bindings of this project, on the other hand, invoke the shared C++ li
 
 ### 2.i Prerequisites (C++)
 
-* [CMake](https://cmake.org/) (version >= 3.16 required for installation [3])
-* C++ compiler which supports at least the C++11 standard.
+* [CMake](https://cmake.org/) (version >= 3.16)
+* C++ compiler which supports at least the C++20 standard.
 * [GNU Scientific Library (GSL)](https://www.gnu.org/software/gsl/)
 * [doxygen](https://www.doxygen.nl/) and all its requirements for [displaying formulas](https://www.doxygen.nl/manual/formulas.html) and [graphs](https://www.doxygen.nl/manual/diagrams.html) (documentation, optional)
 
@@ -65,6 +65,7 @@ Besides all prerequisites for the C++ libraries, the following libraries/tools a
 
 * [python3](https://www.python.org/) (it is assumed that the command-line executable is called 'python3')
 * [numpy](https://numpy.org/)
+* [scipy](https://scipy.org/)
 * [matplotlib](https://matplotlib.org/)
 * [black](https://black.readthedocs.io/) (testing, optional)
 * [pytest](https://docs.pytest.org/) (testing, optional)
@@ -99,7 +100,7 @@ To install `alpaca` in the system, type:
 $ cmake --install .
 ```
 
-The installation is not required to use the C++ libraries (the location of the libraries can be passed to the compiler manually as shown below in the C++ example) or to install the python code. See also footnote [3].
+The installation is not required to use the C++ libraries (the location of the libraries can be passed to the compiler manually as shown below in the C++ example) or to install the python code.
 
 #### 2.iv Optional Testing (C++)
 
@@ -110,25 +111,21 @@ $ cd ALPACA_BUILD_DIR/test
 $ ctest
 ```
 
-### 2.v Build (python)
+### 2.v Installation (python)
 
-Follow the steps for the C++ build in the previous section.
-After that, the python code can be found in `ALPACA_BUILD_DIR/python`.
-For a system-wide install of the library, type:
+To install the python library, simply run
 
 ```
-$ cd ALPACA_BUILD_DIR/python
-$ python3 setup.py install
+$ pip install git+https://github.com/u-eff-gee/alpaca.git@master
 ```
 
 in that directory.
 
 #### 2.vi Optional Testing (python)
 
-To run a self test of the python code, type:
+To run a self test of the python code, run:
 
 ```
-$ cd ALPACA_BUILD_DIR/python
 $ tox
 ```
 
@@ -224,7 +221,7 @@ With the definition of the angles in `alpaca`, the relations between a Cartesian
  * y = sin(θ) sin(Φ)
  * z = cos(θ)
 
- This corresponds to the more common spherical coordinate system encountered in the literature [2,4].
+ This corresponds to the more common spherical coordinate system encountered in the literature [2,3].
  In Ref. [1], the relations are:
 
  * z = sin(θ) cos(Φ)
@@ -259,13 +256,13 @@ As already mentioned, Ref. [1] and `alpaca` use the Biedenharn convention.
 While it has advantages for some nuclear resonance fluorescence (NRF) applications [1], its disadvantage is the dependence of the sign of the mixing ratio on the position of the step in the cascade.
 The KSW convention, on the other hand, enforces an order in the matrix elements (initial state on the right-hand side of the matrix element, "decay matrix elements") that makes them independent of the measurement process.
 
-Recently, a review article for the NRF method was published [5].
+Recently, a review article for the NRF method was published [4].
 In contrast to our article, Zilges *et al.* use the KSW convention.
-For the NRF process, where the first cascade step is an excitation and not a decay, they propose to modify the expression of KSW [6] to take into account the change of sign (see their footnote 2).
+For the NRF process, where the first cascade step is an excitation and not a decay, they propose to modify the expression of KSW [5] to take into account the change of sign (see their footnote 2).
 With the modified expression, the mixing ratios for both steps of an "elastic" NRF cascade have the same sign.
 This seems natural, because both steps are the same transition.
-Please note that - in contrast to Zilges *et al.* - the manual of the Evaluated Nuclear Structure Data File (ENSDF) [7] recommends to use the original expression of KSW with two different signs in that case.
-These conflicting interpretations of the KSW conventions by the NRF community [4,5] and the ENSDF [7] are potentially confusing.
+Please note that - in contrast to Zilges *et al.* - the manual of the Evaluated Nuclear Structure Data File (ENSDF) [6] recommends to use the original expression of KSW with two different signs in that case.
+These conflicting interpretations of the KSW conventions by the NRF community [3,4] and the ENSDF [6] are potentially confusing.
 
 As stated in Ref. [1], it is recommended to state unambiguously in publications which convention has been used.
 
@@ -287,7 +284,7 @@ The author would like to thank
 
 - C. Iliadis for enlightening discussions about the angular correlation formalism and for help with debugging the associated modules.
 - O. Papst (OP) for helpful discussions about the angular correlation formalism and testing of the code. Furthermore, the author would like to advertise OP's angular correlation code [angcorrwat](https://github.com/op3/angcorrwat). angcorrwat is complementary to the present code in the sense that it uses the python package [sympy](https://www.sympy.org/) to obtain symbolic expressions for the angular correlations.
-- N. Pietralla (NP) for helpful discussions about the mixing-ratio conventions. The writing of Ref. [5] had been in progress when our review article [1] appeared. Our use of the Biedenharn convention sparked the aforementioned discussion, and NP helped us realize the discrepancy between the nuclear resonance fluorescence literature and the ENSDF recommendations (see [Sec. 4.ii](#4ii-phases-of-multipole-mixing-ratios)). Footnote 2 in Ref. [5] addresses the issue from the point of view of Zilges *et al.*.
+- N. Pietralla (NP) for helpful discussions about the mixing-ratio conventions. The writing of Ref. [4] had been in progress when our review article [1] appeared. Our use of the Biedenharn convention sparked the aforementioned discussion, and NP helped us realize the discrepancy between the nuclear resonance fluorescence literature and the ENSDF recommendations (see [Sec. 4.ii](#4ii-phases-of-multipole-mixing-ratios)). Footnote 2 in Ref. [4] addresses the issue from the point of view of Zilges *et al.*.
 
 ## 7. References
 
@@ -295,14 +292,12 @@ The author would like to thank
 
 [2] L. C. Biedenharn, 'Angular Correlations in Nuclear Spectroscopy' in F. Ajzenberg-Selove (editor), 'Nuclear Spectroscopy', Part B, Academic Press New York and London (1960)
 
-[3] It was found that the compilation does not work with CMake versions as recent as 3.10 (default on Ubuntu 18 OS). Since the code that uses the most recent CMake features is related to the installation of the C++ libraries, it can help to comment out the last few lines in `ALPACA_DIR/CMakeLists.txt`, starting from `set(_ALPACA_HEADERS ...`. With this modification, it will not be possible to install the C++ libraries in the system's default paths. However, an installation is not required to be able to use the compiled C++ libraries or the python code.
+[3] U. Kneissl, H. H. Pitz, and A. Zilges, 'Investigation of Nuclear Structure by Resonance Fluorescence Scattering', Prog. Part. Nucl. Phys. **37**, 349 (1996) (https://doi.org/10.1016/0146-6410(96)00055-5)
 
-[4] U. Kneissl, H. H. Pitz, and A. Zilges, 'Investigation of Nuclear Structure by Resonance Fluorescence Scattering', Prog. Part. Nucl. Phys. **37**, 349 (1996) (https://doi.org/10.1016/0146-6410(96)00055-5)
+[4] A. Zilges, D. L. Balabanski, J. Isaak, and N. Pietralla, 'Photonuclear reactions - From basic research to applications', Prog. Part. Nucl. Phys. **122**, 103903 (2022) (https://doi.org/10.1016/j.ppnp.2021.103903)
 
-[5] A. Zilges, D. L. Balabanski, J. Isaak, and N. Pietralla, 'Photonuclear reactions - From basic research to applications', Prog. Part. Nucl. Phys. **122**, 103903 (2022) (https://doi.org/10.1016/j.ppnp.2021.103903)
+[5] K. S. Krane, R. M. Steffen, and R. M. Wheeler, 'Directional correlations of gamma radiations emitted from nuclear states oriented by nuclear reactions or cryogenic methods', Atom. Data Nucl. Data **11**, 351-406 (1973) (https://doi.org/10.1016/S0092-640X(73)80016-6)
 
-[6] K. S. Krane, R. M. Steffen, and R. M. Wheeler, 'Directional correlations of gamma radiations emitted from nuclear states oriented by nuclear reactions or cryogenic methods', Atom. Data Nucl. Data **11**, 351-406 (1973) (https://doi.org/10.1016/S0092-640X(73)80016-6)
+[6] M. J. Martin, 'Phase convention for mixing ratios in electromagnetic transitions from angular correlations and angular distributions', in 'Procedures Manual for the Evaluated Nuclear Structure Data File', ed. by M. R. Bhat., The National Nuclear Data Center, Brookhaven National Laboratory, Upton, BNL-NCS-40503 Informal Report (1987) (https://doi.org/10.2172/5262270)
 
-[7] M. J. Martin, 'Phase convention for mixing ratios in electromagnetic transitions from angular correlations and angular distributions', in 'Procedures Manual for the Evaluated Nuclear Structure Data File', ed. by M. R. Bhat., The National Nuclear Data Center, Brookhaven National Laboratory, Upton, BNL-NCS-40503 Informal Report (1987) (https://doi.org/10.2172/5262270)
-
-See also `ALPACA_DIR/bibliography.bib`.
+See also [`bibliography.bib`](bibliography.bib).

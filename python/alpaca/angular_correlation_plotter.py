@@ -24,16 +24,14 @@ class AngularCorrelationPlotter:
     def __init__(self, angular_correlation):
         self.angular_correlation = angular_correlation
 
-    def plot(
-        self, axis, Phi_Theta_Psi=None, n_points_per_dimension=100, max_abs_value=2.0
-    ):
+    def plot(self, axis, n_points_per_dimension=100, max_abs_value=2.0):
 
         theta, phi = np.meshgrid(
             np.linspace(0.0, np.pi, n_points_per_dimension),
             np.linspace(0.0, 2.0 * np.pi, n_points_per_dimension),
         )
 
-        ang_cor = self.angular_correlation(theta, phi, Phi_Theta_Psi=Phi_Theta_Psi)
+        ang_cor = self.angular_correlation(theta, phi)
 
         sine_theta = np.sin(theta)
         x = ang_cor * sine_theta * np.cos(phi)

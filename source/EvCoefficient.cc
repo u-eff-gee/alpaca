@@ -19,23 +19,14 @@
 
 #include <gsl/gsl_sf.h>
 
-#include "EvCoefficient.hh"
+#include "alpaca/EvCoefficient.hh"
 
-EvCoefficient::EvCoefficient(const int two_nu, const EMCharacter em,
-                             const int two_L, const EMCharacter emp,
-                             const int two_Lp, const int two_jn,
-                             const int two_j)
-    : two_nu(two_nu), em(em), two_L(two_L), emp(emp), two_Lp(two_Lp),
-      two_jn(two_jn), two_j(two_j), sign_sigma_L_n((em == magnetic) ? -1 : 1),
-      sign_sigma_Lp_n((emp == magnetic) ? -1 : 1),
-      constant_f_coefficient(two_nu, two_L, two_L, two_jn, two_j),
-      linear_f_coefficient(two_nu, two_L, two_Lp, two_jn, two_j),
-      quadratic_f_coefficient(two_nu, two_Lp, two_Lp, two_jn, two_j) {}
+namespace alpaca {
 
 double EvCoefficient::operator()(const double delta) const {
 
-  const int nu = two_nu / 2;
-  const double nu_times_nu_plus_one = nu * (nu + 1);
+  const auto nu = static_cast<unsigned int>(two_nu / 2);
+  const double nu_times_nu_plus_one = nu * (nu + 1.);
   const int L = two_L / 2;
   const double two_L_times_L_plus_one = 2 * L * (L + 1);
   const int Lp = two_Lp / 2;
@@ -52,3 +43,5 @@ double EvCoefficient::operator()(const double delta) const {
               (nu_times_nu_plus_one - two_Lp_times_Lp_plus_one)) *
          gsl_sf_fact(nu - 2) / gsl_sf_fact(nu + 2);
 }
+
+} // namespace alpaca

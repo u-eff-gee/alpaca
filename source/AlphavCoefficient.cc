@@ -21,49 +21,28 @@
 
 using std::stringstream;
 
-#include "AlphavCoefficient.hh"
+#include "alpaca/AlphavCoefficient.hh"
 
-AlphavCoefficient::AlphavCoefficient(const int two_nu, const int two_L,
-                                     const int two_Lp, const int two_jn,
-                                     const int two_j)
-    : two_nu(two_nu), two_L(two_L), two_Lp(two_Lp), two_jn(two_jn),
-      two_j(two_j), constant_f_coefficient(two_nu, two_L, two_L, two_jn, two_j),
-      linear_f_coefficient(two_nu, two_L, two_Lp, two_jn, two_j),
-      quadratic_f_coefficient(two_nu, two_Lp, two_Lp, two_jn, two_j),
-      constant_kappa_coefficient(two_nu, two_L, two_L),
-      linear_kappa_coefficient(two_nu, two_L, two_Lp),
-      quadratic_kappa_coefficient(two_nu, two_Lp, two_Lp) {
-  constant_coefficient = -constant_kappa_coefficient.get_value() *
-                         constant_f_coefficient.get_value();
-  linear_coefficient = 2. * linear_kappa_coefficient.get_value() *
-                       linear_f_coefficient.get_value();
-  quadratic_coefficient = quadratic_kappa_coefficient.get_value() *
-                          quadratic_f_coefficient.get_value();
-}
-
-double AlphavCoefficient::operator()(const double delta) const {
-
-  return constant_coefficient + delta * linear_coefficient +
-         delta * delta * quadratic_coefficient;
-}
+namespace alpaca {
 
 string AlphavCoefficient::string_representation(
-    const unsigned int n_digits, const vector<string> variable_names) const {
+    const int n_digits, const vector<string> variable_names) const {
 
-  string multipole_mixing_ratio_variable =
-      variable_names.size() ? variable_names[0] : "\\delta";
+  const string multipole_mixing_ratio_variable =
+      variable_names.empty() ? "\\delta" : variable_names[0];
 
-  return string("(-1)") + (n_digits ? "\\times" : "") +
+  const string times = (n_digits != 0 ? "\\times" : "");
+
+  return string("(-1)") + (n_digits != 0 ? "\\times" : "") +
          constant_kappa_coefficient.string_representation(n_digits, {}) +
-         (n_digits ? "\\times" : "") +
-         constant_f_coefficient.string_representation(n_digits, {}) + "+2" +
-         (n_digits ? "\\times" : "") +
-         linear_kappa_coefficient.string_representation(n_digits, {}) +
-         (n_digits ? "\\times" : "") +
-         linear_f_coefficient.string_representation(n_digits, {}) +
-         (n_digits ? "\\times" : "") + multipole_mixing_ratio_variable + "+" +
+         times + constant_f_coefficient.string_representation(n_digits, {}) +
+         "+2" + times +
+         linear_kappa_coefficient.string_representation(n_digits, {}) + times +
+         linear_f_coefficient.string_representation(n_digits, {}) + times +
+         multipole_mixing_ratio_variable + "+" +
          quadratic_kappa_coefficient.string_representation(n_digits, {}) +
-         (n_digits ? "\\times" : "") +
-         quadratic_f_coefficient.string_representation(n_digits, {}) +
-         (n_digits ? "\\times" : "") + multipole_mixing_ratio_variable + "^{2}";
+         times + quadratic_f_coefficient.string_representation(n_digits, {}) +
+         times + multipole_mixing_ratio_variable + "^{2}";
 }
+
+} // namespace alpaca

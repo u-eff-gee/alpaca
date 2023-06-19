@@ -17,17 +17,18 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
-#include "CascadeSampler.hh"
-#include "EulerAngleRotation.hh"
-#include "ReferenceFrameSampler.hh"
+#include "alpaca/CascadeSampler.hh"
+#include "alpaca/EulerAngleRotation.hh"
+#include "alpaca/ReferenceFrameSampler.hh"
+
+namespace alpaca {
 
 CascadeSampler::CascadeSampler(
     vector<shared_ptr<ReferenceFrameSampler>> cascade)
     : angular_correlation_samplers(cascade) {}
 
-vector<array<double, 3>> CascadeSampler::operator()() {
-  vector<array<double, 3>> reference_frames(
-      angular_correlation_samplers.size());
+vector<EulerAngles> CascadeSampler::operator()() {
+  vector<EulerAngles> reference_frames(angular_correlation_samplers.size());
 
   reference_frames[0] = angular_correlation_samplers[0]->operator()();
 
@@ -38,3 +39,5 @@ vector<array<double, 3>> CascadeSampler::operator()() {
 
   return reference_frames;
 }
+
+} // namespace alpaca

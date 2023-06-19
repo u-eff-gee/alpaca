@@ -15,98 +15,81 @@
 #
 #    Copyright (C) 2021-2023 Udo Friman-Gayer
 
-add_library(stringRepresentable StringRepresentable.cc)
-target_include_directories(stringRepresentable PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(stringRepresentable PROPERTIES PUBLIC_HEADER include/StringRepresentable.hh)
+set(libcoeff_src
+        AlphavCoefficient.cc
+        AvCoefficient.cc
+        EvCoefficient.cc
+        FCoefficient.cc
+        KappaCoefficient.cc
+        UvCoefficient.cc)
 
-add_library(fCoefficient FCoefficient.cc)
-target_link_libraries(fCoefficient ${GSL_LIBRARIES})
-target_include_directories(fCoefficient PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(fCoefficient PROPERTIES PUBLIC_HEADER include/FCoefficient.hh)
+set(libangcorr_src
+        AngularCorrelation.cc
+        W_dir_dir.cc
+        W_pol_dir.cc)
 
-add_library(avCoefficient AvCoefficient.cc)
-target_link_libraries(avCoefficient fCoefficient)
-target_include_directories(avCoefficient PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(avCoefficient PROPERTIES PUBLIC_HEADER include/AvCoefficient.hh)
+set(libsampler_src
+        AngCorrRejectionSampler.cc
+        CascadeSampler.cc
+        ReferenceFrameSampler.cc
+        SphereIntegrator.cc
+        SpherePointSampler.cc
+        SphereRejectionSampler.cc
+        SpotlightSampler.cc)
 
-add_library(state State.cc)
-target_include_directories(state PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(state PROPERTIES PUBLIC_HEADER include/State.hh)
+add_library(objcoeff OBJECT ${libcoeff_src})
+add_library(objangcorr OBJECT ${libangcorr_src})
+add_library(objsampler OBJECT ${libsampler_src})
+target_link_libraries(objcoeff PUBLIC GSL::gsl GSL::gslcblas PRIVATE alpaca_options)
+target_link_libraries(objangcorr PUBLIC objcoeff PRIVATE alpaca_options)
+target_link_libraries(objsampler PUBLIC GSL::gsl GSL::gslcblas objcoeff objangcorr PRIVATE alpaca_options)
 
-add_library(transition Transition.cc)
-target_link_libraries(transition state)
-target_include_directories(transition PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(transition PROPERTIES PUBLIC_HEADER include/Transition.hh)
+set_property(TARGET objcoeff PROPERTY POSITION_INDEPENDENT_CODE 1)
+set_property(TARGET objangcorr PROPERTY POSITION_INDEPENDENT_CODE 1)
+set_property(TARGET objsampler PROPERTY POSITION_INDEPENDENT_CODE 1)
 
-add_library(w_gamma_gamma W_gamma_gamma.cc)
-target_include_directories(w_gamma_gamma PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(w_gamma_gamma PROPERTIES PUBLIC_HEADER include/W_gamma_gamma.hh)
+add_library(coeff SHARED $<TARGET_OBJECTS:objcoeff>)
+add_library(coeff_static STATIC $<TARGET_OBJECTS:objcoeff>)
+set_target_properties(coeff PROPERTIES OUTPUT_NAME alpaca_coeff)
+set_target_properties(coeff_static PROPERTIES OUTPUT_NAME alpaca_coeff)
+target_link_libraries(coeff PUBLIC GSL::gsl GSL::gslcblas PRIVATE alpaca_options)
+target_link_libraries(coeff_static PUBLIC GSL::gsl GSL::gslcblas PRIVATE alpaca_options)
+target_include_directories(objcoeff PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+add_library(alpaca::coeff ALIAS coeff)
 
-add_library(w_dir_dir W_dir_dir.cc)
-target_link_libraries(w_dir_dir avCoefficient uvCoefficient)
-target_include_directories(w_dir_dir PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(w_dir_dir PROPERTIES PUBLIC_HEADER include/W_dir_dir.hh)
+add_library(angcorr SHARED $<TARGET_OBJECTS:objangcorr>)
+add_library(angcorr_static STATIC $<TARGET_OBJECTS:objangcorr>)
+set_target_properties(angcorr PROPERTIES OUTPUT_NAME alpaca_angcorr)
+set_target_properties(angcorr_static PROPERTIES OUTPUT_NAME alpaca_angcorr)
+target_link_libraries(angcorr PUBLIC coeff PRIVATE alpaca_options)
+target_link_libraries(angcorr_static PUBLIC coeff_static PRIVATE alpaca_options)
+target_include_directories(objangcorr PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+add_library(alpaca::angcorr ALIAS angcorr)
 
-add_library(kappa_coefficient KappaCoefficient.cc)
-target_link_libraries(kappa_coefficient ${GSL_LIBRARIES})
-target_include_directories(kappa_coefficient PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(kappa_coefficient PROPERTIES PUBLIC_HEADER include/KappaCoefficient.hh)
+add_library(sampler SHARED $<TARGET_OBJECTS:objsampler>)
+add_library(sampler_static STATIC $<TARGET_OBJECTS:objsampler>)
+set_target_properties(sampler PROPERTIES OUTPUT_NAME alpaca_sampler)
+set_target_properties(sampler_static PROPERTIES OUTPUT_NAME alpaca_sampler)
+target_link_libraries(sampler PUBLIC GSL::gsl GSL::gslcblas coeff angcorr PRIVATE alpaca_options)
+target_link_libraries(sampler_static PUBLIC GSL::gsl GSL::gslcblas coeff_static angcorr_static PRIVATE alpaca_options)
+target_include_directories(objsampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+add_library(alpaca::sampler ALIAS sampler)
 
-add_library(alphavCoefficient AlphavCoefficient.cc)
-target_link_libraries(alphavCoefficient fCoefficient kappa_coefficient)
-target_include_directories(alphavCoefficient PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(alphavCoefficient PROPERTIES PUBLIC_HEADER include/AlphavCoefficient.hh)
+if(BUILD_PYTHON)
+        find_package(Python 3.8 COMPONENTS Interpreter Development REQUIRED)
+        find_package(pybind11 QUIET)
+        if(NOT pybind11_FOUND)
+                include(FetchContent)
+                FetchContent_Declare(
+                        pybind11
+                        GIT_REPOSITORY https://github.com/pybind/pybind11.git
+                        GIT_TAG        v2.10.4)
+                FetchContent_MakeAvailable(pybind11)
+        endif()
 
-add_library(evCoefficient EvCoefficient.cc)
-target_link_libraries(evCoefficient fCoefficient)
-target_include_directories(evCoefficient PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(evCoefficient PROPERTIES PUBLIC_HEADER include/EvCoefficient.hh)
-
-add_library(uvCoefficient UvCoefficient.cc)
-target_link_libraries(uvCoefficient ${GSL_LIBRARIES})
-target_include_directories(uvCoefficient PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(uvCoefficient PROPERTIES PUBLIC_HEADER include/UvCoefficient.hh)
-
-add_library(w_pol_dir W_pol_dir.cc)
-target_link_libraries(w_pol_dir alphavCoefficient avCoefficient w_dir_dir)
-target_include_directories(w_pol_dir PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(w_pol_dir PROPERTIES PUBLIC_HEADER include/W_pol_dir.hh)
-
-add_library(angular_correlation SHARED AngularCorrelation.cc)
-target_link_libraries(angular_correlation PUBLIC state transition w_dir_dir w_pol_dir)
-target_include_directories(angular_correlation PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(angular_correlation PROPERTIES PUBLIC_HEADER include/AngularCorrelation.hh)
-
-add_library(spherePointSampler SpherePointSampler.cc)
-target_link_libraries(spherePointSampler ${GSL_LIBRARIES})
-target_include_directories(spherePointSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(spherePointSampler PROPERTIES PUBLIC_HEADER include/SpherePointSampler.hh)
-
-add_library(sphereIntegrator SphereIntegrator.cc)
-target_link_libraries(sphereIntegrator spherePointSampler)
-target_include_directories(sphereIntegrator PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(sphereIntegrator PROPERTIES PUBLIC_HEADER include/SphereIntegrator.hh)
-
-add_library(referenceFrameSampler ReferenceFrameSampler.cc)
-target_link_libraries(referenceFrameSampler)
-target_include_directories(referenceFrameSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(referenceFrameSampler PROPERTIES PUBLIC_HEADER include/ReferenceFrameSampler.hh)
-
-add_library(sphereRejectionSampler SphereRejectionSampler.cc)
-target_link_libraries(sphereRejectionSampler referenceFrameSampler)
-target_include_directories(sphereRejectionSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(sphereRejectionSampler PROPERTIES PUBLIC_HEADER include/SphereRejectionSampler.hh)
-
-add_library(spotlightSampler SpotlightSampler.cc)
-target_link_libraries(spotlightSampler referenceFrameSampler)
-target_include_directories(sphereRejectionSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-
-add_library(angcorrRejectionSampler AngCorrRejectionSampler.cc)
-target_link_libraries(angcorrRejectionSampler sphereRejectionSampler angular_correlation)
-target_include_directories(angcorrRejectionSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(angcorrRejectionSampler PROPERTIES PUBLIC_HEADER include/AngCorrRejectionSampler.hh)
-
-add_library(cascadeSampler CascadeSampler.cc)
-target_link_libraries(cascadeSampler angular_correlation angcorrRejectionSampler)
-target_include_directories(cascadeSampler PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(cascadeSampler PROPERTIES PUBLIC_HEADER include/CascadeSampler.hh)
+        pybind11_add_module(_alpaca PythonBindings.cc)
+        target_link_libraries(_alpaca PRIVATE coeff_static angcorr_static sampler_static alpaca_options)
+        target_include_directories(
+                _alpaca PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+                       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+endif()

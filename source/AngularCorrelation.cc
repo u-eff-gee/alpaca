@@ -18,25 +18,25 @@
 */
 
 #include <stdexcept>
-
-using std::invalid_argument;
-
 #include <string>
 
+using std::invalid_argument;
 using std::to_string;
 
-#include "AngularCorrelation.hh"
-#include "EulerAngleRotation.hh"
-#include "TestUtilities.hh"
-#include "W_dir_dir.hh"
-#include "W_pol_dir.hh"
+#include "alpaca/AngularCorrelation.hh"
+#include "alpaca/EulerAngleRotation.hh"
+#include "alpaca/TestUtilities.hh"
+#include "alpaca/W_dir_dir.hh"
+#include "alpaca/W_pol_dir.hh"
+
+namespace alpaca {
 
 AngularCorrelation::AngularCorrelation(
     const State ini_sta, const vector<pair<Transition, State>> cas_ste)
     : w_gamma_gamma(nullptr) {
   check_cascade(ini_sta, cas_ste);
 
-  if (cas_ste[0].first.em_char == em_unknown) {
+  if (cas_ste[0].first.em_char == EMCharacter::unknown) {
     w_gamma_gamma = std::make_unique<W_dir_dir>(ini_sta, cas_ste);
   } else {
     w_gamma_gamma = std::make_unique<W_pol_dir>(ini_sta, cas_ste);
@@ -54,15 +54,15 @@ AngularCorrelation::AngularCorrelation(const State ini_sta,
 
   vector<pair<Transition, State>> cascade_steps;
 
-  cascade_steps.push_back(
-      {infer_transition({ini_sta, cas_sta[0]}), cas_sta[0]});
+  cascade_steps.emplace_back(infer_transition({ini_sta, cas_sta[0]}),
+                             cas_sta[0]);
 
   for (size_t i = 0; i < cas_sta.size() - 1; ++i) {
-    cascade_steps.push_back(
-        {infer_transition({cas_sta[i], cas_sta[i + 1]}), cas_sta[i + 1]});
+    cascade_steps.emplace_back(infer_transition({cas_sta[i], cas_sta[i + 1]}),
+                               cas_sta[i + 1]);
   }
 
-  if (cascade_steps[0].first.em_char == em_unknown) {
+  if (cascade_steps[0].first.em_char == EMCharacter::unknown) {
     w_gamma_gamma = std::make_unique<W_dir_dir>(ini_sta, cascade_steps);
   } else {
     w_gamma_gamma = std::make_unique<W_pol_dir>(ini_sta, cascade_steps);
@@ -82,25 +82,25 @@ AngularCorrelation::infer_transition(const pair<State, State> states) const {
   if (two_L == 0) {
     two_L += 2;
   }
-  EMCharacter em = em_unknown;
-  EMCharacter emp = em_unknown;
-  if (states.first.parity != parity_unknown &&
-      states.second.parity != parity_unknown) {
+  EMCharacter em = EMCharacter::unknown;
+  EMCharacter emp = EMCharacter::unknown;
+  if (states.first.parity != Parity::unknown &&
+      states.second.parity != Parity::unknown) {
     if (two_L % 4 == 0) {
       if (states.first.parity == states.second.parity) {
-        em = electric;
-        emp = magnetic;
+        em = EMCharacter::electric;
+        emp = EMCharacter::magnetic;
       } else {
-        em = magnetic;
-        emp = electric;
+        em = EMCharacter::magnetic;
+        emp = EMCharacter::electric;
       }
     } else {
       if (states.first.parity == states.second.parity) {
-        em = magnetic;
-        emp = electric;
+        em = EMCharacter::magnetic;
+        emp = EMCharacter::electric;
       } else {
-        em = electric;
-        emp = magnetic;
+        em = EMCharacter::electric;
+        emp = EMCharacter::magnetic;
       }
     }
   }
@@ -133,8 +133,8 @@ void AngularCorrelation::check_angular_momenta(
 
   const int even_odd = ini_sta.two_J % 2;
 
-  for (size_t i = 0; i < cas_ste.size(); ++i) {
-    if (cas_ste[i].second.two_J % 2 != even_odd) {
+  for (const auto &step : cas_ste) {
+    if (step.second.two_J % 2 != even_odd) {
       throw invalid_argument(
           "Unphysical mixing of half-integer and integer spins in cascade.");
     }
@@ -172,9 +172,9 @@ void AngularCorrelation::check_triangle_inequalities(
 void AngularCorrelation::check_em_transitions(
     const State ini_sta, const vector<pair<Transition, State>> cas_ste) const {
 
-  if (ini_sta.parity != parity_unknown &&
-      cas_ste[0].second.parity != parity_unknown) {
-    if (cas_ste[0].first.em_char != em_unknown) {
+  if (ini_sta.parity != Parity::unknown &&
+      cas_ste[0].second.parity != Parity::unknown) {
+    if (cas_ste[0].first.em_char != EMCharacter::unknown) {
       if (!valid_em_character(ini_sta.parity, cas_ste[0].second.parity,
                               cas_ste[0].first.two_L,
                               cas_ste[0].first.em_char)) {
@@ -185,7 +185,7 @@ void AngularCorrelation::check_em_transitions(
             cas_ste[0].first.str_rep(ini_sta, cas_ste[0].second));
       }
 
-      if (cas_ste[0].first.em_charp != em_unknown) {
+      if (cas_ste[0].first.em_charp != EMCharacter::unknown) {
         if (!valid_em_character(ini_sta.parity, cas_ste[0].second.parity,
                                 cas_ste[0].first.two_Lp,
                                 cas_ste[0].first.em_charp)) {
@@ -202,14 +202,14 @@ void AngularCorrelation::check_em_transitions(
       }
     }
 
-    if (cas_ste[0].first.em_char == em_unknown &&
-        cas_ste[0].first.em_charp != em_unknown) {
+    if (cas_ste[0].first.em_char == EMCharacter::unknown &&
+        cas_ste[0].first.em_charp != EMCharacter::unknown) {
       throw invalid_argument(
           "Only one electromagnetic character defined for transition #1: " +
           cas_ste[0].first.str_rep(ini_sta, cas_ste[0].second));
     }
-  } else if (cas_ste[0].first.em_char != em_unknown ||
-             cas_ste[0].first.em_charp != em_unknown) {
+  } else if (cas_ste[0].first.em_char != EMCharacter::unknown ||
+             cas_ste[0].first.em_charp != EMCharacter::unknown) {
     throw invalid_argument(
         "Electromagnetic character defined, but one or both parities missing "
         "for transition #1: " +
@@ -217,9 +217,9 @@ void AngularCorrelation::check_em_transitions(
   }
 
   for (size_t i = 1; i < cas_ste.size(); ++i) {
-    if (cas_ste[i - 1].second.parity != parity_unknown &&
-        cas_ste[i].second.parity != parity_unknown) {
-      if (cas_ste[i].first.em_char != em_unknown) {
+    if (cas_ste[i - 1].second.parity != Parity::unknown &&
+        cas_ste[i].second.parity != Parity::unknown) {
+      if (cas_ste[i].first.em_char != EMCharacter::unknown) {
         if (!valid_em_character(
                 cas_ste[i - 1].second.parity, cas_ste[i].second.parity,
                 cas_ste[i].first.two_L, cas_ste[i].first.em_char)) {
@@ -232,7 +232,7 @@ void AngularCorrelation::check_em_transitions(
         }
       }
 
-      if (cas_ste[i].first.em_charp != em_unknown) {
+      if (cas_ste[i].first.em_charp != EMCharacter::unknown) {
         if (!valid_em_character(
                 cas_ste[i - 1].second.parity, cas_ste[i].second.parity,
                 cas_ste[i].first.two_Lp, cas_ste[i].first.em_charp)) {
@@ -250,15 +250,15 @@ void AngularCorrelation::check_em_transitions(
             cas_ste[i].first.str_rep(cas_ste[i - 1].second, cas_ste[i].second));
       }
 
-      if (cas_ste[i].first.em_char == em_unknown &&
-          cas_ste[i].first.em_charp != em_unknown) {
+      if (cas_ste[i].first.em_char == EMCharacter::unknown &&
+          cas_ste[i].first.em_charp != EMCharacter::unknown) {
         throw invalid_argument(
             "Only one electromagnetic character defined for transition #" +
             to_string(i + 1) + ": " +
             cas_ste[i].first.str_rep(cas_ste[i - 1].second, cas_ste[i].second));
       }
-    } else if (cas_ste[i].first.em_char != em_unknown ||
-               cas_ste[i].first.em_charp != em_unknown) {
+    } else if (cas_ste[i].first.em_char != EMCharacter::unknown ||
+               cas_ste[i].first.em_charp != EMCharacter::unknown) {
       throw invalid_argument(
           "Electromagnetic character defined, but one or both parities missing "
           "for transition #" +
@@ -274,10 +274,10 @@ bool AngularCorrelation::valid_em_character(const Parity p0, const Parity p1,
 
   if (p0 == p1) {
     if ((two_L / 2) % 2 == 0) {
-      if (em != electric) {
+      if (em != EMCharacter::electric) {
         return false;
       }
-    } else if (em != magnetic) {
+    } else if (em != EMCharacter::magnetic) {
       return false;
     }
 
@@ -285,95 +285,14 @@ bool AngularCorrelation::valid_em_character(const Parity p0, const Parity p1,
   }
 
   if ((two_L / 2) % 2 == 0) {
-    if (em != magnetic) {
+    if (em != EMCharacter::magnetic) {
       return false;
     }
-  } else if (em != electric) {
+  } else if (em != EMCharacter::electric) {
     return false;
   }
 
   return true;
 }
 
-extern "C" {
-double angular_correlation(const double theta, const double phi,
-                           const size_t n_cas_ste, int *two_J, short *par,
-                           short *em_char, int *two_L, short *em_charp,
-                           int *two_Lp, double *delta) {
-  State initial_state{two_J[0], (Parity)par[0]};
-  vector<pair<Transition, State>> cascade_steps;
-
-  for (size_t i = 0; i < n_cas_ste; ++i) {
-    cascade_steps.push_back(
-        {Transition{(EMCharacter)em_char[i], two_L[i], (EMCharacter)em_charp[i],
-                    two_Lp[i], delta[i]},
-         State{two_J[i + 1], (Parity)par[i + 1]}});
-  }
-
-  return AngularCorrelation(initial_state, cascade_steps)
-      .
-      operator()(theta, phi);
-}
-
-void *create_angular_correlation(const size_t n_cas_ste, int *two_J, short *par,
-                                 short *em_char, int *two_L, short *em_charp,
-                                 int *two_Lp, double *delta) {
-
-  State initial_state{two_J[0], (Parity)par[0]};
-  vector<pair<Transition, State>> cascade_steps;
-
-  for (size_t i = 0; i < n_cas_ste; ++i) {
-    cascade_steps.push_back(
-        {Transition{(EMCharacter)em_char[i], two_L[i], (EMCharacter)em_charp[i],
-                    two_Lp[i], delta[i]},
-         State{two_J[i + 1], (Parity)par[i + 1]}});
-  }
-
-  return new AngularCorrelation(initial_state, cascade_steps);
-}
-
-void *
-create_angular_correlation_with_transition_inference(const size_t n_cas_ste,
-                                                     int *two_J, short *par) {
-
-  State initial_state{two_J[0], (Parity)par[0]};
-  vector<State> cascade_states;
-
-  for (size_t i = 0; i < n_cas_ste; ++i) {
-    cascade_states.push_back({State{two_J[i + 1], (Parity)par[i + 1]}});
-  }
-
-  return new AngularCorrelation(initial_state, cascade_states);
-}
-
-void evaluate_angular_correlation(AngularCorrelation *angular_correlation,
-                                  const size_t n_angles, double *theta,
-                                  double *phi, double *result) {
-
-  for (size_t i = 0; i < n_angles; ++i) {
-    result[i] = angular_correlation->operator()(theta[i], phi[i]);
-  }
-}
-
-void free_angular_correlation(AngularCorrelation *angular_correlation) {
-  delete angular_correlation;
-}
-
-void get_em_char(AngularCorrelation *angular_correlation, short *em_char) {
-
-  vector<pair<Transition, State>> cascade_steps =
-      angular_correlation->get_cascade_steps();
-  for (size_t i = 0; i < cascade_steps.size(); ++i) {
-    em_char[i] = cascade_steps[i].first.em_char;
-  }
-}
-
-void get_two_L(AngularCorrelation *angular_correlation, int *two_L) {
-
-  vector<pair<Transition, State>> cascade_steps =
-      angular_correlation->get_cascade_steps();
-  for (size_t i = 0; i < cascade_steps.size(); ++i) {
-    two_L[i] = cascade_steps[i].first.two_L;
-  }
-}
-}
+} // namespace alpaca

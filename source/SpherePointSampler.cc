@@ -17,6 +17,7 @@
     Copyright (C) 2021-2023 Udo Friman-Gayer
 */
 
+#include <algorithm>
 #include <cmath>
 #include <sstream>
 #include <stdexcept>
@@ -24,44 +25,44 @@
 #include <gsl/gsl_sf_ellint.h>
 #include <gsl/gsl_sf_elljac.h>
 
-#include "SpherePointSampler.hh"
+#include "alpaca/EulerAngleRotation.hh"
+#include "alpaca/SpherePointSampler.hh"
 
 using std::invalid_argument;
 using std::runtime_error;
 using std::stringstream;
 
-array<vector<double>, 2>
-SpherePointSampler::sample(const unsigned int n) const {
-  array<vector<double>, 2> theta_phi = {vector<double>(n, 0.),
-                                        vector<double>(n, 0.)};
+namespace alpaca {
+
+vector<CoordDir> SpherePointSampler::sample(const unsigned int n) const {
+  vector<CoordDir> theta_phi = vector<CoordDir>(n, {0., 0.});
 
   const double c = find_c(n);
 
-  for (size_t j = 1; j <= n; ++j) {
-    theta_phi[0][j] = find_Theta_j(j, n, c);
-    theta_phi[1][j] = c * theta_phi[0][j];
+  for (unsigned int j = 1; j < n; ++j) {
+    theta_phi[j][0] = find_Theta_j(j, n, c);
+    theta_phi[j][1] = c * theta_phi[j][0];
   }
 
   return theta_phi;
 }
 
-array<vector<double>, 3>
-SpherePointSampler::sample_cartesian(const unsigned int n,
-                                     const double r) const {
+vector<CoordCart> SpherePointSampler::sample_cartesian(const unsigned int n,
+                                                       const double r) const {
 
-  const array<vector<double>, 2> theta_phi = sample(n);
+  const vector<CoordDir> theta_phi = sample(n);
+  vector<CoordCart> x_y_z;
 
-  array<vector<double>, 3> x_y_z = {
-      vector<double>(n, 0.), vector<double>(n, 0.), vector<double>(n, 0.)};
-
-  double sine_theta = 0.;
-
-  for (size_t i = 0; i < n; ++i) {
-    sine_theta = sin(theta_phi[0][i]);
-    x_y_z[0][i] = r * sine_theta * cos(theta_phi[1][i]);
-    x_y_z[1][i] = r * sine_theta * sin(theta_phi[1][i]);
-    x_y_z[2][i] = r * cos(theta_phi[0][i]);
-  }
+  std::transform(theta_phi.begin(), theta_phi.end(), std::back_inserter(x_y_z),
+                 [=](CoordDir sph_coord) {
+                   CoordCart res;
+                   const auto &[theta, phi] = sph_coord;
+                   const double sine_theta = sin(theta);
+                   res[0] = r * sine_theta * cos(phi);
+                   res[1] = r * sine_theta * sin(phi);
+                   res[2] = r * cos(theta);
+                   return res;
+                 });
 
   return x_y_z;
 }
@@ -157,11 +158,14 @@ double SpherePointSampler::segment_length(const double Theta,
 
 double SpherePointSampler::segment_length_linear_interpolation(
     const double Theta, const double c, const unsigned int n_points) const {
-  const double theta_increment = Theta / ((double)n_points - 1.);
-  array<double, 3> x_i{0., 0., 1.};
-  array<double, 3> x_i_plus_one{0., 0., 0.};
-  double phi_i_plus_one{0.}, segment_increment_squared{0.}, segment_length{0.},
-      sine_theta_i_plus_one{0.}, theta_i_plus_one{0.};
+  const double theta_increment = Theta / (static_cast<double>(n_points) - 1.);
+  EulerAngles x_i{0., 0., 1.};
+  EulerAngles x_i_plus_one{0., 0., 0.};
+  double phi_i_plus_one{0.};
+  double segment_increment_squared{0.};
+  double segment_length{0.};
+  double sine_theta_i_plus_one{0.};
+  double theta_i_plus_one{0.};
 
   for (unsigned int i = 0; i < n_points - 1; ++i) {
     theta_i_plus_one = (i + 1) * theta_increment;
@@ -200,7 +204,8 @@ double SpherePointSampler::find_c(const unsigned int n, const double epsilon,
   double c_j = c_0;
   double c_j_plus_one = 0.;
   double negative_c_j_squared = 0;
-  double complete_elliptic_integral_1st{0.}, complete_elliptic_integral_2nd{0.};
+  double complete_elliptic_integral_1st{0.};
+  double complete_elliptic_integral_2nd{0.};
 
   const double n_times_pi = n * M_PI;
 
@@ -249,9 +254,10 @@ SpherePointSampler::find_Theta_j(const unsigned int j, const unsigned int n,
 
   // Initial guess from Ref. \cite Koay2011
   // Note that j is fixed here, and the iteration index is denoted as l
-  const double Theta_j_0 = acos(1. - (2. * j - 1.) / (double)n);
+  const double Theta_j_0 = acos(1. - (2. * j - 1.) / static_cast<double>(n));
   double Theta_j_l = Theta_j_0;
-  const double epsilon_segment = epsilon * segment_length(M_PI, c) / (double)n;
+  const double epsilon_segment =
+      epsilon * segment_length(M_PI, c) / static_cast<double>(n);
 
   double Theta_j_l_plus_one = 0.;
 
@@ -302,3 +308,5 @@ double SpherePointSampler::elliptic_integral_1st_kind_arbitrary_m(
   return kappa_prime *
          elliptic_integral_1st_kind_arbitrary_m(theta, kappa * kappa);
 }
+
+} // namespace alpaca

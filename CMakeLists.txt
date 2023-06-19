@@ -16,43 +16,129 @@
 #    Copyright (C) 2021-2023 Udo Friman-Gayer
 
 cmake_minimum_required(VERSION 3.16)
-project(alpaca VERSION 1.0.5)
+project(
+        alpaca
+        VERSION 1.0.5
+        HOMEPAGE_URL "https://github.com/u-eff-gee/alpaca"
+        LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(GSL REQUIRED)
 include_directories(${GSL_INCLUDE_DIRS})
 
 option(BUILD_DOCUMENTATION "Build doxygen documentation for some classes of alpaca" OFF)
+option(BUILD_TESTS "Build self tests" OFF)
+option(BUILD_PYTHON "Enable building python bindings" ON)
+option(ENABLE_COVERAGE "Enable coverage reporting" OFF)
+option(WARNINGS_AS_ERRORS "Treat warnings as errors" OFF)
+
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'RelWithDebInfo' as none was specified.")
+  set(CMAKE_BUILD_TYPE
+      RelWithDebInfo
+      CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui, ccmake
+  set_property(
+    CACHE CMAKE_BUILD_TYPE
+    PROPERTY STRINGS
+             "Debug"
+             "Release"
+             "MinSizeRel"
+             "RelWithDebInfo")
+endif()
+
+option(alpaca_ENABLE_SANITIZER_ADDRESS "Enable address sanitizer" OFF)
+option(alpaca_ENABLE_SANITIZER_LEAK "Enable leak sanitizer" OFF)
+option(alpaca_ENABLE_SANITIZER_UNDEFINED "Enable undefined sanitizer" OFF)
+option(alpaca_ENABLE_SANITIZER_THREAD "Enable thread sanitizer" OFF)
+option(alpaca_ENABLE_SANITIZER_MEMORY "Enable memory sanitizer" OFF)
+
 if(BUILD_DOCUMENTATION)
         find_package(Doxygen)
         configure_file(${PROJECT_SOURCE_DIR}/Doxyfile.in Doxyfile)
         add_custom_target(doc_doxygen ALL COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile)
 endif(BUILD_DOCUMENTATION)
 
-option(BUILD_TESTS "Build self tests." OFF)
-if(BUILD_TESTS)
-        add_compile_options(-fPIC -Wall -Wextra -Wpedantic -fprofile-arcs -ftest-coverage --coverage)
-        link_libraries(gcov)
-endif(BUILD_TESTS)
+add_library(alpaca_options INTERFACE)
+target_compile_features(alpaca_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
+add_library(alpaca::options ALIAS alpaca_options)
 
-add_compile_options(-fPIC -Wall -Wextra -Wpedantic)
+include(cmake/Sanitizers.cmake)
+enable_sanitizers(
+        alpaca_options
+        ${alpaca_ENABLE_SANITIZER_ADDRESS}
+        ${alpaca_ENABLE_SANITIZER_LEAK}
+        ${alpaca_ENABLE_SANITIZER_UNDEFINED}
+        ${alpaca_ENABLE_SANITIZER_THREAD}
+        ${alpaca_ENABLE_SANITIZER_MEMORY})
+
+
+target_compile_options(
+        alpaca_options
+        INTERFACE
+        -Wall
+        -Wextra
+        -Wshadow # warn if a variable declaration shadows one from a parent context
+        -Wconversion # warn on type conversions that may lose data
+        -Wpedantic # warn if non-standard C++ is used
+        -Wnon-virtual-dtor # warn if class with virtual functions has non-virtual destructor
+        -Wold-style-cast # warn for c-style casts
+        -Wcast-align # warn for potential performance problem casts
+        -Wunused # warn on anything being unused
+        -Woverloaded-virtual # warn if you overload (not override) a virtual function
+        -Wsign-conversion # warn on sign conversions
+        -Wnull-dereference # warn if a null dereference is detected
+        -Wdouble-promotion # warn if float is implicit promoted to double
+        -Wformat=2 # warn on security issues around functions that format output (ie printf)
+        -Wmisleading-indentation # warn if indentation implies blocks where blocks do not exist
+        -Wduplicated-cond # warn if if / else chain has duplicated conditions
+        -Wduplicated-branches # warn if if / else branches have duplicated code
+        -Wlogical-op # warn about logical operations being used where bitwise were probably wanted
+        -Wuseless-cast # warn if you perform a cast to the same type
+        -Wpedantic)
+
+if(ENABLE_COVERAGE)
+        target_compile_options(
+                alpaca_options
+                INTERFACE --coverage -O0 -g -fprofile-arcs -ftest-coverage)
+        target_link_libraries(alpaca_options INTERFACE --coverage)
+        link_libraries(gcov)
+endif()
+
+if(WARNINGS_AS_ERRORS)
+        target_compile_options(alpaca_options INTERFACE -Werror)
+endif()
 
 include(GNUInstallDirs)
 
-add_subdirectory(python)
+
 add_subdirectory(source)
 if(BUILD_TESTS)
-        add_subdirectory(test)
+        add_subdirectory(tests)
 endif(BUILD_TESTS)
 
-set(installable_libs angcorrRejectionSampler angular_correlation alphavCoefficient avCoefficient cascadeSampler referenceFrameSampler fCoefficient kappa_coefficient sphereRejectionSampler state stringRepresentable transition uvCoefficient w_dir_dir w_gamma_gamma w_pol_dir)
+set(installable_libs
+        coeff
+        coeff_static
+        angcorr
+        angcorr_static
+        sampler
+        sampler_static
+        alpaca_options)
 install(
-    TARGETS ${installable_libs}
-    EXPORT ALPACA
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+       TARGETS ${installable_libs}
+       EXPORT ALPACA
+       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-install(EXPORT ALPACA
-        FILE alpaca-config.cmake
-        DESTINATION lib/cmake/alpaca
+install(
+       EXPORT ALPACA
+       FILE alpaca-config.cmake
+       NAMESPACE alpaca::
+       DESTINATION lib/cmake/alpaca
 )

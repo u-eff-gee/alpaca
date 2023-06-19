@@ -19,8 +19,8 @@ import warnings
 
 import numpy as np
 
-from alpaca.angular_correlation import AngularCorrelation
-from alpaca.transition import Transition
+from alpaca import AngularCorrelation
+from alpaca import Transition
 
 CONVENTION = {"natural": 1.0, "KPZ": -1.0}
 
@@ -314,8 +314,6 @@ class AnalyzingPower:
             asymmetries[i] = ana_pow(
                 theta, thetap if thetap is not None else theta, phi, phip
             )
-            # Avoid memory leaking by deleting the temporarily created AngularCorrelation objects.
-            ana_pow.angular_correlation.free()
         if scalar_output:
             return asymmetries[0]
         return np.reshape(asymmetries, original_shape)
