@@ -152,10 +152,10 @@ public:
   /**
    * \brief Sample random gamma-ray directions from the cascade.
    *
-   * \return List of pairs of polar- and azimuthal angle in spherical
-   * coordinates in radians. The first pair describes the direction of emission
-   * of the first (depends on the setting of return_first_direction) gamma ray
-   * in the cascade, the second pair describes the second gamma ray, and so on.
+   * \return List of reference frames in Euler angles. The first reference frame
+   * describes the direction of emission of the first (depends on the setting of
+   * return_first_direction) gamma ray in the cascade, the second pair describes
+   * the second gamma ray, and so on.
    */
   vector<EulerAngles> operator()();
 

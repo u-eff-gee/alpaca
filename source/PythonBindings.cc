@@ -298,11 +298,26 @@ PYBIND11_MODULE(_alpaca, m) {
 
   py::class_<CascadeSampler>(m, "CascadeSampler")
       .def(py::init<std::vector<std::shared_ptr<ReferenceFrameSampler>> &>())
-      .def("__call__", &CascadeSampler::operator())
+      .def("__call__", &CascadeSampler::operator(), R"doc(
+            Sample random gamma-ray directions from the cascade.
+
+            Parameters
+            ----------
+            n: int
+                Number of samples to return
+
+            Returns
+            -------
+                Array of reference frames in Euler angles. If `n` is given, an array of
+                arrays is returned instead (multiple samples). The first reference frame
+                describes the direction of emission of the first (depends on the setting
+                of return_first_direction) gamma ray in the cascade, the second pair
+                describes the second gamma ray, and so on.
+           )doc")
       .def("__call__", [](CascadeSampler &c, py::ssize_t len) {
         auto dim = static_cast<py::ssize_t>(c.size());
         auto res = py::array_t<double>(std::vector<ptrdiff_t>{
-            static_cast<ptrdiff_t>(len), static_cast<ptrdiff_t>(dim), 2});
+            static_cast<ptrdiff_t>(len), static_cast<ptrdiff_t>(dim), 3});
 
         auto data = res.mutable_unchecked<3>();
 
@@ -311,6 +326,7 @@ PYBIND11_MODULE(_alpaca, m) {
           for (py::ssize_t j = 0; j < dim; ++j) {
             data(i, j, 0) = sample[static_cast<size_t>(j)][0];
             data(i, j, 1) = sample[static_cast<size_t>(j)][1];
+            data(i, j, 2) = sample[static_cast<size_t>(j)][2];
           }
         }
         return res;
