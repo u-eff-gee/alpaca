@@ -331,4 +331,43 @@ PYBIND11_MODULE(_alpaca, m) {
         }
         return res;
       });
+
+  m.def("euler_angles_to_spherical", &euler_angle_transform::to_spherical,
+        py::arg("Phi_Theta_Psi"));
+  m.def(
+      "euler_angles_to_spherical",
+      [](py::array_t<double> &Phi_Theta_Psi) {
+        // last dimension is euler angles!
+        py::buffer_info buf = Phi_Theta_Psi.request();
+        auto ndim = buf.ndim;
+        if (Phi_Theta_Psi.shape(ndim - 1) != 3) {
+          throw std::runtime_error(
+              "Euler Angles have to consist of three values (Phi Theta Psi).");
+        }
+        auto shape_res = std::vector<ssize_t>(static_cast<size_t>(ndim));
+        for (py::ssize_t i = 0; i < ndim - 1; ++i) {
+          shape_res[static_cast<size_t>(i)] = Phi_Theta_Psi.shape(i);
+        }
+        shape_res[static_cast<size_t>(ndim - 1)] = 2;
+        auto length = Phi_Theta_Psi.size() / 3;
+        Phi_Theta_Psi.resize({length, 3L});
+
+        auto res = py::array_t<double>(
+            std::vector<ptrdiff_t>{static_cast<ptrdiff_t>(length), 2});
+        auto from = Phi_Theta_Psi.unchecked<2>();
+        auto to = res.mutable_unchecked<2>();
+
+        for (py::ssize_t i = 0; i < length; ++i) {
+          auto [theta, phi] = euler_angle_transform::to_spherical(
+              {from(i, 0), from(i, 1), from(i, 2)});
+          to(i, 0) = theta;
+          to(i, 1) = phi;
+        }
+
+        res.resize(shape_res);
+        return res;
+      },
+      py::arg("Phi_Theta_Psi"));
+  m.def("euler_angles_from_spherical", &euler_angle_transform::from_spherical,
+        py::arg("theta_phi"), py::arg("Phi") = 0.);
 }

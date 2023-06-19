@@ -11,6 +11,8 @@ from _alpaca import (
     DeterministicReferenceFrameSampler,
     SphereRejectionSampler,
     CascadeSampler,
+    euler_angles_from_spherical,
+    euler_angles_to_spherical,
 )
 
 from .analyzing_power import CONVENTION, arctan_grid, AnalyzingPower
